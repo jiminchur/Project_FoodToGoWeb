@@ -1,6 +1,6 @@
 # Project_FoodToGoWeb
 [Project] 음식 주문 관리 플랫폼 개발
-![스크린샷](/IMG/project_Ohteam_foodToGo.png)
+![스크린샷](/IMG/FoodToGoWeb.png)
 ## 개발 기간
 * 2024.08.22 ~ 2024.09.03
 ## 팀원 소개
