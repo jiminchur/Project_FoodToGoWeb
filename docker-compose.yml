@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 데이터베이스
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - Project_FoodToGoWeb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # 인증 서버
+  auth-service:
+    image: image-auth
+    container_name: auth_service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    networks:
+      - Project_FoodToGoWeb
+
+  # 모노리틱 서버
+  monolithic-service:
+    image: image-mono
+    container_name: monolithic_service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+    networks:
+      - Project_FoodToGoWeb
+
+  # 게이트웨이 서버
+  gateway:
+    image: image-gateway
+    container_name: gateway_service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - monolithic-service
+    networks:
+      - Project_FoodToGoWeb
+
+  # Redis
+  redis:
+    image: redis:latest
+    container_name: redis_server
+    ports:
+      - "6379:6379"
+    networks:
+      - Project_FoodToGoWeb
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  db_data:
