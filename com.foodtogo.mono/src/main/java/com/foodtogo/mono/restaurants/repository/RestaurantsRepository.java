@@ -11,4 +11,7 @@ public interface RestaurantsRepository extends JpaRepository<Restaurants, UUID> 
 
     // 전체 조회
     Page<Restaurants> findAll(Pageable pageable);
+
+    // 가게 검색
+    Page<Restaurants> findByRestaurantNameContaining(String restaurantName, Pageable pageable);
 }

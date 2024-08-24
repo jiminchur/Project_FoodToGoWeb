@@ -64,4 +64,15 @@ public class RestaurantsController {
     ){
         restaurantsService.deleteRestaurants(restaurantId,userId);
     }
+
+    // 가게 검색
+    @GetMapping("/search")
+    public Page<Restaurants> getRestaurants(
+            @RequestParam("query") String query,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        return restaurantsService.searchRestaurants(query, pageable);
+    }
 }
