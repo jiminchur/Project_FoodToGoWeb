@@ -19,7 +19,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-
+  
   
     // 회원 정보 조회
     @Transactional(readOnly = true)
@@ -57,6 +57,16 @@ public class UserService {
         Pageable pageable = convertToPage(page, size, sortBy, isAsc);
         Page<User> userList = userRepository.findAll(pageable);
 
+        return userList.map(UserResponseDto::new);
+    }
+  
+    // 회원 검색 - MASTER
+    @Transactional(readOnly = true)
+    public Page<UserResponseDto> searchUserList(int page, int size, String sortBy, boolean isAsc, String keyword) {
+
+        Pageable pageable = convertToPage(page, size, sortBy, isAsc);
+        Page<User> userList = userRepository.findByUsernameContaining(keyword, pageable);
+        
         return userList.map(UserResponseDto::new);
     }
 

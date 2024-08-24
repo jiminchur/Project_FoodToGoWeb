@@ -54,4 +54,15 @@ public class UserController {
         Page<UserResponseDto> userList = userService.getUserList(page, size, sortBy, isAsc);
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
+  
+    // 회원 검색 - MASTER
+    @GetMapping("/search")
+    public ResponseEntity<Page<UserResponseDto>> searchUser(@RequestParam("page") int page,
+                                                            @RequestParam("size") int size,
+                                                            @RequestParam("sortBy") String sortBy,
+                                                            @RequestParam("isAsc") boolean isAsc,
+                                                            @RequestParam("keyword") String keyword) {
+        Page<UserResponseDto> searchedUser = userService.searchUserList(page, size, sortBy, isAsc, keyword);
+        return new ResponseEntity<>(searchedUser, HttpStatus.OK);
+    }
 }
