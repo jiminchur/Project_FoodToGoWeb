@@ -1,5 +1,6 @@
 package com.foodtogo.mono.users.entity;
 
+import com.foodtogo.mono.users.dto.request.UserUpdateRequestDto;
 import com.foodtogo.mono.users.util.LogEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -51,4 +53,17 @@ public class User extends LogEntity {
 
     private String profile_url;
 
+  
+    // 회원 정보 수정 메소드
+    public void updateUserInfo(UserUpdateRequestDto requestDto, String updatedBy) {
+        this.nickname = requestDto.getNickname();
+        this.is_public = requestDto.getIs_public();
+        this.profile_url = requestDto.getProfile_url();
+        setUpdatedBy(updatedBy);
+    }
+  
+    public void deleteUser(String username) {
+        this.setDeletedAt(LocalDateTime.now());
+        this.setDeletedBy(username);
+    }
 }
