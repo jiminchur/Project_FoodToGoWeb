@@ -1,5 +1,7 @@
 package com.foodtogo.mono.users.service;
 
+import com.foodtogo.mono.users.dto.request.UserUpdateRequestDto;
+import com.foodtogo.mono.users.dto.response.UserResponseDto;
 import com.foodtogo.mono.users.entity.User;
 import com.foodtogo.mono.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,17 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    
+    // 회원 정보 수정
+    @Transactional
+    public UserResponseDto updateUserInfo(UserUpdateRequestDto requestDto, UUID userId) {
+
+        User user = findUserId(userId);
+        user.updateUserInfo(requestDto, user.getUsername());
+
+        return new UserResponseDto(user);
+    }
+  
     // 회원 삭제
     @Transactional
     public String deleteUser(UUID userId) {
