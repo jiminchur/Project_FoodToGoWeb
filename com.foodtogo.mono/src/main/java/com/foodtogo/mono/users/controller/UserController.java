@@ -1,5 +1,6 @@
 package com.foodtogo.mono.users.controller;
 
+import org.springframework.data.domain.Page;
 import com.foodtogo.mono.users.dto.request.UserUpdateRequestDto;
 import com.foodtogo.mono.users.dto.response.UserResponseDto;
 import com.foodtogo.mono.users.service.UserService;
@@ -42,5 +43,15 @@ public class UserController {
 
         String message = userService.deleteUser(deleteUserId);
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+  
+    // 회원 목록 조회 - MASTER
+    @GetMapping
+    public ResponseEntity<Page<UserResponseDto>> getUserList(@RequestParam("page") int page,
+                                                             @RequestParam("size") int size,
+                                                             @RequestParam("sortBy") String sortBy,
+                                                             @RequestParam("isAsc") boolean isAsc) {
+        Page<UserResponseDto> userList = userService.getUserList(page, size, sortBy, isAsc);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 }
