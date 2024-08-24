@@ -5,10 +5,13 @@ import com.foodtogo.mono.restaurant_categories.dto.RestaurantCategoriesRequestDt
 import com.foodtogo.mono.restaurant_categories.dto.RestaurantCategoriesResponseDto;
 import com.foodtogo.mono.restaurant_categories.repository.RestaurantCategoriesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +43,24 @@ public class RestaurantCategoriesService {
     // 카테고리 전체 조회
     public List<RestaurantCategories> getAllCategories() {
         return restaurantCategoriesRepository.findAll();
+    }
+
+    // 카테고리 수정
+    @Transactional
+    public RestaurantCategoriesResponseDto updateCategories(
+            UUID restaurantCategoriesId,
+            RestaurantCategoriesRequestDto restaurantCategoriesRequestDto,
+            String userId
+    ){
+        RestaurantCategories restaurantCategories = restaurantCategoriesRepository.findById(restaurantCategoriesId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 카테고리는 없습니다."));
+        restaurantCategories.updateCategories(
+                restaurantCategoriesRequestDto.getCategoryTitle()
+        );
+
+        restaurantCategories.setUpdatedBy(userId);
+        RestaurantCategories updatedRestaurantCategories = restaurantCategoriesRepository.save(restaurantCategories);
+
+        return toResponseDto(updatedRestaurantCategories);
     }
 }

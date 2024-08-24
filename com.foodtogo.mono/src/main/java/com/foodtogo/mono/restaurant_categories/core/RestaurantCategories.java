@@ -41,4 +41,11 @@ public class RestaurantCategories extends LogEntity {
 
         return restaurantCategories;
     }
+
+    // 카테고리 수정
+    public void updateCategories(
+            String categoryTitle
+    ){
+        this.categoryTitle = categoryTitle;
+    }
 }
