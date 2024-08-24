@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -32,5 +33,14 @@ public class RestaurantCategoriesContorller {
     }
 
     // 카테고리 수정
+    @PutMapping("/{category_id}")
+    public RestaurantCategoriesResponseDto updateCategories(
+            @PathVariable("category_id") UUID categoryId,
+            @RequestBody RestaurantCategoriesRequestDto restaurantCategoriesRequestDto,
+            @RequestHeader(value = "X-User-Id", required = true) String userId
+    ){
+        return restaurantCategoriesService.updateCategories(categoryId,restaurantCategoriesRequestDto,userId);
+    }
+
     // 카테고리 삭제
 }
