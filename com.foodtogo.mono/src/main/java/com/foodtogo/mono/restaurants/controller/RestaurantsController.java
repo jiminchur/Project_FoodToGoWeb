@@ -75,4 +75,12 @@ public class RestaurantsController {
         Pageable pageable = PageRequest.of(page, size);
         return restaurantsService.searchRestaurants(query, pageable);
     }
+
+    // 가게 운영상태 변경
+    @PatchMapping("/{restaurant_id}/status")
+    public void closeOpenStatus(
+            @PathVariable("restaurant_id") UUID restaurantId
+    ){
+        restaurantsService.closeOpenStatus(restaurantId);
+    }
 }

@@ -92,6 +92,18 @@ public class RestaurantsService {
         return restaurantsRepository.findByRestaurantNameContaining(query, pageable);
     }
 
+    // 가게 운영 상태 변경
+    public void closeOpenStatus(
+            UUID restaurantId
+    ){
+        Restaurants restaurants = restaurantsRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 식당은 없습니다."));
+
+        restaurants.setIsOpened(!restaurants.getIsOpened());
+
+        restaurantsRepository.save(restaurants);
+    }
+
     private RestaurantsResponseDto toResponseDto(
             Restaurants restaurants
     ){

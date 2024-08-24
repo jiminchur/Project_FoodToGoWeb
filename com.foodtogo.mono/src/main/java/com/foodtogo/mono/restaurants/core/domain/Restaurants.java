@@ -116,5 +116,7 @@ public class Restaurants extends LogEntity {
         );
     }
 
-
+    public void setIsOpened(Boolean isOpened) {
+        this.isOpened = isOpened;
+    }
 }
