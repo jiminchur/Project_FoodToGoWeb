@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RestaurantCategoriesService {
@@ -33,5 +35,10 @@ public class RestaurantCategoriesService {
                 restaurantCategories.getCategoryId()
                 ,restaurantCategories.getCategoryTitle()
         );
+    }
+
+    // 카테고리 전체 조회
+    public List<RestaurantCategories> getAllCategories() {
+        return restaurantCategoriesRepository.findAll();
     }
 }

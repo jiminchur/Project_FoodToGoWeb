@@ -1,10 +1,13 @@
 package com.foodtogo.mono.restaurant_categories.controller;
 
+import com.foodtogo.mono.restaurant_categories.core.RestaurantCategories;
 import com.foodtogo.mono.restaurant_categories.dto.RestaurantCategoriesRequestDto;
 import com.foodtogo.mono.restaurant_categories.dto.RestaurantCategoriesResponseDto;
 import com.foodtogo.mono.restaurant_categories.service.RestaurantCategoriesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -23,6 +26,11 @@ public class RestaurantCategoriesContorller {
     }
 
     // 카테고리 목록 조회
+    @GetMapping
+    public List<RestaurantCategories> getAllCategories(){
+        return restaurantCategoriesService.getAllCategories();
+    }
+
     // 카테고리 수정
     // 카테고리 삭제
 }
