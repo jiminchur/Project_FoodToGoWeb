@@ -1,5 +1,6 @@
 package com.foodtogo.mono.restaurants.core.domain;
 
+import com.foodtogo.mono.log.LogEntity;
 import com.foodtogo.mono.restaurants.core.enums.RestaurantsArea;
 import com.foodtogo.mono.restaurants.dto.RestaurantsRequestDto;
 import com.foodtogo.mono.restaurants.dto.RestaurantsResponseDto;
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -15,7 +17,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "p_restaurants")
-public class Restaurants {
+public class Restaurants extends LogEntity {
 
     // 음식점 ID, PK
     @Id
@@ -60,9 +62,10 @@ public class Restaurants {
     private String restaurantImageUrl;
 
     public static Restaurants createRestaurants(
-            RestaurantsRequestDto requestDto
+            RestaurantsRequestDto requestDto,
+            String createdBy
     ){
-        return Restaurants.builder()
+        Restaurants restaurants = Restaurants.builder()
                 // 지역 : 우선 광화문 1개
                 .area(RestaurantsArea.광화문)
                 // 오픈 상태 디폴드값 True : 가게 오픈 상태 / False는 가게 닫힘
@@ -73,6 +76,10 @@ public class Restaurants {
                 .restaurantIntroduce(requestDto.getRestaurantIntroduce())
                 .restaurantImageUrl(requestDto.getRestaurantImageUrl())
                 .build();
+        // 생성자 삽입
+        restaurants.setCreatedBy(createdBy);
+
+        return restaurants;
     }
 
     public void updateRestaurants(
@@ -88,6 +95,13 @@ public class Restaurants {
         this.restaurantIntroduce = restaurantIntroduce;
         this.restaurantImageUrl = restaurantImageUrl;
     }
+    // 삭제일자 / 삭제자 작성
+    public void deleteRestaurants(
+            String deletedBy
+    ) {
+        this.deletedBy = deletedBy;
+        this.deletedAt = LocalDateTime.now();
+    }
 
     public RestaurantsResponseDto toResponseDto(){
         return new RestaurantsResponseDto(
@@ -101,5 +115,6 @@ public class Restaurants {
                 ,this.restaurantImageUrl
         );
     }
+
 
 }
