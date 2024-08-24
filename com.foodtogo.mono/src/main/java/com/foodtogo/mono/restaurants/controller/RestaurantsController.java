@@ -31,6 +31,14 @@ public class RestaurantsController {
         return restaurantsService.getRestaurantsById(restaurantId);
     }
 
+    // 가게 정보 전체 수정
+    @PutMapping("/{restaurant_id}")
+    public RestaurantsResponseDto updateRestaurants(
+            @PathVariable("restaurant_id") UUID restaurantId,
+            @RequestBody RestaurantsRequestDto restaurantsRequestDto
+    ){
+        return restaurantsService.updateRestaurants(restaurantId,restaurantsRequestDto);
+    }
 
 
 }
