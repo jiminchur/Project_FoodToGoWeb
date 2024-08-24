@@ -22,9 +22,10 @@ public class RestaurantsController {
     // 가게 등록
     @PostMapping
     public RestaurantsResponseDto createRestaurants(
-            @RequestBody RestaurantsRequestDto restaurantsRequestDto
+            @RequestBody RestaurantsRequestDto restaurantsRequestDto,
+            @RequestHeader(value = "X-User-Id", required = true) String userId
     ) {
-        return restaurantsService.createRestaurants(restaurantsRequestDto);
+        return restaurantsService.createRestaurants(restaurantsRequestDto,userId);
     }
 
     // 가게 단건 조회
@@ -39,9 +40,10 @@ public class RestaurantsController {
     @PutMapping("/{restaurant_id}")
     public RestaurantsResponseDto updateRestaurants(
             @PathVariable("restaurant_id") UUID restaurantId,
-            @RequestBody RestaurantsRequestDto restaurantsRequestDto
+            @RequestBody RestaurantsRequestDto restaurantsRequestDto,
+            @RequestHeader(value = "X-User-Id", required = true) String userId
     ){
-        return restaurantsService.updateRestaurants(restaurantId,restaurantsRequestDto);
+        return restaurantsService.updateRestaurants(restaurantId,restaurantsRequestDto,userId);
     }
 
     // 가게 전체 조회
@@ -54,5 +56,12 @@ public class RestaurantsController {
         return restaurantsService.getAllRestaurants(pageable);
     }
 
-
+    // 가게 삭제
+    @DeleteMapping("/{restaurant_id}")
+    public void deleteRestaurants(
+            @PathVariable("restaurant_id") UUID restaurantId,
+            @RequestHeader(value = "X-User-Id", required = true) String userId
+    ){
+        restaurantsService.deleteRestaurants(restaurantId,userId);
+    }
 }

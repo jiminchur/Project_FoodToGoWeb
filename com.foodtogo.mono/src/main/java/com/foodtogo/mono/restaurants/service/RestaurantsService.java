@@ -23,9 +23,10 @@ public class RestaurantsService {
     // 가게 등록
     @Transactional
     public RestaurantsResponseDto createRestaurants(
-            RestaurantsRequestDto restaurantsRequestDto
+            RestaurantsRequestDto restaurantsRequestDto,
+            String userId
     ){
-        Restaurants restaurants = Restaurants.createRestaurants(restaurantsRequestDto);
+        Restaurants restaurants = Restaurants.createRestaurants(restaurantsRequestDto,userId);
         Restaurants savedRestaurants = restaurantsRepository.save(restaurants);
         return toResponseDto(savedRestaurants);
     }
@@ -51,7 +52,8 @@ public class RestaurantsService {
     @Transactional
     public RestaurantsResponseDto updateRestaurants(
             UUID restaurantId,
-            RestaurantsRequestDto restaurantsRequestDto
+            RestaurantsRequestDto restaurantsRequestDto,
+            String userId
     ){
         Restaurants restaurants = restaurantsRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 식당은 없습니다."));
@@ -62,8 +64,24 @@ public class RestaurantsService {
                 ,restaurantsRequestDto.getRestaurantIntroduce()
                 ,restaurantsRequestDto.getRestaurantImageUrl()
         );
+
+        restaurants.setUpdatedBy(userId);
+
         Restaurants updatedRestaurants = restaurantsRepository.save(restaurants);
         return toResponseDto(updatedRestaurants);
+    }
+
+    // 가게 삭제
+    @Transactional
+    public void deleteRestaurants(
+            UUID restaurantId,
+            String userId
+    ){
+        Restaurants restaurants = restaurantsRepository.findById(restaurantId)
+                .filter(o -> o.getDeletedAt() == null)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제 되었거나, 가게가 없습니다."));
+        restaurants.deleteRestaurants(userId);
+        restaurantsRepository.save(restaurants);
     }
 
     private RestaurantsResponseDto toResponseDto(
