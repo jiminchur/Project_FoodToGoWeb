@@ -1,9 +1,13 @@
 package com.foodtogo.mono.restaurants.controller;
 
+import com.foodtogo.mono.restaurants.core.domain.Restaurants;
 import com.foodtogo.mono.restaurants.dto.RestaurantsRequestDto;
 import com.foodtogo.mono.restaurants.dto.RestaurantsResponseDto;
 import com.foodtogo.mono.restaurants.service.RestaurantsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -38,6 +42,16 @@ public class RestaurantsController {
             @RequestBody RestaurantsRequestDto restaurantsRequestDto
     ){
         return restaurantsService.updateRestaurants(restaurantId,restaurantsRequestDto);
+    }
+
+    // 가게 전체 조회
+    @GetMapping
+    public Page<Restaurants> getRestaurants(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        return restaurantsService.getAllRestaurants(pageable);
     }
 
 

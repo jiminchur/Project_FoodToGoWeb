@@ -5,6 +5,8 @@ import com.foodtogo.mono.restaurants.dto.RestaurantsRequestDto;
 import com.foodtogo.mono.restaurants.dto.RestaurantsResponseDto;
 import com.foodtogo.mono.restaurants.repository.RestaurantsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,13 @@ public class RestaurantsService {
         Restaurants restaurants = restaurantsRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 식당은 없습니다."));
         return toResponseDto(restaurants);
+    }
+
+    // 가게 전체 조회
+    public Page<Restaurants> getAllRestaurants(
+            Pageable pageable
+    ){
+        return restaurantsRepository.findAll(pageable);
     }
 
     // 가게 정보 수정
