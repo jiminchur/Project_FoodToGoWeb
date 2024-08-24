@@ -84,6 +84,14 @@ public class RestaurantsService {
         restaurantsRepository.save(restaurants);
     }
 
+    // 가게 검색
+    public Page<Restaurants> searchRestaurants(
+            String query,
+            Pageable pageable
+    ){
+        return restaurantsRepository.findByRestaurantNameContaining(query, pageable);
+    }
+
     private RestaurantsResponseDto toResponseDto(
             Restaurants restaurants
     ){
