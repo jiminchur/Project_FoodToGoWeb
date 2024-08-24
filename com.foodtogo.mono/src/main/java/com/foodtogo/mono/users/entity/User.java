@@ -1,6 +1,6 @@
 package com.foodtogo.mono.users.entity;
 
-import com.foodtogo.mono.users.util.Timestamped;
+import com.foodtogo.mono.users.util.LogEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends Timestamped {
+public class User extends LogEntity {
 
     @Id
     @UuidGenerator
