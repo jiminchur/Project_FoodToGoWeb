@@ -16,6 +16,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+  
+    // 회원 정보 조회
+    @Transactional(readOnly = true)
+    public UserResponseDto getUserInfo(UUID userId) {
+
+        User user = findUserId(userId);
+
+        return new UserResponseDto(user);
+    }
     
     // 회원 정보 수정
     @Transactional

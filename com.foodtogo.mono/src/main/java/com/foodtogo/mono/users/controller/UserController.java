@@ -18,6 +18,14 @@ public class UserController {
     private final UserService userService;
 
   
+    // 회원 정보 조회
+    @GetMapping("/{user_id}")
+    public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable("user_id") UUID findUserId) {
+
+        UserResponseDto userInfo = userService.getUserInfo(findUserId);
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
+    }
+  
     // 회원 정보 수정
     @PutMapping("/{user_id}")
     public ResponseEntity<UserResponseDto> updateUserInfo(@PathVariable("user_id") UUID updateUserId,
