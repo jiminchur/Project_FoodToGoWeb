@@ -1,4 +1,4 @@
-package com.foodtogo.mono.restaurants.core;
+package com.foodtogo.mono.restaurants.core.domain;
 
 import com.foodtogo.mono.restaurants.core.enums.RestaurantsArea;
 import com.foodtogo.mono.restaurants.dto.RestaurantsRequestDto;
@@ -73,6 +73,20 @@ public class Restaurants {
                 .restaurantIntroduce(requestDto.getRestaurantIntroduce())
                 .restaurantImageUrl(requestDto.getRestaurantImageUrl())
                 .build();
+    }
+
+    public void updateRestaurants(
+            String restaurantName,
+            String restaurantAddress,
+            String restaurantPhoneNumber,
+            String restaurantIntroduce,
+            String restaurantImageUrl
+    ){
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantPhoneNumber = restaurantPhoneNumber;
+        this.restaurantIntroduce = restaurantIntroduce;
+        this.restaurantImageUrl = restaurantImageUrl;
     }
 
     public RestaurantsResponseDto toResponseDto(){
