@@ -16,6 +16,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    
     // 회원 정보 수정
     @Transactional
     public UserResponseDto updateUserInfo(UserUpdateRequestDto requestDto, UUID userId) {
@@ -24,6 +25,16 @@ public class UserService {
         user.updateUserInfo(requestDto, user.getUsername());
 
         return new UserResponseDto(user);
+    }
+  
+    // 회원 삭제
+    @Transactional
+    public String deleteUser(UUID userId) {
+
+        User user = findUserId(userId);
+        user.deleteUser(user.getUsername());
+
+        return "[" + user.getUsername() + "]님 회원 정보 삭제 완료";
     }
 
     // 유저 찾는 공통 메소드

@@ -17,6 +17,7 @@ public class UserController {
 
     private final UserService userService;
 
+  
     // 회원 정보 수정
     @PutMapping("/{user_id}")
     public ResponseEntity<UserResponseDto> updateUserInfo(@PathVariable("user_id") UUID updateUserId,
@@ -24,5 +25,14 @@ public class UserController {
 
         UserResponseDto updateUserInfo = userService.updateUserInfo(userUpdateRequestDto, updateUserId);
         return new ResponseEntity<>(updateUserInfo, HttpStatus.OK);
+
+    }
+  
+    // 회원 삭제
+    @DeleteMapping("/{user_id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("user_id") UUID deleteUserId) {
+
+        String message = userService.deleteUser(deleteUserId);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }
