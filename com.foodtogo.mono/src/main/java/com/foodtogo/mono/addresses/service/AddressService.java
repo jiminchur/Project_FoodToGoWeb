@@ -46,6 +46,21 @@ public class AddressService {
         return addressList.map(AddressResponseDto::new);
     }
 
+    // 회원 배송지 상세 조회
+    @Transactional(readOnly = true)
+    public AddressResponseDto getUserAddress(UUID userId, UUID addressId) {
+
+        User user = findUserId(userId);
+        Address address = addressRepository.findById(addressId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
+
+        if(!user.getUser_id().equals(address.getUser().getUser_id())){
+            throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
+        }
+
+        return new AddressResponseDto(address);
+    }
+  
     // 페이지 처리
     private Pageable convertToPage(int page, int size, String sortBy, boolean isAsc) {
 

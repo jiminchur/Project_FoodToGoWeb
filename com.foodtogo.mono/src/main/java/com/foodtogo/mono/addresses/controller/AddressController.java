@@ -39,6 +39,13 @@ public class AddressController {
     }
 
     // 회원 배송지 상세 조회
+    @GetMapping("{address_id}")
+    public ResponseEntity<AddressResponseDto> getUserAddress(@PathVariable("user_id") UUID userId,
+                                                             @PathVariable("address_id") UUID addressId) {
+        AddressResponseDto addressInfo = addressService.getUserAddress(userId, addressId);
+        return new ResponseEntity<>(addressInfo, HttpStatus.OK);
+    }
+  
     // 회원 배송지 정보 수정
     // 회원 배송지 삭제
 }
