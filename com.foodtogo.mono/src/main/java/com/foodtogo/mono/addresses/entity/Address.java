@@ -41,7 +41,7 @@ public class Address extends LogEntity {
         this.user = userId;
         setCreatedBy(userId.getUsername());
     }
-
+  
     // 회원 배송지 정보 수정
     public void updateAddressInfo(AddressRequestDto requestDto) {
         this.address = requestDto.getAddress();
