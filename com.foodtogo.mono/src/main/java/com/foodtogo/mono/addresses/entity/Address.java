@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -41,10 +42,17 @@ public class Address extends LogEntity {
         this.user = userId;
         setCreatedBy(userId.getUsername());
     }
-  
+
     // 회원 배송지 정보 수정
-    public void updateAddressInfo(AddressRequestDto requestDto) {
+    public void updateAddressInfo(AddressRequestDto requestDto, String updatedBy) {
         this.address = requestDto.getAddress();
         this.request = requestDto.getRequest();
+        setUpdatedBy(updatedBy);
+    }
+
+    // 회원 배송지 정보 삭제
+    public void deleteAddress(String username) {
+        this.setDeletedAt(LocalDateTime.now());
+        this.setDeletedBy(username);
     }
 }

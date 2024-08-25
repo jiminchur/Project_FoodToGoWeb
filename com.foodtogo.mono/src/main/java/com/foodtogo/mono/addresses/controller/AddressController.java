@@ -50,10 +50,16 @@ public class AddressController {
     @PutMapping("{address_id}")
     public ResponseEntity<AddressResponseDto> updateAddressInfo(@PathVariable("user_id") UUID userId,
                                                                 @PathVariable("address_id") UUID addressId,
-                                                                AddressRequestDto requestDto){
+                                                                AddressRequestDto requestDto) {
         AddressResponseDto updateAddressInfo = addressService.updateAddressInfo(userId, addressId, requestDto);
         return new ResponseEntity<>(updateAddressInfo, HttpStatus.OK);
     }
-
-    // 회원 배송지 삭제
+      
+    // 회원 배송지 정보 삭제
+    @DeleteMapping("/{address_id}")
+    public ResponseEntity<String> deleteAddress(@PathVariable("user_id") UUID userId,
+                                                @PathVariable("address_id") UUID addressId) {
+        String message = addressService.deleteAddress(userId, addressId);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 }

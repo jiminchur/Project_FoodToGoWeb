@@ -54,7 +54,7 @@ public class AddressService {
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
-        if(!user.getUser_id().equals(address.getUser().getUser_id())){
+        if (!user.getUser_id().equals(address.getUser().getUser_id())) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
 
@@ -69,12 +69,28 @@ public class AddressService {
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
-        if(!user.getUser_id().equals(address.getUser().getUser_id())){
+        if (!user.getUser_id().equals(address.getUser().getUser_id())) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
-        address.updateAddressInfo(requestDto);
+        address.updateAddressInfo(requestDto, user.getUsername());
 
         return new AddressResponseDto(address);
+    }
+
+    // 회원 배송지 정보 삭제
+    @Transactional
+    public String deleteAddress(UUID userId, UUID addressId) {
+
+        User user = findUserId(userId);
+        Address address = addressRepository.findById(addressId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
+
+        if (!user.getUser_id().equals(address.getUser().getUser_id())) {
+            throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
+        }
+
+        address.deleteAddress(user.getUsername());
+        return "배송지 삭제 완료.";
     }
 
     // 페이지 처리
