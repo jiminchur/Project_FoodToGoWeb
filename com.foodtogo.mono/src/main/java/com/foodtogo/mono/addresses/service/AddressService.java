@@ -27,7 +27,6 @@ public class AddressService {
     // 회원 배송지 등록
     public String createAddress(UUID userId, AddressRequestDto requestDto) {
 
-        // 유저 체크? 사실 필요없을 부분 같음.
         User user = findUserId(userId);
 
         Address address = new Address(user, requestDto);
@@ -61,7 +60,7 @@ public class AddressService {
 
         return new AddressResponseDto(address);
     }
-
+  
     // 페이지 처리
     private Pageable convertToPage(int page, int size, String sortBy, boolean isAsc) {
 
@@ -76,6 +75,4 @@ public class AddressService {
         return userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
-
-
 }

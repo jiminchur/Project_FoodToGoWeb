@@ -45,6 +45,7 @@ public class AddressController {
         AddressResponseDto addressInfo = addressService.getUserAddress(userId, addressId);
         return new ResponseEntity<>(addressInfo, HttpStatus.OK);
     }
+  
     // 회원 배송지 정보 수정
     // 회원 배송지 삭제
 }

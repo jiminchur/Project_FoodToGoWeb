@@ -1,4 +1,4 @@
-package com.foodtogo.mono.addresses.util;
+package com.foodtogo.mono.log;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
