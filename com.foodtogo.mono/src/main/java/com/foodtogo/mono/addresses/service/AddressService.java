@@ -27,7 +27,6 @@ public class AddressService {
     // 회원 배송지 등록
     public String createAddress(UUID userId, AddressRequestDto requestDto) {
 
-        // 유저 체크? 사실 필요없을 부분 같음.
         User user = findUserId(userId);
 
         Address address = new Address(user, requestDto);
