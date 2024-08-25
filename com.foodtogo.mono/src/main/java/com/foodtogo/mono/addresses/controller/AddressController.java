@@ -45,7 +45,15 @@ public class AddressController {
         AddressResponseDto addressInfo = addressService.getUserAddress(userId, addressId);
         return new ResponseEntity<>(addressInfo, HttpStatus.OK);
     }
-  
+
     // 회원 배송지 정보 수정
+    @PutMapping("{address_id}")
+    public ResponseEntity<AddressResponseDto> updateAddressInfo(@PathVariable("user_id") UUID userId,
+                                                                @PathVariable("address_id") UUID addressId,
+                                                                AddressRequestDto requestDto){
+        AddressResponseDto updateAddressInfo = addressService.updateAddressInfo(userId, addressId, requestDto);
+        return new ResponseEntity<>(updateAddressInfo, HttpStatus.OK);
+    }
+
     // 회원 배송지 삭제
 }
