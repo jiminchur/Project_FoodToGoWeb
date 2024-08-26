@@ -1,6 +1,6 @@
 package com.foodtogo.mono.users.repository;
 
-import com.foodtogo.mono.users.entity.User;
+import com.foodtogo.mono.users.core.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

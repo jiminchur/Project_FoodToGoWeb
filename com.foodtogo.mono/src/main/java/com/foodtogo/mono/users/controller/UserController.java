@@ -1,10 +1,10 @@
 package com.foodtogo.mono.users.controller;
 
-import org.springframework.data.domain.Page;
 import com.foodtogo.mono.users.dto.request.UserUpdateRequestDto;
 import com.foodtogo.mono.users.dto.response.UserResponseDto;
 import com.foodtogo.mono.users.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

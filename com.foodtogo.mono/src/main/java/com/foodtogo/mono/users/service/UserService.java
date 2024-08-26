@@ -1,8 +1,8 @@
 package com.foodtogo.mono.users.service;
 
+import com.foodtogo.mono.users.core.domain.User;
 import com.foodtogo.mono.users.dto.request.UserUpdateRequestDto;
 import com.foodtogo.mono.users.dto.response.UserResponseDto;
-import com.foodtogo.mono.users.entity.User;
 import com.foodtogo.mono.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

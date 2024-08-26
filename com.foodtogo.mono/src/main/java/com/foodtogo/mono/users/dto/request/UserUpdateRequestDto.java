@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class UserUpdateRequestDto {
     private String nickname;
-    private Boolean is_public;
-    private String profile_url;
+    private Boolean isPublic;
+    private String profileUrl;
 }
