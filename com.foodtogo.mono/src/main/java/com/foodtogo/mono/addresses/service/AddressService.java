@@ -27,7 +27,6 @@ public class AddressService {
     // 회원 배송지 등록
     public String createAddress(UUID userId, AddressRequestDto requestDto) {
 
-        // 유저 체크? 사실 필요없을 부분 같음.
         User user = findUserId(userId);
 
         Address address = new Address(user, requestDto);
@@ -70,7 +69,7 @@ public class AddressService {
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
-        if (!user.getUserId().equals(address.getUser().getUserId())) {
+       if (!user.getUserId().equals(address.getUser().getUserId())) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
         address.updateAddressInfo(requestDto, user.getUsername());
