@@ -1,11 +1,11 @@
 package com.foodtogo.mono.addresses.service;
 
+import com.foodtogo.mono.addresses.core.domain.Address;
 import com.foodtogo.mono.addresses.dto.request.AddressRequestDto;
 import com.foodtogo.mono.addresses.dto.response.AddressResponseDto;
-import com.foodtogo.mono.addresses.entity.Address;
 import com.foodtogo.mono.addresses.repository.AddressRepository;
-import com.foodtogo.mono.users.entity.User;
-import com.foodtogo.mono.users.repository.UserRepository;
+import com.foodtogo.mono.user.core.domain.User;
+import com.foodtogo.mono.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,7 +54,7 @@ public class AddressService {
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
-        if (!user.getUser_id().equals(address.getUser().getUser_id())) {
+        if (!user.getUserId().equals(address.getUser().getUserId())) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
 
@@ -69,7 +69,7 @@ public class AddressService {
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
-        if (!user.getUser_id().equals(address.getUser().getUser_id())) {
+       if (!user.getUserId().equals(address.getUser().getUserId())) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
         address.updateAddressInfo(requestDto, user.getUsername());
@@ -85,7 +85,7 @@ public class AddressService {
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
-        if (!user.getUser_id().equals(address.getUser().getUser_id())) {
+        if (!user.getUserId().equals(address.getUser().getUserId())) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
 

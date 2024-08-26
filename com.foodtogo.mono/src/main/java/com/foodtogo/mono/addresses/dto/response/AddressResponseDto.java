@@ -1,6 +1,6 @@
 package com.foodtogo.mono.addresses.dto.response;
 
-import com.foodtogo.mono.addresses.entity.Address;
+import com.foodtogo.mono.addresses.core.domain.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
