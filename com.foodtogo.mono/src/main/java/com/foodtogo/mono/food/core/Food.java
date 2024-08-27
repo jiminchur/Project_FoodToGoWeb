@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -77,6 +78,14 @@ public class Food extends LogEntity {
         this.foodInfoTitle = foodInfoTitle;
         this.foodInfoDesc = foodInfoDesc;
         this.foodInfoPrice = foodInfoPrice;
+    }
+
+    // 음식 삭제
+    public void deleteFood(
+            String deletedBy
+    ) {
+        this.deletedBy = deletedBy;
+        this.deletedAt = LocalDateTime.now();
     }
 
     public void setIsSale(Boolean isSale) {
