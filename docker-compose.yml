@@ -12,9 +12,21 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - Project_FoodToGoWeb
+      - foodtogoweb
     volumes:
       - db_data:/var/lib/postgresql/data
+
+  redis-stack:
+    image: redis/redis-stack
+    container_name: redis-stack-compose
+    restart: always
+    environment:
+      REDIS_ARGS: "--requirepass ${REDIS_PASSWORD}"  # 환경변수 사용
+    ports:
+      - "6379:6379"
+      - "8001:8001"  # RedisInsight GUI를 위한 포트
+    networks:
+      - foodtogoweb
 
   # 인증 서버
   auth-service:
@@ -25,7 +37,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - Project_FoodToGoWeb
+      - foodtogoweb
 
   # 모노리틱 서버
   monolithic-service:
@@ -36,7 +48,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - Project_FoodToGoWeb
+      - foodtogoweb
 
   # 게이트웨이 서버
   gateway:
@@ -48,19 +60,7 @@ services:
       - auth-service
       - monolithic-service
     networks:
-      - Project_FoodToGoWeb
-
-  # Redis
-  redis:
-    image: redis:latest
-    container_name: redis_server
-    ports:
-      - "6379:6379"
-    networks:
-      - Project_FoodToGoWeb
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
-
+      - foodtogoweb
 networks:
   default:
     driver: bridge
