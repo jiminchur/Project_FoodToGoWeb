@@ -79,4 +79,13 @@ public class FoodController {
     ){
         return foodService.updateFood(foodId,foodRequestDto,userId);
     }
+
+    // 음식 숨김처리 및 복구
+    @PatchMapping("/foods/{food_id}/sale")
+    public void toggleIsHide(
+            @PathVariable("food_id") UUID foodId
+            , @RequestHeader(value = "X-User-Id", required = true) String userId
+    ){
+        foodService.toggleIsSale(foodId,userId);
+    }
 }

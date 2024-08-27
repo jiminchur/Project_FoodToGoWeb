@@ -78,4 +78,8 @@ public class Food extends LogEntity {
         this.foodInfoDesc = foodInfoDesc;
         this.foodInfoPrice = foodInfoPrice;
     }
+
+    public void setIsSale(Boolean isSale) {
+        this.isSale = isSale;
+    }
 }

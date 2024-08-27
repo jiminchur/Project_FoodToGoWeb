@@ -85,6 +85,19 @@ public class FoodService {
         return toResponseDto(updatedFood);
     }
 
+    // 음식 숨김처리
+    public void toggleIsSale(
+            UUID foodId
+            , String userId
+    ){
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 음식은 없습니다."));
+
+        food.setIsSale(!food.getIsSale());
+
+        foodRepository.save(food);
+    }
+
     private FoodResponseDto toResponseDto(
             Food food
     ) {
