@@ -24,17 +24,18 @@ repositories {
 }
 
 dependencies {
-	// Spring Boot and Spring Security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	// JWT for authentication
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+	//implementation 'io.jsonwebtoken:jjwt:0.12.6'
 
 	// BCrypt for password hashing
 	implementation 'org.springframework.security:spring-security-crypto'
@@ -44,12 +45,14 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// Database
-	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.postgresql:postgresql'
 
 	// Testing dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
