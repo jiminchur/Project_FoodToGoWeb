@@ -63,6 +63,28 @@ public class FoodService {
         return toResponseDto(food);
     }
 
+    // 음식 상세 정보 수정
+    @Transactional
+    public FoodResponseDto updateFood(
+            UUID foodId
+            , FoodRequestDto foodRequestDto
+            , String userId
+    ){
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 음식은 없습니다."));
+        food.updateFood(
+                foodRequestDto.getFoodInfoTitle()
+                ,foodRequestDto.getFoodInfoDesc()
+                ,foodRequestDto.getFoodInfoPrice()
+        );
+
+        food.setUpdatedBy(userId);
+
+        Food updatedFood = foodRepository.save(food);
+
+        return toResponseDto(updatedFood);
+    }
+
     private FoodResponseDto toResponseDto(
             Food food
     ) {

@@ -69,4 +69,14 @@ public class FoodController {
         }
         return foodService.getFoodById(foodId);
     }
+
+    // 가게 상세 정보 수정
+    @PutMapping("/foods/{food_id}")
+    public FoodResponseDto updateFoods(
+            @PathVariable("food_id") UUID foodId
+            , @RequestBody FoodRequestDto foodRequestDto
+            , @RequestHeader(value = "X-User-Id", required = true) String userId
+    ){
+        return foodService.updateFood(foodId,foodRequestDto,userId);
+    }
 }

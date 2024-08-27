@@ -67,4 +67,15 @@ public class Food extends LogEntity {
 
         return food;
     }
+
+    // 음식 상세 정보 수정
+    public void updateFood(
+            String foodInfoTitle
+            ,String foodInfoDesc
+            ,BigDecimal foodInfoPrice
+    ){
+        this.foodInfoTitle = foodInfoTitle;
+        this.foodInfoDesc = foodInfoDesc;
+        this.foodInfoPrice = foodInfoPrice;
+    }
 }
