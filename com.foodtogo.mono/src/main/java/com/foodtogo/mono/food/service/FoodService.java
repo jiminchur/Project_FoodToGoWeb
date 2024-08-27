@@ -8,8 +8,12 @@ import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +52,15 @@ public class FoodService {
             Pageable pageable
     ){
         return foodRepository.findAll(pageable);
+    }
+
+    // 음식 단건 조회 (운영진)
+    public FoodResponseDto getFoodById(
+            UUID foodId
+    ){
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당음식은 없습니다."));
+        return toResponseDto(food);
     }
 
     private FoodResponseDto toResponseDto(
