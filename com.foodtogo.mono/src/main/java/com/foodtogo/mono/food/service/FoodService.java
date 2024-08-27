@@ -43,6 +43,13 @@ public class FoodService {
         }
     }
 
+    // 음식 전체 조회 (운영진)
+    public Page<Food> getAllFood(
+            Pageable pageable
+    ){
+        return foodRepository.findAll(pageable);
+    }
+
     private FoodResponseDto toResponseDto(
             Food food
     ) {

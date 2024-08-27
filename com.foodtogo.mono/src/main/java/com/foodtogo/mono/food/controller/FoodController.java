@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -38,5 +40,19 @@ public class FoodController {
     ){
         Pageable pageable = PageRequest.of(page, size);
         return foodService.getRestaurantFood(restaurant,role,pageable);
+    }
+
+    // 음식 전체 조회 (운영진)
+    @GetMapping("/foods")
+    public Page<Food> getAllFoods(
+            @RequestHeader("X-Role") String role
+            , @RequestParam(defaultValue = "0") int page
+            , @RequestParam(defaultValue = "10") int size
+    ){
+        if(!"Manager".equals(role) && !"Master".equals(role)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MANAGER.");
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        return foodService.getAllFood(pageable);
     }
 }
