@@ -67,6 +67,4 @@ public class Order extends LogEntity {
     public void updateOrderStatus(UpdateOrderStatusDto orderStatusDto) {
         this.orderStatus = OrderStatusEnum.valueOf(orderStatusDto.getOrderStatus());
     }
-
-    // 주문 상태 변경
 }
