@@ -13,13 +13,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderFoodResponseDto {
     private UUID orderFoodId;
+    private String foodName;
     private Integer count;
     private BigDecimal singlePrice;
     private BigDecimal totalSinglePrice;
 
-
     public OrderFoodResponseDto(OrderFood orderFood) {
         this.orderFoodId = orderFood.getOrderFoodId();
+        this.foodName = orderFood.getFood().getFoodInfoTitle();
         this.count = orderFood.getCount();
         this.singlePrice = orderFood.getSinglePrice();
         this.totalSinglePrice = orderFood.getTotalSinglePrice();

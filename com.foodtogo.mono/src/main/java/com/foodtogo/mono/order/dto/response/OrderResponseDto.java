@@ -26,7 +26,7 @@ public class OrderResponseDto {
     private Boolean isPaid;
     private List<OrderFoodResponseDto> orderFoodList;
 
-    public OrderResponseDto(Order order) {
+    public OrderResponseDto(Order order, List<OrderFoodResponseDto> orderFoodList) {
         this.orderId = order.getOrderId();
         this.userId = order.getUser().getUserId();
         this.restaurantId = order.getRestaurant().getRestaurantId();
@@ -34,5 +34,6 @@ public class OrderResponseDto {
         this.orderStatus = order.getOrderStatus();
         this.amount = order.getAmount();
         this.isPaid = order.getIsPaid();
+        this.orderFoodList = orderFoodList;
     }
 }
