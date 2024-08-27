@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
@@ -54,5 +56,17 @@ public class FoodController {
         }
         Pageable pageable = PageRequest.of(page, size);
         return foodService.getAllFood(pageable);
+    }
+
+    // 음식 단건 조회 (운영진)
+    @GetMapping("/foods/{food_id}")
+    public FoodResponseDto getFoodsById(
+            @PathVariable("food_id") UUID foodId
+            , @RequestHeader("X-Role") String role
+    ){
+        if(!"Manager".equals(role) && !"Master".equals(role)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MANAGER.");
+        }
+        return foodService.getFoodById(foodId);
     }
 }
