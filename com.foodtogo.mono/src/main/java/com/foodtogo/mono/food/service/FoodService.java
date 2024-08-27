@@ -111,6 +111,19 @@ public class FoodService {
         foodRepository.save(food);
     }
 
+    // 음식 품절처리
+    public void toggleIsHidden(
+            UUID foodId
+            , String userId
+    ){
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 음식은 없습니다."));
+
+        food.setIsHidden(!food.getIsHidden());
+
+        foodRepository.save(food);
+    }
+
     private FoodResponseDto toResponseDto(
             Food food
     ) {

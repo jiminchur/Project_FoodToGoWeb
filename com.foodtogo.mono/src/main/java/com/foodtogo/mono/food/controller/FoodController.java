@@ -97,4 +97,13 @@ public class FoodController {
     ){
         foodService.deleteFood(foodId,userId);
     }
+
+    // 음식 품절처리 및 복구
+    @PatchMapping("/foods/{food_id}/sold")
+    public void toggleIsSale(
+            @PathVariable("food_id") UUID foodId
+            , @RequestHeader(value = "X-User-Id", required = true) String userId
+    ){
+        foodService.toggleIsHidden(foodId,userId);
+    }
 }
