@@ -5,16 +5,20 @@ import com.foodtogo.mono.restaurant.dto.RestaurantRequestDto;
 import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
 import com.foodtogo.mono.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/restaurants")
 @RequiredArgsConstructor
+@Slf4j
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
@@ -23,16 +27,20 @@ public class RestaurantController {
     @PostMapping
     public RestaurantResponseDto createRestaurants(
             @RequestBody RestaurantRequestDto restaurantRequestDto,
-            @RequestHeader(value = "X-User-Id", required = true) String userId
+            @RequestHeader(value = "X-User-Id", required = true) String userId,
+            @RequestHeader(value = "X-Role", required = true) String role
     ) {
-        return restaurantService.createRestaurants(restaurantRequestDto,userId);
+        validateRole(role);
+        log.info("Creating restaurant for userId: {}", userId);
+        return restaurantService.createRestaurants(restaurantRequestDto, userId);
     }
 
     // 가게 단건 조회
     @GetMapping("/{restaurant_id}")
     public RestaurantResponseDto getRestaurantsById(
             @PathVariable("restaurant_id") UUID restaurantId
-    ){
+    ) {
+        log.info("Fetching restaurant with id: {}", restaurantId);
         return restaurantService.getRestaurantsById(restaurantId);
     }
 
@@ -41,9 +49,12 @@ public class RestaurantController {
     public RestaurantResponseDto updateRestaurants(
             @PathVariable("restaurant_id") UUID restaurantId,
             @RequestBody RestaurantRequestDto restaurantRequestDto,
-            @RequestHeader(value = "X-User-Id", required = true) String userId
-    ){
-        return restaurantService.updateRestaurants(restaurantId, restaurantRequestDto,userId);
+            @RequestHeader(value = "X-User-Id", required = true) String userId,
+            @RequestHeader(value = "X-Role", required = true) String role
+    ) {
+        validateRole(role);
+        log.info("Updating restaurant with id: {} by userId: {}", restaurantId, userId);
+        return restaurantService.updateRestaurants(restaurantId, restaurantRequestDto, userId);
     }
 
     // 가게 전체 조회
@@ -51,8 +62,9 @@ public class RestaurantController {
     public Page<Restaurant> getRestaurants(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
-    ){
+    ) {
         Pageable pageable = PageRequest.of(page, size);
+        log.info("Fetching all restaurants, page: {}, size: {}", page, size);
         return restaurantService.getAllRestaurants(pageable);
     }
 
@@ -61,26 +73,38 @@ public class RestaurantController {
     public void deleteRestaurants(
             @PathVariable("restaurant_id") UUID restaurantId,
             @RequestHeader(value = "X-User-Id", required = true) String userId
-    ){
-        restaurantService.deleteRestaurants(restaurantId,userId);
+    ) {
+        log.info("Deleting restaurant with id: {} by userId: {}", restaurantId, userId);
+        restaurantService.deleteRestaurants(restaurantId, userId);
     }
 
     // 가게 검색
     @GetMapping("/search")
-    public Page<Restaurant> getRestaurants(
+    public Page<Restaurant> searchRestaurants(
             @RequestParam("query") String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
-    ){
+    ) {
         Pageable pageable = PageRequest.of(page, size);
+        log.info("Searching restaurants with query: {}, page: {}, size: {}", query, page, size);
         return restaurantService.searchRestaurants(query, pageable);
     }
 
     // 가게 운영상태 변경
     @PatchMapping("/{restaurant_id}/status")
     public void closeOpenStatus(
-            @PathVariable("restaurant_id") UUID restaurantId
-    ){
-        restaurantService.closeOpenStatus(restaurantId);
+            @PathVariable("restaurant_id") UUID restaurantId,
+            @RequestHeader(value = "X-User-Id", required = true) String userId,
+            @RequestHeader(value = "X-Role", required = true) String role
+    ) {
+        validateRole(role);
+        log.info("Changing status of restaurant with id: {} by userId: {}", restaurantId, userId);
+        restaurantService.closeOpenStatus(restaurantId, userId);
+    }
+
+    private void validateRole(String role) {
+        if (!"MASTER".equals(role) && !"OWNER".equals(role)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MANAGER or OWNER.");
+        }
     }
 }
