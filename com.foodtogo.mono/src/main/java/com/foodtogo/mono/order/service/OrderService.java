@@ -32,6 +32,7 @@ public class OrderService {
     private final RestaurantRepository restaurantRepository;
     private final FoodRepository foodRepository;
     private final OrderFoodRepository orderFoodRepository;
+  
 
     // 주문 등록 (접수)
     @Transactional
@@ -62,7 +63,7 @@ public class OrderService {
         return "[" + user.getUsername() + "]님 주문 접수 완료";
     }
 
-
+    // 주문 단건 조회
     @Transactional
     public OrderResponseDto getOrderInfo(UUID userId, UUID orderId) {
         // 주문 확인
@@ -85,7 +86,7 @@ public class OrderService {
     }
 
 
-    // 주문 단건 조회
+    
     // 음식점에 속한 주문 전체 조회 for 가게
     // 주문  조회 for 고객
     // 주문 전체 조회 FOR 운영진
