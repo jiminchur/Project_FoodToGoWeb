@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantRequestDto {
 
+    private UUID categoryId;
     private String area;
     private Boolean isOpened;
     private String restaurantName;
