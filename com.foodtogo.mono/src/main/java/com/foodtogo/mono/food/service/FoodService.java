@@ -6,6 +6,8 @@ import com.foodtogo.mono.food.dto.FoodResponseDto;
 import com.foodtogo.mono.food.repository.FoodRepository;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,19 @@ public class FoodService {
         Food savedFood = foodRepository.save(food);
 
         return toResponseDto(savedFood);
+    }
+
+    // 가게에 속한 음식 조회 (고객 / 운영진,가게주인)
+    public Page<Food> getRestaurantFood(
+            Restaurant restaurant
+            , String role
+            , Pageable pageable
+    ){
+        if(role.equals("User")){
+            return foodRepository.findByRestaurantAndIsHiddenFalse(restaurant,pageable);
+        } else {
+            return foodRepository.findByRestaurant(restaurant,pageable);
+        }
     }
 
     private FoodResponseDto toResponseDto(
