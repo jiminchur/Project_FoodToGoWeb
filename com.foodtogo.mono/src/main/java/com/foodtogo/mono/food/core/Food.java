@@ -91,4 +91,8 @@ public class Food extends LogEntity {
     public void setIsSale(Boolean isSale) {
         this.isSale = isSale;
     }
+
+    public void setIsHidden(Boolean isHidden) {
+        this.isHidden = isHidden;
+    }
 }
