@@ -15,6 +15,7 @@ import com.foodtogo.mono.restaurant.repository.RestaurantRepository;
 import com.foodtogo.mono.user.core.domain.User;
 import com.foodtogo.mono.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class OrderService {
     private final RestaurantRepository restaurantRepository;
     private final FoodRepository foodRepository;
     private final OrderFoodRepository orderFoodRepository;
+
 
     // 주문 등록 (접수)
     @Transactional
@@ -71,7 +73,6 @@ public class OrderService {
             throw new IllegalArgumentException("회원님의 주문정보가 아닙니다.");
         }
         // 주문-음식 정보
-
         return new OrderResponseDto(order, findOrderFoodList(order));
     }
 
@@ -114,6 +115,7 @@ public class OrderService {
 
     // 주문 내역 삭제
     // 주문 취소 요청
+
     // 주문 상태 업데이트
     @Transactional
     public OrderResponseDto updateOrderStatus(UUID orderId, UpdateOrderStatusDto updateOrderStatusDto) {
@@ -137,5 +139,4 @@ public class OrderService {
         return orderFoodList.stream()
                 .map(OrderFoodResponseDto::new).toList();
     }
-
 }
