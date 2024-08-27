@@ -98,6 +98,19 @@ public class FoodService {
         foodRepository.save(food);
     }
 
+    // 가게 삭제
+    @Transactional
+    public void deleteFood(
+            UUID foodId
+            , String userId
+    ){
+        Food food = foodRepository.findById(foodId)
+                .filter(o -> o.getDeletedAt() == null)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 음식은 없습니다."));
+        food.deleteFood(userId);
+        foodRepository.save(food);
+    }
+
     private FoodResponseDto toResponseDto(
             Food food
     ) {

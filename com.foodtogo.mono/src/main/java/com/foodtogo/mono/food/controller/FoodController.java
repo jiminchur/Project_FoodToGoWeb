@@ -88,4 +88,13 @@ public class FoodController {
     ){
         foodService.toggleIsSale(foodId,userId);
     }
+
+    // 음식 삭제
+    @DeleteMapping("/foods/{food_id}")
+    public void deleteFood(
+            @PathVariable("food_id") UUID foodId
+            , @RequestHeader(value = "X-User-Id", required = true) String userId
+    ){
+        foodService.deleteFood(foodId,userId);
+    }
 }
