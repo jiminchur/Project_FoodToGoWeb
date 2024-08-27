@@ -4,6 +4,7 @@ import com.foodtogo.mono.log.LogEntity;
 import com.foodtogo.mono.order.core.enums.OrderStatusEnum;
 import com.foodtogo.mono.order.core.enums.OrderTypeEnum;
 import com.foodtogo.mono.order.dto.request.OrderRequestDto;
+import com.foodtogo.mono.order.dto.request.UpdateOrderStatusDto;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import com.foodtogo.mono.user.core.domain.User;
 import jakarta.persistence.*;
@@ -63,4 +64,7 @@ public class Order extends LogEntity {
     }
 
     // 주문 상태 변경
+    public void updateOrderStatus(UpdateOrderStatusDto orderStatusDto) {
+        this.orderStatus = OrderStatusEnum.valueOf(orderStatusDto.getOrderStatus());
+    }
 }

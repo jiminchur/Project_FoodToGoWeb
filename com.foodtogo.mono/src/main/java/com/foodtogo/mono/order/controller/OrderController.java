@@ -1,8 +1,10 @@
 package com.foodtogo.mono.order.controller;
 
 import com.foodtogo.mono.order.dto.request.OrderRequestDto;
+import com.foodtogo.mono.order.dto.request.UpdateOrderStatusDto;
 import com.foodtogo.mono.order.dto.response.OrderResponseDto;
 import com.foodtogo.mono.order.service.OrderService;
+import com.foodtogo.mono.user.core.enums.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,4 +42,14 @@ public class OrderController {
     // 주문 내역 삭제
     // 주문 취소 요청
     // 주문 상태 업데이트
+    @PatchMapping("/orders/{order_id}/status")
+    public ResponseEntity<OrderResponseDto> updateOrderStatus(@RequestHeader("X-Role") String role,
+                                                              @PathVariable("order_id") UUID orderId,
+                                                              @RequestBody UpdateOrderStatusDto updateOrderStatusDto) {
+        if (UserRoleEnum.valueOf(role).equals(UserRoleEnum.CUSTOMER)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        OrderResponseDto orderResponseDto = orderService.updateOrderStatus(orderId, updateOrderStatusDto);
+        return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
+    }
 }

@@ -5,6 +5,7 @@ import com.foodtogo.mono.food.repository.FoodRepository;
 import com.foodtogo.mono.order.core.domain.Order;
 import com.foodtogo.mono.order.core.domain.OrderFood;
 import com.foodtogo.mono.order.dto.request.OrderRequestDto;
+import com.foodtogo.mono.order.dto.request.UpdateOrderStatusDto;
 import com.foodtogo.mono.order.dto.response.OrderFoodResponseDto;
 import com.foodtogo.mono.order.dto.response.OrderResponseDto;
 import com.foodtogo.mono.order.repository.OrderFoodRepository;
@@ -67,8 +68,7 @@ public class OrderService {
     @Transactional
     public OrderResponseDto getOrderInfo(UUID userId, UUID orderId) {
         // 주문 확인
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 주문 정보입니다."));
+        Order order = findOrderId(orderId);
         // 유저 확인
         if (!order.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("회원님의 주문정보가 아닙니다.");
@@ -85,12 +85,25 @@ public class OrderService {
         return orderResponseDto;
     }
 
-
-    
     // 음식점에 속한 주문 전체 조회 for 가게
     // 주문  조회 for 고객
     // 주문 전체 조회 FOR 운영진
     // 주문 내역 삭제
     // 주문 취소 요청
+
     // 주문 상태 업데이트
+    @Transactional
+    public OrderResponseDto updateOrderStatus(UUID orderId, UpdateOrderStatusDto updateOrderStatusDto) {
+        // 주문 확인
+        Order order = findOrderId(orderId);
+
+        order.updateOrderStatus(updateOrderStatusDto);
+        return new OrderResponseDto(order);
+    }
+
+    // 주문 정보 찾는 공통 메소드
+    private Order findOrderId(UUID orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 주문 정보입니다."));
+    }
 }
