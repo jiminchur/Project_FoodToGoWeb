@@ -3,7 +3,9 @@ package com.foodtogo.mono.order.core.domain;
 import com.foodtogo.mono.food.core.Food;
 import com.foodtogo.mono.log.LogEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Table(name = "p_orders_foods")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderFood extends LogEntity {
 
     @Id
@@ -23,7 +27,7 @@ public class OrderFood extends LogEntity {
     @Column(nullable = false)
     private Integer count;
 
-    @Column // 이녀석 필요할까?
+    @Column
     private BigDecimal singlePrice;
 
     @Column

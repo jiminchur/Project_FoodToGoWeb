@@ -5,6 +5,9 @@ import com.foodtogo.mono.food.repository.FoodRepository;
 import com.foodtogo.mono.order.core.domain.Order;
 import com.foodtogo.mono.order.core.domain.OrderFood;
 import com.foodtogo.mono.order.dto.request.OrderRequestDto;
+import com.foodtogo.mono.order.dto.response.OrderFoodResponseDto;
+import com.foodtogo.mono.order.dto.response.OrderResponseDto;
+import com.foodtogo.mono.order.repository.OrderFoodRepository;
 import com.foodtogo.mono.order.repository.OrderRepository;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import com.foodtogo.mono.restaurant.repository.RestaurantRepository;
@@ -28,6 +31,8 @@ public class OrderService {
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
     private final FoodRepository foodRepository;
+    private final OrderFoodRepository orderFoodRepository;
+  
 
     // 주문 등록 (접수)
     @Transactional
@@ -58,8 +63,30 @@ public class OrderService {
         return "[" + user.getUsername() + "]님 주문 접수 완료";
     }
 
-
     // 주문 단건 조회
+    @Transactional
+    public OrderResponseDto getOrderInfo(UUID userId, UUID orderId) {
+        // 주문 확인
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 주문 정보입니다."));
+        // 유저 확인
+        if (!order.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("회원님의 주문정보가 아닙니다.");
+        }
+        // 주문-음식 정보
+        List<OrderFood> orderFoodList = orderFoodRepository.findByOrder(order);
+        // OrderFood -> OrderFoodResponseDto 변환
+        List<OrderFoodResponseDto> orderFoodResponseDto = orderFoodList.stream()
+                .map(OrderFoodResponseDto::new)
+                .toList();
+
+        OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+        orderResponseDto.setOrderFoodList(orderFoodResponseDto);
+        return orderResponseDto;
+    }
+
+
+    
     // 음식점에 속한 주문 전체 조회 for 가게
     // 주문  조회 for 고객
     // 주문 전체 조회 FOR 운영진
