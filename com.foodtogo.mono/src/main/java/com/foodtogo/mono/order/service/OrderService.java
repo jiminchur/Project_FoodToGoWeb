@@ -15,7 +15,6 @@ import com.foodtogo.mono.restaurant.repository.RestaurantRepository;
 import com.foodtogo.mono.user.core.domain.User;
 import com.foodtogo.mono.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,7 +105,7 @@ public class OrderService {
 
     // 주문 전체 조회 FOR 운영진
     @Transactional(readOnly = true)
-    public List<OrderResponseDto> getOrderListAll(){
+    public List<OrderResponseDto> getOrderListAll() {
 
         return orderRepository.findAll().stream()
                 .map(order -> new OrderResponseDto(order, findOrderFoodList(order)))
@@ -114,6 +113,21 @@ public class OrderService {
     }
 
     // 주문 내역 삭제
+    @Transactional
+    public String deleteUserOrderInfo(UUID userId, UUID orderId) {
+        // 유저 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        // 주문 확인
+        Order order = findOrderId(orderId);
+        // 회원 주문 여부 체크
+        if (!order.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
+        }
+        order.deleteUserOrderInfo(user.getUsername());
+        return "[" + user.getUsername() + "]님 주문 내역 삭제 완료.";
+    }
+
     // 주문 취소 요청
 
     // 주문 상태 업데이트
@@ -133,7 +147,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 주문 정보입니다."));
     }
 
-    // OrderFood -> OrderFoodResponseDto 변환
+    // 주문한 음식 정보 찾는 공통 메소드(OrderFood -> OrderFoodResponseDto 변환)
     private List<OrderFoodResponseDto> findOrderFoodList(Order order) {
         List<OrderFood> orderFoodList = orderFoodRepository.findByOrder(order);
         return orderFoodList.stream()

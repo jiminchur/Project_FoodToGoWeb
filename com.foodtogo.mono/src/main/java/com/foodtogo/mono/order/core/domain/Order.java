@@ -15,6 +15,7 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,5 +67,11 @@ public class Order extends LogEntity {
     // 주문 상태 변경
     public void updateOrderStatus(UpdateOrderStatusDto orderStatusDto) {
         this.orderStatus = OrderStatusEnum.valueOf(orderStatusDto.getOrderStatus());
+    }
+
+    // 주문 내역 삭제
+    public void deleteUserOrderInfo(String username) {
+        this.setDeletedAt(LocalDateTime.now());
+        this.setDeletedBy(username);
     }
 }

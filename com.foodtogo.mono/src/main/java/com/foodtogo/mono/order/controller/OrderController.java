@@ -72,6 +72,14 @@ public class OrderController {
     }
 
     // 주문 내역 삭제
+    @DeleteMapping("/orders/{order_id}")
+    public ResponseEntity<String> deleteUserOrderInfo(@RequestHeader("X-User-Id") UUID userId,
+                                                      @PathVariable("order_id") UUID orderId) {
+
+        String message = orderService.deleteUserOrderInfo(userId, orderId);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
     // 주문 취소 요청
     // 주문 상태 업데이트
     @PatchMapping("/orders/{order_id}/status")
