@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,20 +33,16 @@ public class OrderService {
     private final FoodRepository foodRepository;
     private final OrderFoodRepository orderFoodRepository;
 
-
+  
     // 주문 등록 (접수)
     @Transactional
     public String createOrder(UUID userId, UUID restaurantId, OrderRequestDto requestDto) {
         // 유저 확인
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = findUserId(userId);
         // 음식점 확인
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 음식점입니다."));
-
+        Restaurant restaurant = findRestaurant(restaurantId);
         // 주문 생성 (접수)
         Order order = new Order(user, restaurant, requestDto);
-
         // 음식 리스트를 OrderFood 객체로 변환하고, OrderFood를 Order에 추가
         List<OrderFood> orderFoodList = requestDto.getFoodList().stream()
                 .map(foodInfoDto -> {
@@ -79,8 +76,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderResponseDto> getOrderListForRestaurant(UUID userId, UUID restaurantId) {
         // 음식점 확인
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 음식점입니다."));
+        Restaurant restaurant = findRestaurant(restaurantId);
         // 유저 확인
         if (!restaurant.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("회원님 소유의 음식점이 아닙니다.");
@@ -95,8 +91,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderResponseDto> getOrderListForUser(UUID userId) {
         // 유저 확인
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = findUserId(userId);
 
         return orderRepository.findByUser(user).stream()
                 .map(order -> new OrderResponseDto(order, findOrderFoodList(order)))
@@ -116,8 +111,7 @@ public class OrderService {
     @Transactional
     public String deleteUserOrderInfo(UUID userId, UUID orderId) {
         // 유저 확인
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = findUserId(userId);
         // 주문 확인
         Order order = findOrderId(orderId);
         // 회원 주문 여부 체크
@@ -129,6 +123,21 @@ public class OrderService {
     }
 
     // 주문 취소 요청
+    public String cancelOrder(UUID userId, UUID orderId) {
+        // 유저 조회
+        User user = findUserId(userId);
+        // 주문 조회
+        Order order = findOrderId(orderId);
+        // 회원 주문 여부 체크
+        if (!order.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
+        }
+        if (!canCancelOrder(order)) {
+            return "주문을 접수한지 5분이 지났기 때문에 취소가 불가합니다.";
+        }
+        order.cancelOrder(user.getUsername());
+        return "주문 취소 완료.";
+    }
 
     // 주문 상태 업데이트
     @Transactional
@@ -147,10 +156,29 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 주문 정보입니다."));
     }
 
+    // 회원 정보 찾는 공통 메소드
+    private User findUserId(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    // 음식점 정보 찾는 공통 메소드
+    private Restaurant findRestaurant(UUID restaurantId) {
+        return restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 음식점입니다."));
+    }
+
     // 주문한 음식 정보 찾는 공통 메소드(OrderFood -> OrderFoodResponseDto 변환)
     private List<OrderFoodResponseDto> findOrderFoodList(Order order) {
         List<OrderFood> orderFoodList = orderFoodRepository.findByOrder(order);
         return orderFoodList.stream()
                 .map(OrderFoodResponseDto::new).toList();
+    }
+
+    // 주문 취소 가능 여부 확인
+    private boolean canCancelOrder(Order order) {
+        LocalDateTime cancelDeadline = order.getCreatedAt().plusMinutes(5);
+
+        return LocalDateTime.now().isBefore(cancelDeadline);
     }
 }

@@ -81,6 +81,16 @@ public class OrderController {
     }
 
     // 주문 취소 요청
+    @PostMapping("/orders/{order_id}/cancel")
+    public ResponseEntity<String> cancelOrder(@RequestHeader("X-User-Id") UUID userId,
+                                              @PathVariable("order_id") UUID orderId) {
+        String message = orderService.cancelOrder(userId, orderId);
+        if (message.equals("주문을 접수한지 5분이 지났기 때문에 취소가 불가합니다.")){
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
     // 주문 상태 업데이트
     @PatchMapping("/orders/{order_id}/status")
     public ResponseEntity<OrderResponseDto> updateOrderStatus(@RequestHeader("X-Role") String role,

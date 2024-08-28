@@ -74,4 +74,11 @@ public class Order extends LogEntity {
         this.setDeletedAt(LocalDateTime.now());
         this.setDeletedBy(username);
     }
+
+    // 주문 취소
+    public void cancelOrder(String username) {
+        this.deletedAt = LocalDateTime.now();
+        this.deletedBy = username;
+        this.orderStatus = OrderStatusEnum.CANCELED;
+    }
 }
