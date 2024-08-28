@@ -1,14 +1,11 @@
 package com.foodtogo.auth.service;
 
 import com.foodtogo.auth.users.UserRoleEnum;
-import com.foodtogo.auth.users.UsersRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.NoSuchElementException;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j(topic = "RedisService")

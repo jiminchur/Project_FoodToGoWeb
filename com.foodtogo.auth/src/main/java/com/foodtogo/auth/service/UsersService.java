@@ -1,6 +1,7 @@
 package com.foodtogo.auth.service;
 
 import com.foodtogo.auth.dto.LoginRequestDto;
+import com.foodtogo.auth.dto.LoginResponseDto;
 import com.foodtogo.auth.dto.SignupRequestDto;
 import com.foodtogo.auth.jwt.JwtUtil;
 import com.foodtogo.auth.users.UserRoleEnum;
@@ -23,7 +24,6 @@ import java.util.UUID;
 public class UsersService {
 	private final UsersRepository usersRepository;
 	private final PasswordEncoder passwordEncoder;
-
 	private final JwtUtil jwtUtil;
 
 	public UsersService(UsersRepository usersRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
@@ -35,7 +35,7 @@ public class UsersService {
 	// ADMIN_TOKEN
 	private final String MANAGER_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
-	public String login(LoginRequestDto requestDto, HttpServletResponse res) {
+	public LoginResponseDto login(LoginRequestDto requestDto, HttpServletResponse res) {
 		String email = requestDto.getEmail();
 		String password = requestDto.getPassword();
 
@@ -54,7 +54,11 @@ public class UsersService {
 
 		//쿠키 저장
 		jwtUtil.addJwtToCookie(token, res);
-		return token;
+		return LoginResponseDto.builder()
+				.token(token)
+				.userId(user.getUserId())
+				.role(user.getRole())
+				.build();
 	}
 
 	public void signup(SignupRequestDto requestDto) {
