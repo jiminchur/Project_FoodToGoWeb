@@ -44,9 +44,10 @@ public class UsersController {
 			*/
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
-
-		String token = usersService.login(requestDto, res);
-		return ResponseEntity.ok(new LoginResponseDto(token));
+		LoginResponseDto responseDto = usersService.login(requestDto, res);
+		// redis role 추가
+		redisService.updateUserRole(responseDto.getUserId().toString(), responseDto.getRole());
+		return ResponseEntity.ok(responseDto);
 	}
 
 	/*
@@ -56,15 +57,20 @@ public class UsersController {
 		- 클라이언트에서 jwt 토큰 쿠키 삭제
 	 */
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(@RequestHeader("Authorization") String tokenValue, HttpServletResponse res) {
-		// 토큰을 블랙리스트에 추가
-		final String token = jwtUtil.extractTokenFromBearer(tokenValue);
-		redisService.addBlackToken(token);
+	public ResponseEntity<Void> logout(
+			@RequestHeader("Authorization") String tokenValue
+			, @RequestHeader(value = "X-Token", required = true) String extractedToken
+			, @RequestHeader(value = "X-User-Id", required = true) String userId
+			, @RequestHeader(value = "X-Role", required = true) String role
+			, HttpServletResponse res
 
+	) {
+		// 토큰을 블랙리스트에 추가
+		redisService.addBlackToken(extractedToken);
 		return ResponseEntity.ok().build();
 	}
 
-		/*
+	/*
 			jwt 토큰이 없는 상태
 				2. 회원가입
 					- 게이트웨이 서버에서 모노리틱서버로 유저를 생성한다,
