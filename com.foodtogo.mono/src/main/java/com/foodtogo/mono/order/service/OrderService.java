@@ -32,6 +32,7 @@ public class OrderService {
     private final FoodRepository foodRepository;
     private final OrderFoodRepository orderFoodRepository;
 
+
     // 주문 등록 (접수)
     @Transactional
     public String createOrder(UUID userId, UUID restaurantId, OrderRequestDto requestDto) {
@@ -71,7 +72,6 @@ public class OrderService {
             throw new IllegalArgumentException("회원님의 주문정보가 아닙니다.");
         }
         // 주문-음식 정보
-
         return new OrderResponseDto(order, findOrderFoodList(order));
     }
 
@@ -129,6 +129,7 @@ public class OrderService {
     }
 
     // 주문 취소 요청
+
     // 주문 상태 업데이트
     @Transactional
     public OrderResponseDto updateOrderStatus(UUID orderId, UpdateOrderStatusDto updateOrderStatusDto) {
