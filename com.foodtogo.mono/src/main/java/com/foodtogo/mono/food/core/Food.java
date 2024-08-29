@@ -30,7 +30,7 @@ public class Food extends LogEntity {
 
     // 음식점 ID, Fk, restaurant_id
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "restaurant_id", nullable = false )
+    @JoinColumn(name = "restaurant_id", nullable = false )
     private Restaurant restaurant;
 
     // 음식 아이템 이름
@@ -50,34 +50,31 @@ public class Food extends LogEntity {
     private Boolean isSale;
 
     // 가게에 속한 음식 등록
-    public static Food createFoods(
+    public Food(
             FoodRequestDto foodRequestDto,
             Restaurant restaurant,
             String createdBy
-    ){
-        Food food = Food.builder()
-                .restaurant(restaurant)
-                .foodInfoTitle(foodRequestDto.getFoodInfoTitle())
-                .foodInfoDesc(foodRequestDto.getFoodInfoDesc())
-                .foodInfoPrice(foodRequestDto.getFoodInfoPrice())
-                .isHidden(Boolean.FALSE)
-                .isSale(Boolean.TRUE)
-                .build();
+    ) {
+        this.foodInfoTitle = foodRequestDto.getFoodInfoTitle();
+        this.foodInfoDesc = foodRequestDto.getFoodInfoDesc();
+        this.foodInfoPrice = foodRequestDto.getFoodInfoPrice();
+        this.isHidden = Boolean.FALSE;
+        this.isSale = Boolean.TRUE;
+        this.restaurant = restaurant;
 
-        food.setCreatedBy(createdBy);
-
-        return food;
+        setCreatedBy(createdBy);
     }
 
     // 음식 상세 정보 수정
     public void updateFood(
-            String foodInfoTitle
-            ,String foodInfoDesc
-            ,BigDecimal foodInfoPrice
+            FoodRequestDto foodRequestDto,
+            String updatedBy
     ){
-        this.foodInfoTitle = foodInfoTitle;
-        this.foodInfoDesc = foodInfoDesc;
-        this.foodInfoPrice = foodInfoPrice;
+        this.foodInfoTitle = foodRequestDto.getFoodInfoTitle();
+        this.foodInfoDesc = foodRequestDto.getFoodInfoDesc();
+        this.foodInfoPrice = foodRequestDto.getFoodInfoPrice();
+
+        setUpdatedBy(updatedBy);
     }
 
     // 음식 삭제

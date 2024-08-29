@@ -26,84 +26,104 @@ public class FoodController {
     @PostMapping("/restaurants/{restaurant_id}/foods")
     public FoodResponseDto createFoods(
             @PathVariable("restaurant_id") Restaurant restaurant,
-            @RequestHeader(value = "X-User-Id", required = true) String userId,
+            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader(value = "X-Role") String role,
             @RequestBody FoodRequestDto foodRequestDto
-    ){
-        return foodService.createFoods(foodRequestDto,restaurant,userId);
+    ) {
+        checkUserPermissions(role); // 권한 체크
+        return foodService.createFoods(foodRequestDto, restaurant, userId, role);
     }
 
-    // 가게에 속한 음식 조회 (고객 / 운영진,가게주인)
+    // 가게에 속한 음식 조회
     @GetMapping("/restaurants/{restaurant_id}/foods")
     public Page<Food> getRestaurantFoods(
-            @PathVariable("restaurant_id") Restaurant restaurant
-            , @RequestHeader("X-Role") String role
-            , @RequestParam(defaultValue = "0") int page
-            , @RequestParam(defaultValue = "10") int size
-    ){
+            @PathVariable("restaurant_id") Restaurant restaurant,
+            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader("X-Role") String role,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         Pageable pageable = PageRequest.of(page, size);
-        return foodService.getRestaurantFood(restaurant,role,pageable);
+        return foodService.getRestaurantFood(restaurant, userId, role, pageable);
     }
 
     // 음식 전체 조회 (운영진)
     @GetMapping("/foods")
     public Page<Food> getAllFoods(
-            @RequestHeader("X-Role") String role
-            , @RequestParam(defaultValue = "0") int page
-            , @RequestParam(defaultValue = "10") int size
-    ){
-        if(!"Manager".equals(role) && !"Master".equals(role)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MANAGER.");
-        }
+            @RequestHeader("X-Role") String role,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        checkAdminPermissions(role);
         Pageable pageable = PageRequest.of(page, size);
         return foodService.getAllFood(pageable);
     }
 
-    // 음식 단건 조회 (운영진)
+    // 음식 단건 조회
     @GetMapping("/foods/{food_id}")
     public FoodResponseDto getFoodsById(
-            @PathVariable("food_id") UUID foodId
-            , @RequestHeader("X-Role") String role
-    ){
-        if(!"Manager".equals(role) && !"Master".equals(role)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MANAGER.");
-        }
+            @PathVariable("food_id") UUID foodId,
+            @RequestHeader("X-Role") String role
+    ) {
+        checkAdminPermissions(role);
         return foodService.getFoodById(foodId);
     }
 
-    // 가게 상세 정보 수정
+    // 음식 정보 수정
     @PutMapping("/foods/{food_id}")
     public FoodResponseDto updateFoods(
-            @PathVariable("food_id") UUID foodId
-            , @RequestBody FoodRequestDto foodRequestDto
-            , @RequestHeader(value = "X-User-Id", required = true) String userId
-    ){
-        return foodService.updateFood(foodId,foodRequestDto,userId);
+            @PathVariable("food_id") UUID foodId,
+            @RequestBody FoodRequestDto foodRequestDto,
+            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader("X-Role") String role
+    ) {
+        checkUserPermissions(role); // 권한 체크
+        return foodService.updateFood(foodId, foodRequestDto, userId, role);
     }
 
-    // 음식 숨김처리 및 복구
+    // 음식 숨김 처리 및 복구
     @PatchMapping("/foods/{food_id}/sale")
     public void toggleIsHide(
-            @PathVariable("food_id") UUID foodId
-            , @RequestHeader(value = "X-User-Id", required = true) String userId
-    ){
-        foodService.toggleIsSale(foodId,userId);
+            @PathVariable("food_id") UUID foodId,
+            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader("X-Role") String role
+    ) {
+        checkUserPermissions(role); // 권한 체크
+        foodService.toggleIsSale(foodId, userId, role);
     }
 
     // 음식 삭제
     @DeleteMapping("/foods/{food_id}")
     public void deleteFood(
-            @PathVariable("food_id") UUID foodId
-            , @RequestHeader(value = "X-User-Id", required = true) String userId
-    ){
-        foodService.deleteFood(foodId,userId);
+            @PathVariable("food_id") UUID foodId,
+            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader("X-Role") String role
+    ) {
+        checkUserPermissions(role); // 권한 체크
+        foodService.deleteFood(foodId, userId, role);
     }
 
-    // 음식 품절처리 및 복구
+    // 음식 품절 처리 및 복구
     @PatchMapping("/foods/{food_id}/sold")
     public void toggleIsSale(
-            @PathVariable("food_id") UUID foodId
-            , @RequestHeader(value = "X-User-Id", required = true) String userId
-    ){
-        foodService.toggleIsHidden(foodId,userId);
+            @PathVariable("food_id") UUID foodId,
+            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader("X-Role") String role
+    ) {
+        checkUserPermissions(role); // 권한 체크
+        foodService.toggleIsHidden(foodId, userId, role);
+    }
+
+    // 권한 체크 메서드
+    private void checkUserPermissions(String role) {
+        if ("USER".equals(role)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");
+        }
+    }
+
+    private void checkAdminPermissions(String role) {
+        if (!"Manager".equals(role) && !"Master".equals(role)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MANAGER.");
+        }
     }
 }
