@@ -11,6 +11,7 @@ import com.foodtogo.auth.users.UsersMapper;
 import com.foodtogo.auth.users.UsersRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +33,8 @@ public class UsersService {
 		this.jwtUtil = jwtUtil;
 	}
 
-	// ADMIN_TOKEN
-	private final String MANAGER_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+	@Value("${role.manager}")
+	private String MANAGER_TOKEN;
 
 	public LoginResponseDto login(LoginRequestDto requestDto, HttpServletResponse res) {
 		String email = requestDto.getEmail();
