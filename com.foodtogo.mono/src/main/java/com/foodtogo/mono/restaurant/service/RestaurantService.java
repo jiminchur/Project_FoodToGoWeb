@@ -30,110 +30,138 @@ public class RestaurantService {
     private final RestaurantCategoryRepository restaurantCategoryRepository;
     private final RestaurantRepositoryCustom restaurantRepositoryCustom;
 
+    // 가게 생성
     @Transactional
-    public RestaurantResponseDto createRestaurants(RestaurantRequestDto restaurantRequestDto, String userId) {
+    public RestaurantResponseDto createRestaurants(
+            RestaurantRequestDto restaurantRequestDto,
+            String userId
+    ) {
         User user = findUser(userId);
         RestaurantCategory category = findCategory(restaurantRequestDto.getCategoryId());
 
-        Restaurant restaurant = Restaurant.createRestaurants(restaurantRequestDto, userId, user, category);
-        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+        Restaurant restaurant = new Restaurant(restaurantRequestDto, userId, user, category);
 
-        log.info("Restaurant created: {}", savedRestaurant.getRestaurantId());
-        return toResponseDto(savedRestaurant);
+        restaurantRepository.save(restaurant);
+
+        log.info("가게가 생성되었습니다: {}", restaurant.getRestaurantId());
+        return new RestaurantResponseDto(restaurant);
     }
 
-    @Transactional
-    public RestaurantResponseDto getRestaurantsById(UUID restaurantId) {
+    // 가게 단건 조회
+    @Transactional(readOnly = true)
+    public RestaurantResponseDto getRestaurantsById(
+            UUID restaurantId
+    ) {
         Restaurant restaurant = findRestaurantById(restaurantId);
-        return toResponseDto(restaurant);
+        log.info("가게가 조회되었습니다 : {}", restaurant.getRestaurantId());
+        return new RestaurantResponseDto(restaurant);
     }
 
-    @Transactional
-    public Page<Restaurant> getAllRestaurants(Pageable pageable) {
-        return restaurantRepositoryCustom.findRestaurantsWithLob(pageable);
+    // 가게 전체 조회
+    @Transactional(readOnly = true)
+    public Page<Restaurant> getAllRestaurants(
+            Pageable pageable
+    ) {
+        log.info("가게 전체 조회 시작");
+        return restaurantRepositoryCustom.findRestaurants(pageable);
     }
 
+    // 가게 수정
     @Transactional
-    public RestaurantResponseDto updateRestaurants(UUID restaurantId, RestaurantRequestDto restaurantRequestDto, String userId) {
+    public RestaurantResponseDto updateRestaurants(
+            UUID restaurantId,
+            RestaurantRequestDto restaurantRequestDto,
+            String userId,
+            String role
+    ) {
         Restaurant restaurant = findRestaurantById(restaurantId);
-        validateUserOwnership(restaurant, userId);
+        validateUserOwnership(restaurant, userId, role);
 
-        restaurant.updateRestaurants(
-                restaurantRequestDto.getRestaurantName(),
-                restaurantRequestDto.getRestaurantAddress(),
-                restaurantRequestDto.getRestaurantPhoneNumber(),
-                restaurantRequestDto.getRestaurantIntroduce(),
-                restaurantRequestDto.getRestaurantImageUrl()
-        );
+        restaurant.updateRestaurants(restaurantRequestDto, userId);
 
-        restaurant.setUpdatedBy(userId);
-        Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
+        log.info("가게가 수정되었습니다: {}", restaurant.getRestaurantId());
 
-        log.info("Restaurant updated: {}", updatedRestaurant.getRestaurantId());
-        return toResponseDto(updatedRestaurant);
+        return new RestaurantResponseDto(restaurant);
     }
 
+    // 가게 삭제
     @Transactional
-    public void deleteRestaurants(UUID restaurantId, String userId) {
+    public void deleteRestaurants(
+            UUID restaurantId,
+            String userId,
+            String role
+    ) {
         Restaurant restaurant = findRestaurantById(restaurantId);
-        validateUserOwnership(restaurant, userId);
+        validateUserOwnership(restaurant, userId, role);
 
         restaurant.deleteRestaurants(userId);
         restaurantRepository.save(restaurant);
 
-        log.info("Restaurant deleted: {}", restaurantId);
+        log.info("가게가 삭제되었습니다: {}", restaurantId);
     }
 
-    public Page<Restaurant> searchRestaurants(String query, Pageable pageable) {
+    // 가게 검색
+    public Page<Restaurant> searchRestaurants(
+            String query,
+            Pageable pageable
+    ) {
         return restaurantRepository.findByRestaurantNameContaining(query, pageable);
     }
 
-    public void closeOpenStatus(UUID restaurantId, String userId) {
+    // 가게 오픈상태 토글
+    public void closeOpenStatus(
+            UUID restaurantId,
+            String userId,
+            String role
+    ) {
         Restaurant restaurant = findRestaurantById(restaurantId);
-        validateUserOwnership(restaurant, userId);
+        validateUserOwnership(restaurant, userId, role);
 
         restaurant.setIsOpened(!restaurant.getIsOpened());
         restaurantRepository.save(restaurant);
 
-        log.info("Restaurant open status changed: {} - {}", restaurantId, restaurant.getIsOpened());
-    }
-
-    private RestaurantResponseDto toResponseDto(Restaurant restaurant) {
-        return new RestaurantResponseDto(
-                restaurant.getRestaurantId(),
-                restaurant.getArea().name(),
-                restaurant.getIsOpened(),
-                restaurant.getRestaurantName(),
-                restaurant.getRestaurantAddress(),
-                restaurant.getRestaurantPhoneNumber(),
-                restaurant.getRestaurantIntroduce(),
-                restaurant.getRestaurantImageUrl()
-        );
+        log.info("가게 오픈 상태가 변경되었습니다: {} - {}", restaurantId, restaurant.getIsOpened());
     }
 
     // user_id로 찾기
-    private User findUser(String userId) {
+    private User findUser(
+            String userId
+    ) {
         return userRepository.findById(UUID.fromString(userId))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
     // category_id로 찾기
-    private RestaurantCategory findCategory(UUID categoryId) {
+    private RestaurantCategory findCategory(
+            UUID categoryId
+    ) {
         return restaurantCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다."));
     }
 
     // restaurant_id로 찾기
-    private Restaurant findRestaurantById(UUID restaurantId) {
+    private Restaurant findRestaurantById(
+            UUID restaurantId
+    ) {
         return restaurantRepository.findById(restaurantId)
                 .filter(o -> o.getDeletedAt() == null)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 식당은 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 식당은 존재하지 않습니다."));
     }
 
-    private void validateUserOwnership(Restaurant restaurant, String userId) {
-        if (!restaurant.getUser().getUserId().equals(UUID.fromString(userId))) {
-            log.info("User ID validation failed: userId={}, restaurantOwnerId={}", userId, restaurant.getUser().getUserId());
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "가게 주인이 아닙니다.");
+    // 사용자 소유권 검증
+    private void validateUserOwnership(
+            Restaurant restaurant,
+            String userId,
+            String role
+    ) {
+        if (!"MASTER".equals(role)) {
+
+            log.info("해당 가게 주인인지 검증 시작");
+
+            if (!restaurant.getUser().getUserId().equals(UUID.fromString(userId))) {
+                log.info("사용자 ID 검증 실패: userId={}, restaurantOwnerId={}", userId, restaurant.getUser().getUserId());
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "가게 주인이 아닙니다.");
+            }
         }
     }
 }

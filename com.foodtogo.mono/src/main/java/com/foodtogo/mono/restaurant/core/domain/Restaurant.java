@@ -18,7 +18,6 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "p_restaurants")
 public class Restaurant extends LogEntity {
@@ -55,50 +54,43 @@ public class Restaurant extends LogEntity {
     private String restaurantPhoneNumber;
 
     // 음식점 소개
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String restaurantIntroduce;
 
     // 이미지 URL
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String restaurantImageUrl;
 
-    public static Restaurant createRestaurants(
+    public Restaurant(
             RestaurantRequestDto requestDto
             , String createdBy
             , User user
             , RestaurantCategory category
     ){
-        Restaurant restaurant = Restaurant.builder()
-                // 지역 : 우선 광화문 1개
-                .area(RestaurantArea.광화문)
-                // 오픈 상태 디폴드값 True : 가게 오픈 상태 / False는 가게 닫힘
-                .isOpened(Boolean.TRUE)
-                .restaurantName(requestDto.getRestaurantName())
-                .restaurantAddress(requestDto.getRestaurantAddress())
-                .restaurantPhoneNumber(requestDto.getRestaurantPhoneNumber())
-                .restaurantIntroduce(requestDto.getRestaurantIntroduce())
-                .restaurantImageUrl(requestDto.getRestaurantImageUrl())
-                .user(user)
-                .category(category)
-                .build();
-        // 생성자 삽입
-        restaurant.setCreatedBy(createdBy);
+        this.restaurantName = requestDto.getRestaurantName();
+        this.restaurantAddress = requestDto.getRestaurantAddress();
+        this.restaurantPhoneNumber = requestDto.getRestaurantPhoneNumber();
+        this.restaurantIntroduce = requestDto.getRestaurantIntroduce();
+        this.restaurantImageUrl = requestDto.getRestaurantImageUrl();
+        this.user = user;
+        this.category = category;
+        this.isOpened = Boolean.TRUE;
+        this.area = RestaurantArea.광화문;
 
-        return restaurant;
+        setCreatedBy(createdBy);
     }
 
     public void updateRestaurants(
-            String restaurantName,
-            String restaurantAddress,
-            String restaurantPhoneNumber,
-            String restaurantIntroduce,
-            String restaurantImageUrl
+            RestaurantRequestDto requestDto
+            , String updatedBy
     ){
-        this.restaurantName = restaurantName;
-        this.restaurantAddress = restaurantAddress;
-        this.restaurantPhoneNumber = restaurantPhoneNumber;
-        this.restaurantIntroduce = restaurantIntroduce;
-        this.restaurantImageUrl = restaurantImageUrl;
+        this.restaurantName = requestDto.getRestaurantName();
+        this.restaurantAddress = requestDto.getRestaurantAddress();
+        this.restaurantPhoneNumber = requestDto.getRestaurantPhoneNumber();
+        this.restaurantIntroduce = requestDto.getRestaurantIntroduce();
+        this.restaurantImageUrl = requestDto.getRestaurantImageUrl();
+
+        setUpdatedBy(updatedBy);
     }
     // 삭제일자 / 삭제자 작성
     public void deleteRestaurants(
@@ -106,19 +98,6 @@ public class Restaurant extends LogEntity {
     ) {
         this.deletedBy = deletedBy;
         this.deletedAt = LocalDateTime.now();
-    }
-
-    public RestaurantResponseDto toResponseDto(){
-        return new RestaurantResponseDto(
-                this.restaurantId
-                ,this.area.name()
-                ,this.isOpened
-                ,this.restaurantName
-                ,this.restaurantAddress
-                ,this.restaurantPhoneNumber
-                ,this.restaurantIntroduce
-                ,this.restaurantImageUrl
-        );
     }
 
     public void setIsOpened(Boolean isOpened) {

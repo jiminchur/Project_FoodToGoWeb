@@ -19,7 +19,7 @@ public class RestaurantRepositoryCustom {
     private EntityManager entityManager;
 
     @Transactional
-    public Page<Restaurant> findRestaurantsWithLob(Pageable pageable) {
+    public Page<Restaurant> findRestaurants(Pageable pageable) {
         String sql = "SELECT * FROM p_restaurants WHERE deleted_at IS NULL";
 
         // 전체 레코드 수 조회
