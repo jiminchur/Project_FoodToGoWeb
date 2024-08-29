@@ -122,7 +122,7 @@ public class FoodController {
     }
 
     private void checkAdminPermissions(String role) {
-        if (!"Manager".equals(role) && !"Master".equals(role)) {
+        if (!"MANAGER".equals(role) && !"MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MANAGER.");
         }
     }
