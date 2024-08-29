@@ -19,6 +19,7 @@ public class UserResponseDto {
     private Boolean isBlock;
     private String profileUrl;
 
+
     public UserResponseDto(User user) {
         this.email = user.getEmail();
         this.username = user.getUsername();

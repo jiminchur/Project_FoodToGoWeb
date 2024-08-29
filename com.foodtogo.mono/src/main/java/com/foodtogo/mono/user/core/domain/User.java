@@ -73,7 +73,6 @@ public class User extends LogEntity {
         this.createdBy = signupRequestDto.getUsername();
     }
 
-
     // 회원 정보 수정 메소드
     public void updateUserInfo(UserUpdateRequestDto requestDto, String updatedBy) {
         this.nickname = requestDto.getNickname();

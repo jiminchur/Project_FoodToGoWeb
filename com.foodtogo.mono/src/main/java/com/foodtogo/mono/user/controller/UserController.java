@@ -46,7 +46,6 @@ public class UserController {
 
         UserResponseDto updateUserInfo = userService.updateUserInfo(userUpdateRequestDto, userId, updateUserId);
         return new ResponseEntity<>(updateUserInfo, HttpStatus.OK);
-
     }
 
     // 회원 삭제
