@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +44,7 @@ public class OrderController {
                                                                             @RequestHeader("X-User-Id") UUID userId,
                                                                             @PathVariable("restaurant_id") UUID restaurantId) {
         if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.OWNER)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not OWNER.");
         }
         List<OrderResponseDto> orderResponseDtoList = orderService.getOrderListForRestaurant(userId, restaurantId);
         return new ResponseEntity<>(orderResponseDtoList, HttpStatus.OK);
@@ -54,7 +55,7 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDto>> getOrderListForUser(@RequestHeader("X-Role") String role,
                                                                       @PathVariable("user_id") UUID userId) {
         if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.CUSTOMER)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not CUSTOMER.");
         }
         List<OrderResponseDto> orderResponseDtoList = orderService.getOrderListForUser(userId);
         return new ResponseEntity<>(orderResponseDtoList, HttpStatus.OK);
@@ -65,7 +66,7 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDto>> getOrderListAll(@RequestHeader("X-Role") String role) {
 
         if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.MASTER) && !UserRoleEnum.valueOf(role).equals(UserRoleEnum.MANAGER)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MASTER or MANAGER.");
         }
         List<OrderResponseDto> orderResponseDtoList = orderService.getOrderListAll();
         return new ResponseEntity<>(orderResponseDtoList, HttpStatus.OK);
@@ -85,7 +86,7 @@ public class OrderController {
     public ResponseEntity<String> cancelOrder(@RequestHeader("X-User-Id") UUID userId,
                                               @PathVariable("order_id") UUID orderId) {
         String message = orderService.cancelOrder(userId, orderId);
-        if (message.equals("주문을 접수한지 5분이 지났기 때문에 취소가 불가합니다.")){
+        if (message.equals("주문을 접수한지 5분이 지났기 때문에 취소가 불가합니다.")) {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -94,12 +95,13 @@ public class OrderController {
     // 주문 상태 업데이트
     @PatchMapping("/orders/{order_id}/status")
     public ResponseEntity<OrderResponseDto> updateOrderStatus(@RequestHeader("X-Role") String role,
+                                                              @RequestHeader("X-User-Id") UUID userId,
                                                               @PathVariable("order_id") UUID orderId,
                                                               @RequestBody UpdateOrderStatusDto updateOrderStatusDto) {
         if (UserRoleEnum.valueOf(role).equals(UserRoleEnum.CUSTOMER)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is CUSTOMER");
         }
-        OrderResponseDto orderResponseDto = orderService.updateOrderStatus(orderId, updateOrderStatusDto);
+        OrderResponseDto orderResponseDto = orderService.updateOrderStatus(orderId, userId,updateOrderStatusDto);
         return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
     }
 }

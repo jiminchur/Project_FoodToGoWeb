@@ -33,7 +33,7 @@ public class OrderService {
     private final FoodRepository foodRepository;
     private final OrderFoodRepository orderFoodRepository;
 
-  
+
     // 주문 등록 (접수)
     @Transactional
     public String createOrder(UUID userId, UUID restaurantId, OrderRequestDto requestDto) {
@@ -98,7 +98,7 @@ public class OrderService {
                 .toList();
     }
 
-    // 주문 전체 조회 FOR 운영진
+    // 주문 전체 조회 for 운영진
     @Transactional(readOnly = true)
     public List<OrderResponseDto> getOrderListAll() {
 
@@ -123,6 +123,7 @@ public class OrderService {
     }
 
     // 주문 취소 요청
+    @Transactional
     public String cancelOrder(UUID userId, UUID orderId) {
         // 유저 조회
         User user = findUserId(userId);
@@ -141,11 +142,13 @@ public class OrderService {
 
     // 주문 상태 업데이트
     @Transactional
-    public OrderResponseDto updateOrderStatus(UUID orderId, UpdateOrderStatusDto updateOrderStatusDto) {
+    public OrderResponseDto updateOrderStatus(UUID orderId, UUID userId, UpdateOrderStatusDto updateOrderStatusDto) {
+        // 유저 조회
+        User user = findUserId(userId);
         // 주문 확인
         Order order = findOrderId(orderId);
         // 주문 상태 변경
-        order.updateOrderStatus(updateOrderStatusDto);
+        order.updateOrderStatus(updateOrderStatusDto, user.getUsername());
 
         return new OrderResponseDto(order, findOrderFoodList(order));
     }

@@ -11,7 +11,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
@@ -22,7 +21,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "p_orders")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order extends LogEntity {
@@ -61,18 +59,19 @@ public class Order extends LogEntity {
         this.orderType = requestDto.getIsOnline() ? OrderTypeEnum.ONLINE : OrderTypeEnum.OFFLINE;
         this.amount = BigDecimal.ZERO;
         this.isPaid = false;
-        setCreatedBy(user.getUsername()); // 생성자에서 username 설정
+        this.createdBy = user.getUsername();
     }
 
     // 주문 상태 변경
-    public void updateOrderStatus(UpdateOrderStatusDto orderStatusDto) {
+    public void updateOrderStatus(UpdateOrderStatusDto orderStatusDto, String updatedBy) {
         this.orderStatus = OrderStatusEnum.valueOf(orderStatusDto.getOrderStatus());
+        this.updatedBy = updatedBy;
     }
 
     // 주문 내역 삭제
-    public void deleteUserOrderInfo(String username) {
+    public void deleteUserOrderInfo(String deletedBy) {
         this.setDeletedAt(LocalDateTime.now());
-        this.setDeletedBy(username);
+        this.setDeletedBy(deletedBy);
     }
 
     // 주문 취소
@@ -81,4 +80,7 @@ public class Order extends LogEntity {
         this.deletedBy = username;
         this.orderStatus = OrderStatusEnum.CANCELED;
     }
+
+    // 주문한 음식 리스트 지정
+    public void setOrderFoodList(List<OrderFood> orderFoodList) {this.orderFoodList = orderFoodList;}
 }
