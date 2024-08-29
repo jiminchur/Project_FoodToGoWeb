@@ -9,9 +9,6 @@ import java.util.UUID;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
 
-    // 전체 조회
-    Page<Restaurant> findAll(Pageable pageable);
-
     // 가게 검색
     Page<Restaurant> findByRestaurantNameContaining(String restaurantName, Pageable pageable);
 }
