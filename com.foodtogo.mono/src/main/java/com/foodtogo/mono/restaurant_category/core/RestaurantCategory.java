@@ -1,14 +1,15 @@
 package com.foodtogo.mono.restaurant_category.core;
 
 import com.foodtogo.mono.log.LogEntity;
-import com.foodtogo.mono.restaurant_category.dto.RestaurantCategoriesRequestDto;
+import com.foodtogo.mono.restaurant_category.dto.RestaurantCategoryRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -20,32 +21,37 @@ import java.util.UUID;
 public class RestaurantCategory extends LogEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "category_id")
+    @UuidGenerator
     private UUID categoryId;
 
-    @Column(name = "category_title",length = 50, unique = true)
+    @Column(length = 50, unique = true)
     private String categoryTitle;
 
     // 카테고리 생성
-    public static RestaurantCategory createCategories(
-            RestaurantCategoriesRequestDto restaurantCategoriesRequest,
+    public RestaurantCategory(
+            RestaurantCategoryRequestDto restaurantCategoriesRequest,
             String createBy
     ){
-        RestaurantCategory restaurantCategory = RestaurantCategory.builder()
-                .categoryTitle(restaurantCategoriesRequest.getCategoryTitle())
-                .build();
+        this.categoryTitle = restaurantCategoriesRequest.getCategoryTitle();
 
-        restaurantCategory.setCreatedBy(createBy);
-
-        return restaurantCategory;
+        setCreatedBy(createBy);
     }
 
     // 카테고리 수정
     public void updateCategories(
-            String categoryTitle
+            RestaurantCategoryRequestDto restaurantCategoriesRequest,
+            String updatedBy
     ){
-        this.categoryTitle = categoryTitle;
+        this.categoryTitle = restaurantCategoriesRequest.getCategoryTitle();
+
+        setUpdatedBy(updatedBy);
+    }
+
+    // 카테고리 삭제
+    public void deleteCategory(
+            String deleteBy
+    ) {
+        this.deletedBy = deleteBy;
+        this.deletedAt = LocalDateTime.now();
     }
 }
