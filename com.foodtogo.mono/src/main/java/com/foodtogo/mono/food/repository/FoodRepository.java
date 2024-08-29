@@ -14,5 +14,5 @@ public interface FoodRepository extends JpaRepository<Food, UUID> {
     Page<Food> findByRestaurant(Restaurant restaurant, Pageable pageable);
 
     // User의 대한 가게에 속한 음식 조회
-    Page<Food> findByRestaurantAndIsHiddenFalse(Restaurant restaurants, Pageable pageable);
+    Page<Food> findByRestaurantAndIsHiddenFalseAndDeletedAtIsNull(Restaurant restaurants, Pageable pageable);
 }
