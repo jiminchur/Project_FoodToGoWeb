@@ -17,6 +17,7 @@
 
 # 디렉토리 기반의 환경 변수 파일
 .env
+**/.env
 
 # Maven 관련
 .mvn/
@@ -29,11 +30,15 @@ release.properties
 
 # Gradle 관련
 .gradle/
+**/gradle/
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+!**/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 gradle-app.setting
+**/gradle-app.setting
+**/gradle/wrapper/gradle-wrapper.properties
 
 # STS (Spring Tool Suite) 관련
 .apt_generated
@@ -89,3 +94,6 @@ docker-compose.override.yml
 .env.test.local
 .env.production.local
 docker-compose-local.yml
+
+# dev 관련
+**/application-dev.yml
