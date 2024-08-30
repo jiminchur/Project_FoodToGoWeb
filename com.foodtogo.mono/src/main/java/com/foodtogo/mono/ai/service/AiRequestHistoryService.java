@@ -1,6 +1,8 @@
 package com.foodtogo.mono.ai.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodtogo.mono.ai.core.AiRequestHistory;
+import com.foodtogo.mono.ai.dto.AiRequestHistoryResponseDto;
 import com.foodtogo.mono.ai.repository.AiRequestHistoryRepository;
 import com.foodtogo.mono.user.core.domain.User;
 import com.foodtogo.mono.user.repository.UserRepository;
@@ -28,6 +30,7 @@ public class AiRequestHistoryService {
     private final UserRepository userRepository;
 
 
+
     public String generateContent(
             String text,
             String userId
@@ -43,12 +46,27 @@ public class AiRequestHistoryService {
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        AiRequestHistory aiRequestHistory = new AiRequestHistory(user,text,response.getBody(),userId);
+        // JSON 파싱
+        ObjectMapper objectMapper = new ObjectMapper();
+        AiRequestHistoryResponseDto aiRequestHistoryResponseDto;
+
+        try {
+            aiRequestHistoryResponseDto = objectMapper.readValue(response.getBody(), AiRequestHistoryResponseDto.class);
+        } catch (Exception e) {
+            // 에러 처리
+            e.printStackTrace();
+            return "Error parsing response";
+        }
+
+        // text 부분만 추출
+        String resultText = aiRequestHistoryResponseDto.getCandidates().get(0).getContent().getParts().get(0).getText();
+
+        AiRequestHistory aiRequestHistory = new AiRequestHistory(user,text,resultText,userId);
 
         // 요청 기록 저장
         requestHistoryRepository.save(aiRequestHistory);
 
-        return response.getBody();
+        return resultText;
     }
 
     // 전체조회
