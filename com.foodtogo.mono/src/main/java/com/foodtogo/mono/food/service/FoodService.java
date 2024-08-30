@@ -138,6 +138,14 @@ public class FoodService {
         log.info("음식 품절 상태 변경 완료: {}", food);
     }
 
+    // 음식 검색
+    public Page<Food> searchFoods(
+            String query,
+            Pageable pageable
+    ) {
+        return foodRepository.findByFoodInfoTitleContainingAndDeletedAtIsNull(query, pageable);
+    }
+
     // 가게 주인 검증
     private void validateOwner(Restaurant restaurant, String userId, String role) {
         log.info("가게 주인 검증 시작");

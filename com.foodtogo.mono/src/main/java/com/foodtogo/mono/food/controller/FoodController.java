@@ -6,6 +6,7 @@ import com.foodtogo.mono.food.dto.FoodResponseDto;
 import com.foodtogo.mono.food.service.FoodService;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor
+@Slf4j
 public class FoodController {
 
     private final FoodService foodService;
@@ -112,6 +114,18 @@ public class FoodController {
     ) {
         checkUserPermissions(role); // 권한 체크
         foodService.toggleIsHidden(foodId, userId, role);
+    }
+
+    // 음식 검색
+    @GetMapping("/foods/search")
+    public Page<Food> searchRestaurants(
+            @RequestParam("query") String query,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        log.info("음식 검색: {}, page: {}, size: {}", query, page, size);
+        return foodService.searchFoods(query, pageable);
     }
 
     // 권한 체크 메서드
