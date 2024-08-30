@@ -4,7 +4,6 @@ import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import com.foodtogo.mono.restaurant.dto.RestaurantRequestDto;
 import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
 import com.foodtogo.mono.restaurant.repository.RestaurantRepository;
-import com.foodtogo.mono.restaurant.repository.RestaurantRepositoryCustom;
 import com.foodtogo.mono.restaurant_category.core.RestaurantCategory;
 import com.foodtogo.mono.restaurant_category.repository.RestaurantCategoryRepository;
 import com.foodtogo.mono.user.core.domain.User;
@@ -28,7 +27,6 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
     private final RestaurantCategoryRepository restaurantCategoryRepository;
-    private final RestaurantRepositoryCustom restaurantRepositoryCustom;
 
     // 가게 생성
     @Transactional
@@ -63,7 +61,7 @@ public class RestaurantService {
             Pageable pageable
     ) {
         log.info("가게 전체 조회 시작");
-        return restaurantRepositoryCustom.findRestaurants(pageable);
+        return restaurantRepository.findAllAndDeletedAtIsNull(pageable);
     }
 
     // 가게 수정
