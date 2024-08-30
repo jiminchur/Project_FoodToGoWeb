@@ -15,7 +15,6 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "p_restaurant_categories")
 public class RestaurantCategory extends LogEntity {

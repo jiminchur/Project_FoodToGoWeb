@@ -26,9 +26,11 @@ public class AiRequestHistory extends LogEntity {
     @JoinColumn(name = "user_id", nullable = false )
     private User user;
 
+    // 긴 텍스트 필드 설정
     @Column(columnDefinition = "TEXT")
     private String aiRequest;
 
+    // 긴 텍스트 필드 설정
     @Column(columnDefinition = "TEXT")
     private String aiResponse;
 

@@ -18,7 +18,6 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "p_food_infos")
 public class Food extends LogEntity {
