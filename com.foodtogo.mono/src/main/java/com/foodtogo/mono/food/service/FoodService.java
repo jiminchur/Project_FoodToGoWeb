@@ -35,7 +35,12 @@ public class FoodService {
         validateOwner(restaurant, userId, role);
 
         // 음식 객체 생성 및 저장
-        Food food = new Food(foodRequestDto, restaurant, userId);
+        Food food = new Food(
+                foodRequestDto.getFoodInfoTitle(),
+                foodRequestDto.getFoodInfoDesc(),
+                foodRequestDto.getFoodInfoPrice(),
+                restaurant,
+                userId);
         foodRepository.save(food);
 
         log.info("음식 등록 완료: {}", food);
@@ -81,7 +86,11 @@ public class FoodService {
     ) {
         Food food = findFoodId(foodId);
         validateOwner(food.getRestaurant(), userId, role); // 가게 주인 검증
-        food.updateFood(foodRequestDto, userId); // 음식 정보 업데이트
+        food.updateFood(
+                foodRequestDto.getFoodInfoTitle(),
+                foodRequestDto.getFoodInfoDesc(),
+                foodRequestDto.getFoodInfoPrice(),
+                userId); // 음식 정보 업데이트
         foodRepository.save(food);
 
         log.info("음식 수정 완료: {}", food);

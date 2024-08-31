@@ -50,13 +50,15 @@ public class Food extends LogEntity {
 
     // 가게에 속한 음식 등록
     public Food(
-            FoodRequestDto foodRequestDto,
+            String foodInfoTitle,
+            String foodInfoDesc,
+            BigDecimal foodInfoPrice,
             Restaurant restaurant,
             String createdBy
     ) {
-        this.foodInfoTitle = foodRequestDto.getFoodInfoTitle();
-        this.foodInfoDesc = foodRequestDto.getFoodInfoDesc();
-        this.foodInfoPrice = foodRequestDto.getFoodInfoPrice();
+        this.foodInfoTitle = foodInfoTitle;
+        this.foodInfoDesc = foodInfoDesc;
+        this.foodInfoPrice = foodInfoPrice;
         this.isHidden = Boolean.FALSE;
         this.isSale = Boolean.TRUE;
         this.restaurant = restaurant;
@@ -66,12 +68,14 @@ public class Food extends LogEntity {
 
     // 음식 상세 정보 수정
     public void updateFood(
-            FoodRequestDto foodRequestDto,
+            String foodInfoTitle,
+            String foodInfoDesc,
+            BigDecimal foodInfoPrice,
             String updatedBy
     ){
-        this.foodInfoTitle = foodRequestDto.getFoodInfoTitle();
-        this.foodInfoDesc = foodRequestDto.getFoodInfoDesc();
-        this.foodInfoPrice = foodRequestDto.getFoodInfoPrice();
+        this.foodInfoTitle = foodInfoTitle;
+        this.foodInfoDesc = foodInfoDesc;
+        this.foodInfoPrice = foodInfoPrice;
 
         setUpdatedBy(updatedBy);
     }

@@ -35,7 +35,15 @@ public class RestaurantService {
         RestaurantCategory category = findCategory(restaurantRequestDto.getCategoryId()); // 카테고리 찾기
 
         // 새로운 Restaurant 객체 생성
-        Restaurant restaurant = new Restaurant(restaurantRequestDto, userId, user, category);
+        Restaurant restaurant = new Restaurant(
+                restaurantRequestDto.getRestaurantName(),
+                restaurantRequestDto.getRestaurantAddress(),
+                restaurantRequestDto.getRestaurantPhoneNumber(),
+                restaurantRequestDto.getRestaurantIntroduce(),
+                restaurantRequestDto.getRestaurantImageUrl(),
+                userId,
+                user,
+                category);
         restaurantRepository.save(restaurant); // 데이터베이스에 가게 저장
 
         log.info("가게가 생성되었습니다: {}", restaurant.getRestaurantId());
@@ -63,7 +71,13 @@ public class RestaurantService {
         Restaurant restaurant = findRestaurantById(restaurantId); // 가게 찾기
         validateUserOwnership(restaurant, userId, role); // 사용자 소유권 검증
 
-        restaurant.updateRestaurants(restaurantRequestDto, userId); // 가게 정보 업데이트
+        restaurant.updateRestaurants(
+                restaurantRequestDto.getRestaurantName(),
+                restaurantRequestDto.getRestaurantAddress(),
+                restaurantRequestDto.getRestaurantPhoneNumber(),
+                restaurantRequestDto.getRestaurantIntroduce(),
+                restaurantRequestDto.getRestaurantImageUrl(),
+                userId); // 가게 정보 업데이트
         log.info("가게가 수정되었습니다: {}", restaurant.getRestaurantId());
 
         return new RestaurantResponseDto(restaurant); // 수정된 가게 정보 반환

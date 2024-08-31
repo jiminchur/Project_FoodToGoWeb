@@ -28,7 +28,9 @@ public class RestaurantCategoryService {
             String userId
     ){
         log.info("카테고리 등록 요청: {}", restaurantCategoryRequestDto);
-        RestaurantCategory restaurantCategory = new RestaurantCategory(restaurantCategoryRequestDto,userId);
+        RestaurantCategory restaurantCategory = new RestaurantCategory(
+                restaurantCategoryRequestDto.getCategoryTitle(),
+                userId);
         restaurantCategoryRepository.save(restaurantCategory);
 
         log.info("카테고리 등록 완료: {}", restaurantCategory);
@@ -59,7 +61,9 @@ public class RestaurantCategoryService {
                     return new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리는 없습니다.");
                 });
 
-        restaurantCategory.updateCategories(restaurantCategoryRequestDto,userId);
+        restaurantCategory.updateCategories(
+                restaurantCategoryRequestDto.getCategoryTitle(),
+                userId);
         restaurantCategoryRepository.save(restaurantCategory);
 
         log.info("카테고리 수정 완료: {}", restaurantCategory);

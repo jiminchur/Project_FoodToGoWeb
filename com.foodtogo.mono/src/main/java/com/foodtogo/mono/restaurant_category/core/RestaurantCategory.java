@@ -28,20 +28,20 @@ public class RestaurantCategory extends LogEntity {
 
     // 카테고리 생성
     public RestaurantCategory(
-            RestaurantCategoryRequestDto restaurantCategoriesRequest,
+            String categoryTitle,
             String createBy
     ){
-        this.categoryTitle = restaurantCategoriesRequest.getCategoryTitle();
+        this.categoryTitle = categoryTitle;
 
         setCreatedBy(createBy);
     }
 
     // 카테고리 수정
     public void updateCategories(
-            RestaurantCategoryRequestDto restaurantCategoriesRequest,
+            String categoryTitle,
             String updatedBy
     ){
-        this.categoryTitle = restaurantCategoriesRequest.getCategoryTitle();
+        this.categoryTitle = categoryTitle;
 
         setUpdatedBy(updatedBy);
     }

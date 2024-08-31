@@ -62,16 +62,20 @@ public class Restaurant extends LogEntity {
     private String restaurantImageUrl;
 
     public Restaurant(
-            RestaurantRequestDto requestDto
-            , String createdBy
-            , User user
-            , RestaurantCategory category
+            String restaurantName,
+            String restaurantAddress,
+            String restaurantPhoneNumber,
+            String restaurantIntroduce,
+            String restaurantImageUrl,
+            String createdBy,
+            User user,
+            RestaurantCategory category
     ){
-        this.restaurantName = requestDto.getRestaurantName();
-        this.restaurantAddress = requestDto.getRestaurantAddress();
-        this.restaurantPhoneNumber = requestDto.getRestaurantPhoneNumber();
-        this.restaurantIntroduce = requestDto.getRestaurantIntroduce();
-        this.restaurantImageUrl = requestDto.getRestaurantImageUrl();
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantPhoneNumber = restaurantPhoneNumber;
+        this.restaurantIntroduce = restaurantIntroduce;
+        this.restaurantImageUrl = restaurantImageUrl;
         this.user = user;
         this.category = category;
         this.isOpened = Boolean.TRUE;
@@ -81,14 +85,18 @@ public class Restaurant extends LogEntity {
     }
 
     public void updateRestaurants(
-            RestaurantRequestDto requestDto
-            , String updatedBy
+            String restaurantName,
+            String restaurantAddress,
+            String restaurantPhoneNumber,
+            String restaurantIntroduce,
+            String restaurantImageUrl,
+            String updatedBy
     ){
-        this.restaurantName = requestDto.getRestaurantName();
-        this.restaurantAddress = requestDto.getRestaurantAddress();
-        this.restaurantPhoneNumber = requestDto.getRestaurantPhoneNumber();
-        this.restaurantIntroduce = requestDto.getRestaurantIntroduce();
-        this.restaurantImageUrl = requestDto.getRestaurantImageUrl();
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantPhoneNumber = restaurantPhoneNumber;
+        this.restaurantIntroduce = restaurantIntroduce;
+        this.restaurantImageUrl = restaurantImageUrl;
 
         setUpdatedBy(updatedBy);
     }
