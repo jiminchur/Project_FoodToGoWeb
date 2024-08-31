@@ -8,7 +8,9 @@ import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,8 +134,23 @@ public class FoodService {
     }
 
     // 음식 검색
-    public Page<Food> searchFoods(String query, Pageable pageable) {
-        return foodRepository.findByFoodInfoTitleContainingAndDeletedAtIsNull(query, pageable);
+    public Page<FoodResponseDto> searchFoods(
+            String query,
+            int page,
+            int size,
+            String sortBy,
+            boolean isAsc
+    ) {
+        Pageable pageable = convertToPage(
+                page,
+                size,
+                sortBy,
+                isAsc
+        );
+
+        Page<Food> foodList = foodRepository.findByFoodInfoTitleContainingAndDeletedAtIsNull(query,pageable);
+
+        return foodList.map(FoodResponseDto::new);
     }
 
     // 가게 주인 검증 메서드
@@ -152,5 +169,14 @@ public class FoodService {
         return foodRepository.findById(foodId)
                 .filter(o -> o.getDeletedAt() == null)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 음식은 없습니다."));
+    }
+
+    // 페이지 처리
+    private Pageable convertToPage(int page, int size, String sortBy, boolean isAsc) {
+
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+
+        return PageRequest.of(page, size, sort);
     }
 }

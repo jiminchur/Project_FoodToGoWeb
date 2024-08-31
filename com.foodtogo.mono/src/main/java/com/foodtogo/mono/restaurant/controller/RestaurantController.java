@@ -4,12 +4,14 @@ import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import com.foodtogo.mono.restaurant.dto.RestaurantRequestDto;
 import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
 import com.foodtogo.mono.restaurant.service.RestaurantService;
+import com.foodtogo.mono.user.dto.response.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -82,14 +84,23 @@ public class RestaurantController {
 
     // 가게 검색
     @GetMapping("/search")
-    public Page<Restaurant> searchRestaurants(
+    public ResponseEntity<Page<RestaurantResponseDto>> searchRestaurants(
             @RequestParam("query") String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Page<RestaurantResponseDto> searchedRestaurants = restaurantService.searchRestaurants(
+                query,
+                page,
+                size,
+                sortBy,
+                isAsc
+        );
         log.info("가게 검색: {}, page: {}, size: {}", query, page, size);
-        return restaurantService.searchRestaurants(query, pageable);
+        return new ResponseEntity<>(searchedRestaurants, HttpStatus.OK);
     }
 
     // 가게 운영상태 변경

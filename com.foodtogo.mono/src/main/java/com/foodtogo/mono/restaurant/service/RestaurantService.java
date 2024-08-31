@@ -11,7 +11,9 @@ import com.foodtogo.mono.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,8 +98,22 @@ public class RestaurantService {
     }
 
     // 가게 검색
-    public Page<Restaurant> searchRestaurants(String query, Pageable pageable) {
-        return restaurantRepository.findByRestaurantNameContaining(query, pageable); // 이름으로 가게 검색
+    public Page<RestaurantResponseDto> searchRestaurants(
+                String query,
+                int page,
+                int size,
+                String sortBy,
+                boolean isAsc
+            ) {
+        Pageable pageable = convertToPage(
+                page,
+                size,
+                sortBy,
+                isAsc
+        );
+        Page<Restaurant> restaurantsList = restaurantRepository.findByRestaurantNameContaining(query, pageable);
+
+        return restaurantsList.map(RestaurantResponseDto::new); // 이름으로 가게 검색
     }
 
     // 가게 오픈상태 토글
@@ -139,5 +155,14 @@ public class RestaurantService {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "가게 주인이 아닙니다."); // 주인이 아닐 경우 예외 발생
             }
         }
+    }
+
+    // 페이지 처리
+    private Pageable convertToPage(int page, int size, String sortBy, boolean isAsc) {
+
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+
+        return PageRequest.of(page, size, sort);
     }
 }

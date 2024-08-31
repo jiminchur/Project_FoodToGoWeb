@@ -5,12 +5,14 @@ import com.foodtogo.mono.food.dto.FoodRequestDto;
 import com.foodtogo.mono.food.dto.FoodResponseDto;
 import com.foodtogo.mono.food.service.FoodService;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
+import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -118,14 +120,17 @@ public class FoodController {
 
     // 음식 검색
     @GetMapping("/foods/search")
-    public Page<Food> searchRestaurants(
+    public ResponseEntity<Page<FoodResponseDto>> searchRestaurants(
             @RequestParam("query") String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Page<FoodResponseDto> searchedFoods = foodService.searchFoods(query, page, size, sortBy, isAsc);
         log.info("음식 검색: {}, page: {}, size: {}", query, page, size);
-        return foodService.searchFoods(query, pageable);
+        return new ResponseEntity<>(searchedFoods,HttpStatus.OK);
     }
 
     // 권한 체크 메서드
