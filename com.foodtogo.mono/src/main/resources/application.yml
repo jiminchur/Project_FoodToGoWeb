@@ -7,14 +7,14 @@ spring:
       enabled: ALWAYS
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${{secrets.DB_URL}}
+    username: ${{secrets.DB_USERNAME}}
+    password: ${{secrets.DB_PASSWORD}}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
@@ -24,4 +24,4 @@ spring:
 
 google:
   api:
-    key: ${GOOGLE_KEY}
+    key: ${{secrets.GOOGLE_KEY}}
