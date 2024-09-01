@@ -1,7 +1,7 @@
 package com.foodtogo.auth.controller;
 
 import com.foodtogo.auth.jwt.JwtUtil;
-import com.foodtogo.auth.users.UserRoleEnum;
+import com.foodtogo.auth.user.core.enums.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
