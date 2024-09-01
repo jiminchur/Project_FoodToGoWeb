@@ -1,4 +1,4 @@
-package com.foodtogo.auth.users;
+package com.foodtogo.auth.user.core.enums;
 
 public final class Authority {
 	public static final String CUSTOMER = "CUSTOMER";

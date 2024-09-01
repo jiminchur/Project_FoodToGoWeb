@@ -1,4 +1,4 @@
-package com.foodtogo.auth.dto;
+package com.foodtogo.auth.dto.request;
 
 import lombok.Data;
 

@@ -1,14 +1,15 @@
 package com.foodtogo.auth.controller;
 
-import com.foodtogo.auth.dto.LoginRequestDto;
-import com.foodtogo.auth.dto.LoginResponseDto;
-import com.foodtogo.auth.dto.SignupRequestDto;
+import com.foodtogo.auth.dto.request.LoginRequestDto;
+import com.foodtogo.auth.dto.request.SignupRequestDto;
+import com.foodtogo.auth.dto.response.LoginResponseDto;
 import com.foodtogo.auth.jwt.JwtUtil;
 import com.foodtogo.auth.service.RedisService;
 import com.foodtogo.auth.service.UsersService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -25,50 +26,50 @@ import java.util.List;
 @RequestMapping("/auth/v1/users")
 public class UsersController {
 
-	private final UsersService usersService;
-	private final RedisService redisService;
-	private final JwtUtil jwtUtil;
+    private final UsersService usersService;
+    private final RedisService redisService;
+    private final JwtUtil jwtUtil;
 
-	public UsersController(UsersService usersService, RedisService redisService, JwtUtil jwtUtil) {
-		this.usersService = usersService;
-		this.redisService = redisService;
-		this.jwtUtil = jwtUtil;
-	}
+    public UsersController(UsersService usersService, RedisService redisService, JwtUtil jwtUtil) {
+        this.usersService = usersService;
+        this.redisService = redisService;
+        this.jwtUtil = jwtUtil;
+    }
 
-	/*
-			jwt 토큰이 없는 상태
-				1. 로그인 요청
-				- email과 비밀번호가 일치하는지 확인
-				- 일치하면 토큰을 발행한다
-				- 토큰을 쿠키에 담는다, 게이트웨이 서버로 보낸다, 게이트웨이 서버는 유저에게 jwt 토큰을 준다
-			*/
-	@PostMapping("/login")
-	public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
-		LoginResponseDto responseDto = usersService.login(requestDto, res);
-		// redis role 추가
-		redisService.updateUserRole(responseDto.getUserId().toString(), responseDto.getRole());
-		return ResponseEntity.ok(responseDto);
-	}
+    /*
+            jwt 토큰이 없는 상태
+                1. 로그인 요청
+                - email과 비밀번호가 일치하는지 확인
+                - 일치하면 토큰을 발행한다
+                - 토큰을 쿠키에 담는다, 게이트웨이 서버로 보낸다, 게이트웨이 서버는 유저에게 jwt 토큰을 준다
+            */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
+        final LoginResponseDto responseDto = usersService.login(requestDto, res);
+        // redis role 추가
+        redisService.updateUserRole(responseDto.getUserId().toString(), responseDto.getRole());
+        return ResponseEntity.ok(responseDto);
+    }
 
-	/*
-	5. 로그아웃
-		- 레디스에 블랙리스트jwt 을 넣는다
-		- 세션은 안쓰니 세션 제거는 필요없다
-		- 클라이언트에서 jwt 토큰 쿠키 삭제
-	 */
-	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(
-			@RequestHeader("Authorization") String tokenValue
-			, @RequestHeader(value = "X-Token", required = true) String extractedToken
-			, @RequestHeader(value = "X-User-Id", required = true) String userId
-			, @RequestHeader(value = "X-Role", required = true) String role
-			, HttpServletResponse res
+    /*
+    5. 로그아웃
+        - 레디스에 블랙리스트jwt 을 넣는다
+        - 세션은 안쓰니 세션 제거는 필요없다
+        - 클라이언트에서 jwt 토큰 쿠키 삭제
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @RequestHeader("Authorization") String tokenValue
+            , @RequestHeader(value = "X-Token", required = true) String extractedToken
+            , @RequestHeader(value = "X-User-Id", required = true) String userId
+            , @RequestHeader(value = "X-Role", required = true) String role
+            , HttpServletResponse res
 
-	) {
-		// 토큰을 블랙리스트에 추가
-		redisService.addBlackToken(extractedToken);
-		return ResponseEntity.ok().build();
-	}
+    ) {
+        // 토큰을 블랙리스트에 추가
+        redisService.addBlackToken(extractedToken);
+        return ResponseEntity.ok().build();
+    }
 
 	/*
 			jwt 토큰이 없는 상태
@@ -80,19 +81,18 @@ public class UsersController {
 						- 레디스 (userid:권한) 이때 처음 추가
 	*/
 
-	@PostMapping("/signup")
-	public String signup(@RequestBody @Valid SignupRequestDto requestDto, BindingResult bindingResult) {
-		// validation 예외 처리
-		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-		if (!fieldErrors.isEmpty()) {
-			for (FieldError fieldError : bindingResult.getFieldErrors()) {
-				log.error(fieldError.getField() + fieldError.getDefaultMessage());
-			}
-			return "validation error";
-		}
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequestDto requestDto, BindingResult bindingResult) {
+        // validation 예외 처리
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        if (!fieldErrors.isEmpty()) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                log.error(fieldError.getField() + fieldError.getDefaultMessage());
+            }
+            throw new IllegalArgumentException(fieldErrors.toString());
+        }
 
-		usersService.signup(requestDto);
-		return "signup";
-	}
-
+        usersService.signup(requestDto);
+        return new ResponseEntity<>(requestDto.getEmail(), HttpStatus.CREATED);
+    }
 }

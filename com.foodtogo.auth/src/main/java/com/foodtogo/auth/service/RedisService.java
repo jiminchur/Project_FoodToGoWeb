@@ -1,6 +1,6 @@
 package com.foodtogo.auth.service;
 
-import com.foodtogo.auth.users.UserRoleEnum;
+import com.foodtogo.auth.user.core.enums.UserRoleEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

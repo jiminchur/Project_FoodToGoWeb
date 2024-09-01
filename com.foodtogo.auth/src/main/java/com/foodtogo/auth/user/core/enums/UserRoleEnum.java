@@ -1,6 +1,6 @@
-package com.foodtogo.mono.user.core.enums;
+package com.foodtogo.auth.user.core.enums;
 
-import com.foodtogo.mono.error.CustomAccessDeniedException;
+import com.foodtogo.auth.error.CustomAccessDeniedException;
 import lombok.Getter;
 
 @Getter

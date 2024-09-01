@@ -1,9 +1,9 @@
 package com.foodtogo.auth.controller;
 
-import com.foodtogo.auth.dto.JwtTokenRequestDto;
-import com.foodtogo.auth.dto.UserRoleRequestDto;
+import com.foodtogo.auth.dto.request.JwtTokenRequestDto;
+import com.foodtogo.auth.dto.request.UserRoleRequestDto;
 import com.foodtogo.auth.service.RedisService;
-import com.foodtogo.auth.users.UserRoleEnum;
+import com.foodtogo.auth.user.core.enums.UserRoleEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

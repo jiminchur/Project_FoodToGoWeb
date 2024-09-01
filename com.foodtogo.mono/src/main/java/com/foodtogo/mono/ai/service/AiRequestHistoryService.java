@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AiRequestHistoryService {
 
-    @Value("${api.key}")
+    @Value("${google.api.key}")
     private String apiKey;
 
     private final RestTemplate restTemplate;

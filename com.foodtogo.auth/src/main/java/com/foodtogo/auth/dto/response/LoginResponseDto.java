@@ -1,6 +1,6 @@
-package com.foodtogo.auth.dto;
+package com.foodtogo.auth.dto.response;
 
-import com.foodtogo.auth.users.UserRoleEnum;
+import com.foodtogo.auth.user.core.enums.UserRoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

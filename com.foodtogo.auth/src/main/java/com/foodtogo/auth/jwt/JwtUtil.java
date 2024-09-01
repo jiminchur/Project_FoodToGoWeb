@@ -1,6 +1,6 @@
 package com.foodtogo.auth.jwt;
 
-import com.foodtogo.auth.users.UserRoleEnum;
+import com.foodtogo.auth.user.core.enums.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
