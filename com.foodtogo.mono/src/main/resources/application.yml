@@ -25,3 +25,6 @@ spring:
 google:
   api:
     key: ${{secrets.GOOGLE_KEY}}
+
+role:
+  manager: ${{secrets.MANAGER_TOKEN}}
