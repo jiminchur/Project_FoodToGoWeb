@@ -105,7 +105,10 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
 	}
 
 	private boolean isExcludedPath(String path) {
-		return path.equals("/auth/v1/users/signup") || path.equals("/api/v1/users/join");
+		return path.equals("/auth/v1/users/signup")
+				|| path.equals("/api/v1/users/signup")
+				|| path.startsWith("/auth/v1/cache")
+				;
 	}
 
 	private boolean isInvalidToken(String token) {
