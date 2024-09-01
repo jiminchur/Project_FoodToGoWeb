@@ -43,7 +43,6 @@ public class RestaurantService {
                 restaurantRequestDto.getRestaurantPhoneNumber(),
                 restaurantRequestDto.getRestaurantIntroduce(),
                 restaurantRequestDto.getRestaurantImageUrl(),
-                userId,
                 user,
                 category);
         restaurantRepository.save(restaurant); // 데이터베이스에 가게 저장
@@ -78,8 +77,7 @@ public class RestaurantService {
                 restaurantRequestDto.getRestaurantAddress(),
                 restaurantRequestDto.getRestaurantPhoneNumber(),
                 restaurantRequestDto.getRestaurantIntroduce(),
-                restaurantRequestDto.getRestaurantImageUrl(),
-                userId); // 가게 정보 업데이트
+                restaurantRequestDto.getRestaurantImageUrl()); // 가게 정보 업데이트
         log.info("가게가 수정되었습니다: {}", restaurant.getRestaurantId());
 
         return new RestaurantResponseDto(restaurant); // 수정된 가게 정보 반환

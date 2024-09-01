@@ -1,16 +1,15 @@
 package com.foodtogo.mono.restaurant.core.domain;
 
-import com.foodtogo.mono.log.LogEntity;
+import com.foodtogo.mono.log.BaseEntity;
 import com.foodtogo.mono.restaurant.core.enums.RestaurantArea;
-import com.foodtogo.mono.restaurant.dto.RestaurantRequestDto;
-import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
 import com.foodtogo.mono.restaurant_category.core.RestaurantCategory;
 import com.foodtogo.mono.user.core.domain.User;
 import jakarta.persistence.*;
-import jdk.jfr.Category;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,7 +19,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "p_restaurants")
-public class Restaurant extends LogEntity {
+@EntityListeners(value = {AuditingEntityListener.class})
+public class Restaurant extends BaseEntity {
 
     // 음식점 ID, PK
     @Id
@@ -67,7 +67,6 @@ public class Restaurant extends LogEntity {
             String restaurantPhoneNumber,
             String restaurantIntroduce,
             String restaurantImageUrl,
-            String createdBy,
             User user,
             RestaurantCategory category
     ){
@@ -80,8 +79,6 @@ public class Restaurant extends LogEntity {
         this.category = category;
         this.isOpened = Boolean.TRUE;
         this.area = RestaurantArea.광화문;
-
-        setCreatedBy(createdBy);
     }
 
     public void updateRestaurants(
@@ -89,16 +86,13 @@ public class Restaurant extends LogEntity {
             String restaurantAddress,
             String restaurantPhoneNumber,
             String restaurantIntroduce,
-            String restaurantImageUrl,
-            String updatedBy
+            String restaurantImageUrl
     ){
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantPhoneNumber = restaurantPhoneNumber;
         this.restaurantIntroduce = restaurantIntroduce;
         this.restaurantImageUrl = restaurantImageUrl;
-
-        setUpdatedBy(updatedBy);
     }
     // 삭제일자 / 삭제자 작성
     public void deleteRestaurants(

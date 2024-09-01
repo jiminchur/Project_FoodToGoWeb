@@ -15,7 +15,7 @@ public class AuthService {
 	private final WebClient webClient;
 
 	@Value("${auth.server.url}")
-	private String authServerUrl = "http://localhost:8081";
+	private String authServerUrl = "http://43.201.54.62:8081";
 
 	public AuthService(WebClient.Builder webClientBuilder, @Value("${auth.server.url}") String authServerUrl) {
 		this.authServerUrl = authServerUrl;

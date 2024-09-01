@@ -41,8 +41,7 @@ public class FoodService {
                 foodRequestDto.getFoodInfoTitle(),
                 foodRequestDto.getFoodInfoDesc(),
                 foodRequestDto.getFoodInfoPrice(),
-                restaurant,
-                userId);
+                restaurant);
         foodRepository.save(food);
 
         log.info("음식 등록 완료: {}", food);
@@ -91,8 +90,7 @@ public class FoodService {
         food.updateFood(
                 foodRequestDto.getFoodInfoTitle(),
                 foodRequestDto.getFoodInfoDesc(),
-                foodRequestDto.getFoodInfoPrice(),
-                userId); // 음식 정보 업데이트
+                foodRequestDto.getFoodInfoPrice()); // 음식 정보 업데이트
         foodRepository.save(food);
 
         log.info("음식 수정 완료: {}", food);

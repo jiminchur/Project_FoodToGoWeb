@@ -25,7 +25,7 @@ public class WebClientConfig {
 	@Bean
 	public WebClient webClient(WebClient.Builder webClientBuilder) {
 		return webClientBuilder
-				.baseUrl("http://localhost:8081")  // 기본 URL 설정
+				.baseUrl("http://43.201.54.62:8081")  // 기본 URL 설정
 				.build();
 	}
 }

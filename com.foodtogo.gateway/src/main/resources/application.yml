@@ -10,11 +10,11 @@ spring:
     gateway:
       routes:  # Spring Cloud Gateway의 라우팅 설정
         - id: auth-service  # 라우트 식별자
-          uri: ${AUTH_SERVICE_URL}
+          uri: ${{secrets.AUTH_SERVICE_URL}}
           predicates:
             - Path=/auth/**  # /auth/** 경로로 들어오는 요청을 이 라우트로 처리
         - id: monolithic-service  # 라우트 식별자
-          uri: ${MONO_SERVICE_URL}
+          uri: ${{secrets.MONO_SERVICE_URL}}
           predicates:
             - Path=/api/**  # /api/** 경로로 들어오는 요청을 이 라우트로 처리
       discovery:
@@ -22,16 +22,16 @@ spring:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
+      host: ${{secrets.REDIS_HOST}}
+      port: ${{secrets.REDIS_PORT}}
+      password: ${{secrets.REDIS_PASSWORD}}
 service:
   jwt:
-    secret-key: ${JWT_SECRET_KEY}
+    secret-key: ${{secrets.JWT_SECRET_KEY}}
     expiration-time: 3600000
     token-prefix: "Bearer "
     header-string: "Authorization"
 
 auth:
   server:
-    url: ${AUTH_SERVICE_URL}
+    url: ${{secrets.AUTH_SERVICE_URL}}

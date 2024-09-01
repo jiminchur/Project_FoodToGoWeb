@@ -43,7 +43,7 @@ public class AiRequestHistoryService {
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        AiRequestHistory aiRequestHistory = new AiRequestHistory(user,text,response.getBody(),userId);
+        AiRequestHistory aiRequestHistory = new AiRequestHistory(user,text,response.getBody());
 
         // 요청 기록 저장
         requestHistoryRepository.save(aiRequestHistory);

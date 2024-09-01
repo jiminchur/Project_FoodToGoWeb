@@ -1,13 +1,12 @@
 package com.foodtogo.mono.restaurant_category.core;
 
-import com.foodtogo.mono.log.LogEntity;
-import com.foodtogo.mono.restaurant_category.dto.RestaurantCategoryRequestDto;
+import com.foodtogo.mono.log.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,7 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "p_restaurant_categories")
-public class RestaurantCategory extends LogEntity {
+@EntityListeners(value = {AuditingEntityListener.class})
+public class RestaurantCategory extends BaseEntity {
 
     @Id
     @UuidGenerator
@@ -28,22 +28,16 @@ public class RestaurantCategory extends LogEntity {
 
     // 카테고리 생성
     public RestaurantCategory(
-            String categoryTitle,
-            String createBy
+            String categoryTitle
     ){
         this.categoryTitle = categoryTitle;
-
-        setCreatedBy(createBy);
     }
 
     // 카테고리 수정
     public void updateCategories(
-            String categoryTitle,
-            String updatedBy
+            String categoryTitle
     ){
         this.categoryTitle = categoryTitle;
-
-        setUpdatedBy(updatedBy);
     }
 
     // 카테고리 삭제

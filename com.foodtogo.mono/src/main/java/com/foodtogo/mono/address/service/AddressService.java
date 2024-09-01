@@ -21,27 +21,26 @@ import java.util.UUID;
 public class AddressService {
 
     private final AddressRepository addressRepository;
-
     private final UserRepository userRepository;
 
     // 회원 배송지 등록
+    @Transactional
     public String createAddress(UUID userId, AddressRequestDto requestDto) {
 
-        User user = userRepository.findUserId(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        Address address = new Address(user, requestDto);
+        Address address = new Address(user, requestDto.getAddress(), requestDto.getRequest());
         addressRepository.save(address);
         return "[" + user.getUsername() + "] 회원님 배송지 등록 완료";
     }
 
     // 회원 배송지 목록 조회
     @Transactional(readOnly = true)
-    public Page<AddressResponseDto> getUserAddressList(int page, int size, String sortBy, boolean isAsc, UUID userId) {
+    public Page<AddressResponseDto> getUserAddressList(int page, int size, String sortBy, UUID userId) {
 
-        User user = userRepository.findUserId(userId);
-
-        Pageable pageable = convertToPage(page, size, sortBy, isAsc);
-        Page<Address> addressList = addressRepository.findByUser(user, pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Page<Address> addressList = addressRepository.findByUserId(userId, pageable);
 
         return addressList.map(AddressResponseDto::new);
     }
@@ -50,11 +49,8 @@ public class AddressService {
     @Transactional(readOnly = true)
     public AddressResponseDto getUserAddress(UUID userId, UUID addressId) {
 
-        User user = userRepository.findUserId(userId);
-        Address address = addressRepository.findById(addressId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
-
-        if (!user.getUserId().equals(address.getUser().getUserId())) {
+        Address address = findAddressId(addressId);
+        if (!address.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
 
@@ -65,14 +61,11 @@ public class AddressService {
     @Transactional
     public AddressResponseDto updateAddressInfo(UUID userId, UUID addressId, AddressRequestDto requestDto) {
 
-        User user = userRepository.findUserId(userId);
-        Address address = addressRepository.findById(addressId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
-
-        if (!user.getUserId().equals(address.getUser().getUserId())) {
+        Address address = findAddressId(addressId);
+        if (!address.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
-        address.updateAddressInfo(requestDto, user.getUsername());
+        address.updateAddressInfo(requestDto.getAddress(), requestDto.getRequest());
 
         return new AddressResponseDto(address);
     }
@@ -81,25 +74,19 @@ public class AddressService {
     @Transactional
     public String deleteAddress(UUID userId, UUID addressId) {
 
-        User user = userRepository.findUserId(userId);
-        Address address = addressRepository.findById(addressId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
-
-        if (!user.getUserId().equals(address.getUser().getUserId())) {
+        Address address = findAddressId(addressId);
+        if (!address.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
+        address.deleteAddress(address.getUser().getUsername());
 
-        address.deleteAddress(user.getUsername());
         return "배송지 삭제 완료.";
     }
 
-    // 페이지 처리
-    private Pageable convertToPage(int page, int size, String sortBy, boolean isAsc) {
 
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-
-        return PageRequest.of(page, size, sort);
+    // 배송지 공통 메소드
+    public Address findAddressId(UUID addressId) {
+        return addressRepository.findById(addressId)
+                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 배송지입니다."));
     }
-
 }
