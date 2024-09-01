@@ -4,6 +4,7 @@ import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import com.foodtogo.mono.restaurant.dto.RestaurantRequestDto;
 import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
 import com.foodtogo.mono.restaurant.service.RestaurantService;
+import com.foodtogo.mono.user.dto.response.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
