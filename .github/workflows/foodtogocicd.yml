@@ -21,11 +21,11 @@ jobs:
 
       - name: Build JAR files
         run: |
-          cd com.foodtogo.gateway
+          cd com.foodtogo.mono
           ./gradlew build
           cd ../com.foodtogo.auth
           ./gradlew build
-          cd ../com.foodtogo.mono
+          cd ../com.foodtogo.gateway
           ./gradlew build
 
       - name: Log in to Docker Hub
