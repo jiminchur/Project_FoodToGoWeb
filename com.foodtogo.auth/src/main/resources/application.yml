@@ -20,17 +20,22 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: false
-  security:
-    jwt:
-      secret: ${{secrets.JWT_SECRET_KEY}}
-      expiration-time: 86400000
-      token-prefix: Bearer
-      header-string: Authorization
   data:
     redis:
       host: ${{secrets.REDIS_HOST}}
       port: ${{secrets.REDIS_PORT}}
+      password: ${{sercrets.REDIS_PASSWORD}}
+  app:
+    user:
+      default-role: CUSTOMER
 
-app:
-  user:
-    default-role: CUSTOMER
+service:
+  jwt:
+    secret-key: ${{secrets.JWT_SECRET_KEY}}
+    expiration-time: 3600000
+    token-prefix: "Bearer "
+    header-string: "Authorization"
+
+role:
+  manager: ${{secrets.MANAGER_TOKEN}}
+
