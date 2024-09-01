@@ -10,11 +10,11 @@ spring:
     gateway:
       routes:  # Spring Cloud Gateway의 라우팅 설정
         - id: auth-service  # 라우트 식별자
-          uri: ${AUTH_SERVICE_URL}
+          uri: http://${AUTH_SERVICE_HOST}:${AUTH_SERVICE_PORT}
           predicates:
             - Path=/auth/**  # /auth/** 경로로 들어오는 요청을 이 라우트로 처리
         - id: monolithic-service  # 라우트 식별자
-          uri: ${MONO_SERVICE_URL}
+          uri: http://${MONO_SERVICE_HOST}:${MONO_SERVICE_PORT}
           predicates:
             - Path=/api/**  # /api/** 경로로 들어오는 요청을 이 라우트로 처리
       discovery:
@@ -34,4 +34,4 @@ service:
 
 auth:
   server:
-    url: ${AUTH_SERVICE_URL}
+    url: http://${AUTH_SERVICE_HOST}:${AUTH_SERVICE_PORT}
