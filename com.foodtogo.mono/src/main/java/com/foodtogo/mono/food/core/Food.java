@@ -1,15 +1,14 @@
 package com.foodtogo.mono.food.core;
 
 
-import com.foodtogo.mono.food.dto.FoodRequestDto;
-import com.foodtogo.mono.log.LogEntity;
+import com.foodtogo.mono.log.BaseEntity;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,10 +17,10 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "p_food_infos")
-public class Food extends LogEntity {
+@EntityListeners(value = {AuditingEntityListener.class})
+public class Food extends BaseEntity {
 
     // 음식 아이템 ID, PK
     @Id
@@ -51,30 +50,28 @@ public class Food extends LogEntity {
 
     // 가게에 속한 음식 등록
     public Food(
-            FoodRequestDto foodRequestDto,
-            Restaurant restaurant,
-            String createdBy
+            String foodInfoTitle,
+            String foodInfoDesc,
+            BigDecimal foodInfoPrice,
+            Restaurant restaurant
     ) {
-        this.foodInfoTitle = foodRequestDto.getFoodInfoTitle();
-        this.foodInfoDesc = foodRequestDto.getFoodInfoDesc();
-        this.foodInfoPrice = foodRequestDto.getFoodInfoPrice();
+        this.foodInfoTitle = foodInfoTitle;
+        this.foodInfoDesc = foodInfoDesc;
+        this.foodInfoPrice = foodInfoPrice;
         this.isHidden = Boolean.FALSE;
         this.isSale = Boolean.TRUE;
         this.restaurant = restaurant;
-
-        setCreatedBy(createdBy);
     }
 
     // 음식 상세 정보 수정
     public void updateFood(
-            FoodRequestDto foodRequestDto,
-            String updatedBy
+            String foodInfoTitle,
+            String foodInfoDesc,
+            BigDecimal foodInfoPrice
     ){
-        this.foodInfoTitle = foodRequestDto.getFoodInfoTitle();
-        this.foodInfoDesc = foodRequestDto.getFoodInfoDesc();
-        this.foodInfoPrice = foodRequestDto.getFoodInfoPrice();
-
-        setUpdatedBy(updatedBy);
+        this.foodInfoTitle = foodInfoTitle;
+        this.foodInfoDesc = foodInfoDesc;
+        this.foodInfoPrice = foodInfoPrice;
     }
 
     // 음식 삭제

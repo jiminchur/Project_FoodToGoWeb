@@ -22,7 +22,7 @@ public class OrderResponseDto {
     private UUID restaurantId;
     private OrderTypeEnum orderType;
     private OrderStatusEnum orderStatus;
-    private BigDecimal amount;
+    private BigDecimal totalOrderPrice;
     private Boolean isPaid;
     private List<OrderFoodResponseDto> orderFoodList;
 
@@ -32,7 +32,7 @@ public class OrderResponseDto {
         this.restaurantId = order.getRestaurant().getRestaurantId();
         this.orderType = order.getOrderType();
         this.orderStatus = order.getOrderStatus();
-        this.amount = order.getAmount();
+        this.totalOrderPrice = order.getTotalOrderPrice();
         this.isPaid = order.getIsPaid();
         this.orderFoodList = orderFoodList;
     }

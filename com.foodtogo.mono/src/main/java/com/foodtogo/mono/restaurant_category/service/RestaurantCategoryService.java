@@ -24,11 +24,11 @@ public class RestaurantCategoryService {
     // 카테고리 등록
     @Transactional
     public RestaurantCategoryResponseDto createCategories(
-            RestaurantCategoryRequestDto restaurantCategoryRequestDto,
-            String userId
+            RestaurantCategoryRequestDto restaurantCategoryRequestDto
     ){
         log.info("카테고리 등록 요청: {}", restaurantCategoryRequestDto);
-        RestaurantCategory restaurantCategory = new RestaurantCategory(restaurantCategoryRequestDto,userId);
+        RestaurantCategory restaurantCategory = new RestaurantCategory(
+                restaurantCategoryRequestDto.getCategoryTitle());
         restaurantCategoryRepository.save(restaurantCategory);
 
         log.info("카테고리 등록 완료: {}", restaurantCategory);
@@ -48,8 +48,7 @@ public class RestaurantCategoryService {
     @Transactional
     public RestaurantCategoryResponseDto updateCategories(
             UUID categoryId,
-            RestaurantCategoryRequestDto restaurantCategoryRequestDto,
-            String userId
+            RestaurantCategoryRequestDto restaurantCategoryRequestDto
     ){
         log.info("카테고리 수정 요청: ID={}, 데이터={}", categoryId, restaurantCategoryRequestDto);
         RestaurantCategory restaurantCategory = restaurantCategoryRepository.findById(categoryId)
@@ -59,7 +58,8 @@ public class RestaurantCategoryService {
                     return new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리는 없습니다.");
                 });
 
-        restaurantCategory.updateCategories(restaurantCategoryRequestDto,userId);
+        restaurantCategory.updateCategories(
+                restaurantCategoryRequestDto.getCategoryTitle());
         restaurantCategoryRepository.save(restaurantCategory);
 
         log.info("카테고리 수정 완료: {}", restaurantCategory);

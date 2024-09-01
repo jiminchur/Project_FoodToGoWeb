@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -42,12 +43,18 @@ public class AiRequestHistoryService {
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        AiRequestHistory aiRequestHistory = new AiRequestHistory(user,text,response.getBody(),userId);
+        AiRequestHistory aiRequestHistory = new AiRequestHistory(user,text,response.getBody());
 
         // 요청 기록 저장
         requestHistoryRepository.save(aiRequestHistory);
 
         return response.getBody();
+    }
+
+    // 전체조회
+    public List<AiRequestHistory> getAllHistory(
+    ) {
+        return requestHistoryRepository.findAll();
     }
 
     // user_id로 찾기

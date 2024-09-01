@@ -1,16 +1,15 @@
 package com.foodtogo.mono.restaurant.core.domain;
 
-import com.foodtogo.mono.log.LogEntity;
+import com.foodtogo.mono.log.BaseEntity;
 import com.foodtogo.mono.restaurant.core.enums.RestaurantArea;
-import com.foodtogo.mono.restaurant.dto.RestaurantRequestDto;
-import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
 import com.foodtogo.mono.restaurant_category.core.RestaurantCategory;
 import com.foodtogo.mono.user.core.domain.User;
 import jakarta.persistence.*;
-import jdk.jfr.Category;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,7 +19,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "p_restaurants")
-public class Restaurant extends LogEntity {
+@EntityListeners(value = {AuditingEntityListener.class})
+public class Restaurant extends BaseEntity {
 
     // 음식점 ID, PK
     @Id
@@ -62,35 +62,37 @@ public class Restaurant extends LogEntity {
     private String restaurantImageUrl;
 
     public Restaurant(
-            RestaurantRequestDto requestDto
-            , String createdBy
-            , User user
-            , RestaurantCategory category
+            String restaurantName,
+            String restaurantAddress,
+            String restaurantPhoneNumber,
+            String restaurantIntroduce,
+            String restaurantImageUrl,
+            User user,
+            RestaurantCategory category
     ){
-        this.restaurantName = requestDto.getRestaurantName();
-        this.restaurantAddress = requestDto.getRestaurantAddress();
-        this.restaurantPhoneNumber = requestDto.getRestaurantPhoneNumber();
-        this.restaurantIntroduce = requestDto.getRestaurantIntroduce();
-        this.restaurantImageUrl = requestDto.getRestaurantImageUrl();
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantPhoneNumber = restaurantPhoneNumber;
+        this.restaurantIntroduce = restaurantIntroduce;
+        this.restaurantImageUrl = restaurantImageUrl;
         this.user = user;
         this.category = category;
         this.isOpened = Boolean.TRUE;
         this.area = RestaurantArea.광화문;
-
-        setCreatedBy(createdBy);
     }
 
     public void updateRestaurants(
-            RestaurantRequestDto requestDto
-            , String updatedBy
+            String restaurantName,
+            String restaurantAddress,
+            String restaurantPhoneNumber,
+            String restaurantIntroduce,
+            String restaurantImageUrl
     ){
-        this.restaurantName = requestDto.getRestaurantName();
-        this.restaurantAddress = requestDto.getRestaurantAddress();
-        this.restaurantPhoneNumber = requestDto.getRestaurantPhoneNumber();
-        this.restaurantIntroduce = requestDto.getRestaurantIntroduce();
-        this.restaurantImageUrl = requestDto.getRestaurantImageUrl();
-
-        setUpdatedBy(updatedBy);
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
+        this.restaurantPhoneNumber = restaurantPhoneNumber;
+        this.restaurantIntroduce = restaurantIntroduce;
+        this.restaurantImageUrl = restaurantImageUrl;
     }
     // 삭제일자 / 삭제자 작성
     public void deleteRestaurants(
