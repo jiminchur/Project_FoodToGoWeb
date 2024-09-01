@@ -5,9 +5,9 @@ spring:
   application:
     name: auth
   datasource:
-    url: ${{secrets.DB_URL}}
-    username: ${{secrets.DB_USERNAME}}
-    password: ${{secrets.DB_PASSWORD}}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -22,20 +22,20 @@ spring:
       write-dates-as-timestamps: false
   data:
     redis:
-      host: ${{secrets.REDIS_HOST}}
-      port: ${{secrets.REDIS_PORT}}
-      password: ${{sercrets.REDIS_PASSWORD}}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
   app:
     user:
       default-role: CUSTOMER
 
 service:
   jwt:
-    secret-key: ${{secrets.JWT_SECRET_KEY}}
+    secret-key: ${JWT_SECRET_KEY}
     expiration-time: 3600000
     token-prefix: "Bearer "
     header-string: "Authorization"
 
 role:
-  manager: ${{secrets.MANAGER_TOKEN}}
+  manager: ${MANAGER_TOKEN}
 

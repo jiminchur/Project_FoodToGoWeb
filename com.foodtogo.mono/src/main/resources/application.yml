@@ -7,9 +7,9 @@ spring:
       enabled: ALWAYS
 
   datasource:
-    url: ${{secrets.DB_URL}}
-    username: ${{secrets.DB_USERNAME}}
-    password: ${{secrets.DB_PASSWORD}}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -24,7 +24,7 @@ spring:
 
 google:
   api:
-    key: ${{secrets.GOOGLE_KEY}}
+    key: ${GOOGLE_KEY}
 
 role:
-  manager: ${{secrets.MANAGER_TOKEN}}
+  manager: ${MANAGER_TOKEN}
