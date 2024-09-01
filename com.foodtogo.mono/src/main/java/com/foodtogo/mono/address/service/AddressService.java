@@ -27,7 +27,7 @@ public class AddressService {
     // 회원 배송지 등록
     public String createAddress(UUID userId, AddressRequestDto requestDto) {
 
-        User user = findUserId(userId);
+        User user = userRepository.findUserId(userId);
 
         Address address = new Address(user, requestDto);
         addressRepository.save(address);
@@ -38,7 +38,7 @@ public class AddressService {
     @Transactional(readOnly = true)
     public Page<AddressResponseDto> getUserAddressList(int page, int size, String sortBy, boolean isAsc, UUID userId) {
 
-        User user = findUserId(userId);
+        User user = userRepository.findUserId(userId);
 
         Pageable pageable = convertToPage(page, size, sortBy, isAsc);
         Page<Address> addressList = addressRepository.findByUser(user, pageable);
@@ -50,7 +50,7 @@ public class AddressService {
     @Transactional(readOnly = true)
     public AddressResponseDto getUserAddress(UUID userId, UUID addressId) {
 
-        User user = findUserId(userId);
+        User user = userRepository.findUserId(userId);
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
@@ -65,11 +65,11 @@ public class AddressService {
     @Transactional
     public AddressResponseDto updateAddressInfo(UUID userId, UUID addressId, AddressRequestDto requestDto) {
 
-        User user = findUserId(userId);
+        User user = userRepository.findUserId(userId);
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
-       if (!user.getUserId().equals(address.getUser().getUserId())) {
+        if (!user.getUserId().equals(address.getUser().getUserId())) {
             throw new IllegalArgumentException("회원님의 배송지가 아닙니다.");
         }
         address.updateAddressInfo(requestDto, user.getUsername());
@@ -81,7 +81,7 @@ public class AddressService {
     @Transactional
     public String deleteAddress(UUID userId, UUID addressId) {
 
-        User user = findUserId(userId);
+        User user = userRepository.findUserId(userId);
         Address address = addressRepository.findById(addressId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 주소입니다."));
 
@@ -102,9 +102,4 @@ public class AddressService {
         return PageRequest.of(page, size, sort);
     }
 
-    // 유저 찾는 공통 메소드
-    public User findUserId(UUID userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-    }
 }

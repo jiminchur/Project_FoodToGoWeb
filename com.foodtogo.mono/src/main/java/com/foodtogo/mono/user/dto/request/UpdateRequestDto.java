@@ -1,21 +1,15 @@
 package com.foodtogo.mono.user.dto.request;
 
 import com.foodtogo.mono.user.core.enums.UserRoleEnum;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SignupRequestDto {
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
-    private String email;
-
+public class UpdateRequestDto {
     @NotBlank(message = "Password is required")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,15}$",
             message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
@@ -28,7 +22,7 @@ public class SignupRequestDto {
     private String nickname;
 
     @NotNull(message = "Role is required.")
-    private String role;
+    private UserRoleEnum role;
 
     private String profileUrl;
     private String adminToken = "";

@@ -174,6 +174,11 @@ public class JwtUtil {
 
 	public String extractTokenFromExchange(ServerWebExchange exchange) {
 		final String authHeader = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION_HEADER);
+		// authHeader가 null인지 체크합니다.
+		if (authHeader == null || authHeader.isBlank()) {
+			log.error("AUTHORIZATION_HEADER is empty or blank");
+			throw new IllegalArgumentException("Authorization header is missing or empty");
+		}
 		return extractTokenFromBearer(authHeader);
 	}
 

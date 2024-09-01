@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: mono
@@ -17,11 +20,14 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
-        use_sql_comments: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        allow_jdbc_metadata_access: true
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
 
 google:
   api:
     key: ${GOOGLE_KEY}
+role:
+  manager: ${MANAGER_TOKEN}

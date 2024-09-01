@@ -11,26 +11,39 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: validate
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        allow_jdbc_metadata_access: true
+        show_sql: true
         format_sql: true
         use_sql_comments: true
-  jackson:
-    serialization:
-      write-dates-as-timestamps: false
-  security:
-    jwt:
-      secret: 7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5n6rCV7J2Y7Yqc7YSw7LWc7JuQ67mI7J6F64uI64ukLg==
-      expiration-time: 86400000
-      token-prefix: Bearer
-      header-string: Authorization
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+    jackson:
+      serialization:
+        write-dates-as-timestamps: false
+    data:
+      redis:
+        host: ${REDIS_HOST}
+        port: ${REDIS_PORT}
+        password: ${REDIS_PASSWORD}
 
-app:
-  user:
-    default-role: CUSTOMER
+  app:
+    user:
+      default-role: CUSTOMER
+
+  logging:
+    level:
+      org.springframework.boot.context.logging.LoggingApplicationListener: DEBUG
+      org.hibernate: DEBUG
+      org.springframework.orm.jpa: DEBUG
+
+  service:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration-time: 3600000
+      token-prefix: "Bearer "
+      header-string: "Authorization"
+
+  role:
+    manager: ${MANAGER_TOKEN}
