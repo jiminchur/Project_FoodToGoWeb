@@ -98,8 +98,7 @@ public class User extends LogEntity {
         return user;
     }
 
-    public void updateUserInfo(UpdateRequestDto requestDto, String passwordEncode) {
-        this.password = passwordEncode;
+    public void updateUserInfo(UpdateRequestDto requestDto) {
         this.username = requestDto.getUsername();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.nickname = requestDto.getNickname();
