@@ -1,3 +1,4 @@
+
 name: Deploy to EC2
 
 on:
@@ -19,14 +20,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Generate application.yml (mono)
+        run: |
+          cd ./com.foodtogo.mono/src/main/resources
+          echo "${{ secrets.MONO_YML }}" > application.yml
+
+      - name: Generate application.yml (auth)
+        run: |
+          cd ./com.foodtogo.auth/src/main/resources
+          echo "${{ secrets.AUTH_YML }}" > application.yml
+
+      - name: Generate application.yml (gateway)
+        run: |
+          cd ./com.foodtogo.gateway/src/main/resources
+          echo "${{ secrets.GW_YML }}" > application.yml
+
       - name: Build JAR files
         run: |
-          cd com.foodtogo.mono
-          ./gradlew build
-          cd ../com.foodtogo.auth
-          ./gradlew build
-          cd ../com.foodtogo.gateway
-          ./gradlew build
+          cd com.foodtogo.mono && ./gradlew build
+          cd ../com.foodtogo.auth && ./gradlew build
+          cd ../com.foodtogo.gateway && ./gradlew build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -48,7 +61,7 @@ jobs:
           docker build --platform linux/amd64 -t ttlcc13/foodtogo-mono:latest ./com.foodtogo.mono
           docker push ttlcc13/foodtogo-mono:latest
 
-      - name: 1st Deploy to EC2 (auth-service, mono-service)
+      - name: Deploy to EC2 (auth-service, mono-service)
         env:
           HOST: ${{ secrets.EC2_HOST }}
           USER: ${{ secrets.EC2_USER }}
@@ -60,7 +73,8 @@ jobs:
             docker compose -f app-compose.yml down
             docker compose -f app-compose.yml up -d
           EOF
-      - name: 2nd Deploy to EC2 (gateway-service)
+
+      - name: Deploy to EC2 (gateway-service)
         env:
           HOST: ${{ secrets.EC2_HOST_GW }}
           USER: ${{ secrets.EC2_USER }}
@@ -70,5 +84,5 @@ jobs:
           chmod 600 key.pem
           ssh -i key.pem $USER@$HOST << 'EOF'
             docker compose -f app-compose.yml down
-              docker compose -f app-compose.yml up -d
-            EOF
+            docker compose -f app-compose.yml up -d
+          EOF
