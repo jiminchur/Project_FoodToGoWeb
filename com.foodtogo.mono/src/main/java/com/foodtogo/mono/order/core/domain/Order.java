@@ -30,6 +30,7 @@ public class Order extends BaseEntity {
     private UUID orderId;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OrderTypeEnum orderType;
 
     @Column(nullable = false)
@@ -37,7 +38,6 @@ public class Order extends BaseEntity {
     private OrderStatusEnum orderStatus = OrderStatusEnum.PENDING;
 
     @Column
-    @Enumerated(EnumType.STRING)
     private BigDecimal totalOrderPrice;
 
     @Column(nullable = false)

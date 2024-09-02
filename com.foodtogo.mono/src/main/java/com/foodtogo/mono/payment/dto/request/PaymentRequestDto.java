@@ -11,5 +11,4 @@ import java.util.UUID;
 public class PaymentRequestDto {
     private UUID orderId;
     private String paymentType;
-    private BigDecimal amount;
 }
