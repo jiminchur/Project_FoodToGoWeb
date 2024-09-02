@@ -60,10 +60,6 @@ public class UserService {
         return UserResponseDto.fromUser(user);
     }
 
-    public User getUserByUserId(UUID userId) {
-        return userRepository.findUserId(userId);
-    }
-
     // 회원 정보 수정
     @Transactional
     public void updateUserInfo(UpdateRequestDto requestDto, UUID userId) {
@@ -127,4 +123,11 @@ public class UserService {
         user.setUpdatedBy(loginUserId.toString());
     }
 
+    public User getUserByUserId(UUID userId) {
+        return userRepository.findUserId(userId);
+    }
+    
+    public User getUserByEmail(String email) {
+        return userRepository.findEmail(email);
+    }
 }

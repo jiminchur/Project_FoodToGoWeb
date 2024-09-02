@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
@@ -17,6 +18,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     // Default 메소드를 사용하여 findById의 Optional을 내부적으로 처리
     default User findUserId(UUID userId) {
         return findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId.toString()));
+    }
+
+    Optional<User> findByEmail(String email);
+    default User findEmail(String email) {
+        return findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
     }
 
     // 회원 목록 조회 (정렬 및 페이징)
