@@ -71,9 +71,9 @@ jobs:
           USER: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem $USER@$HOST << 'EOF'
+          echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
+          chmod 600 foodtogo.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             docker compose -f app-compose.yml down
             docker compose -f app-compose.yml up -d
           EOF
@@ -84,9 +84,9 @@ jobs:
           USER: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem $USER@$HOST << 'EOF'
+          echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
+          chmod 600 foodtogo.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_GW }} << 'EOF'
             docker compose -f app-compose.yml down
             docker compose -f app-compose.yml up -d
           EOF
