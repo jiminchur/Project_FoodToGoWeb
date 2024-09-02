@@ -63,7 +63,12 @@ jobs:
                 fi
             done
           EOF
-
+      - name: Create SSH directory
+        run: |
+          mkdir -p ~/.ssh
+      - name: Add known host
+        run: |
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
       - name: Build and Deploy JAR files
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
@@ -72,7 +77,7 @@ jobs:
             cd com.foodtogo.$service
             ./gradlew build
             cd build/libs/
-            scp -o StrictHostKeyChecking=no -i foodtogo.pem ${service}-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
+            scp -i foodtogo.pem ${service}-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
           done
 
       - name: Start Applications
