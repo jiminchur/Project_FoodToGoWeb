@@ -4,6 +4,7 @@ import com.foodtogo.mono.Result;
 import com.foodtogo.mono.food.core.Food;
 import com.foodtogo.mono.food.dto.FoodRequestDto;
 import com.foodtogo.mono.food.dto.FoodResponseDto;
+import com.foodtogo.mono.food.dto.FoodSearchDto;
 import com.foodtogo.mono.food.service.FoodService;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import lombok.RequiredArgsConstructor;
@@ -121,15 +122,10 @@ public class FoodController {
     // 음식 검색
     @GetMapping("/foods/search")
     public ResponseEntity<Result<Page<FoodResponseDto>>> searchRestaurants(
-            @RequestParam("query") String query,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc
+            FoodSearchDto foodSearchDto
     ) {
-
-        Page<FoodResponseDto> searchedFoods = foodService.searchFoods(query, page, size, sortBy, isAsc);
-        log.info("음식 검색: {}, page: {}, size: {}", query, page, size);
+        int size = foodSearchDto.getValidatedSize();
+        Page<FoodResponseDto> searchedFoods = foodService.searchFoods(foodSearchDto.getKeyword(),foodSearchDto.getPage(),size,foodSearchDto.getSortBy());
         return new ResponseEntity<>(Result.of(searchedFoods),HttpStatus.OK);
     }
 
