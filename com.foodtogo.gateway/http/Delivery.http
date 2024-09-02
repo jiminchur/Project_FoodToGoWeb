@@ -1,0 +1,62 @@
+### 배송지 관련 API
+
+### 서버 URL 설정 (여기에서 필요한 환경의 주석을 제거하세요)
+@SERVER_URL = http://localhost:8080
+# @SERVER_URL = http://43.201.69.252:8080
+
+### 공통 변수 설정
+@email = "user@example.com"
+@currentPassword = "Password123!"
+@newPassword = "Password123!new"
+
+### 가변 변수 설정 1
+@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmM2RhNjlkNS0xYWZlLTRlZmUtODUwZi00N2I5YjNjNzY2NmYiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1Mjg0MDk1LCJpYXQiOjE3MjUyODA0OTV9.qZMew6vC_gRuVOeP_khtJOrHSZKqsdH3RZNwLDJlJeU
+@userId = f3da69d5-1afe-4efe-850f-47b9b3c7666f
+@role = MASTER
+@categoryId = 7f69d63d-3fa5-400e-af64-c676fab829be
+@restaurantId = 2b06f460-8873-4263-b7e2-ee4223ecb51e
+@foodInfoId1 = f73a7fdd-f447-4e2a-beb3-ddb5914abac5
+@foodInfoId2 = c5b4f857-9fde-4ec1-92f6-c0dc899899a4
+@foodInfoId3 = fc389736-267a-4d32-a123-37f2eab16e67
+@foodInfoId4 = 4d9ffadd-aa29-4b7d-b213-d6a6a44edd1c
+@orderId = cb19e45c-bdbf-4bde-94b5-69f488925a8e
+@orderId1 = 03e394ba-ad99-4471-bdd1-b911e91f42bb
+@orderId2 = e6d05fcb-6aad-432d-80d8-718b65d8ed5b
+@orderId3 = 9edbce64-c5c4-45a7-add9-dde9c7e86b77
+@orderId4 = eb700ac5-24d7-421b-a61f-13f06aa3416e
+@orderId5 = b965ffeb-9fc1-4759-9cbc-797df6a5fbe3
+
+### 유저 배송지 등록
+POST {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "address": "서울특별시 중구 세종대로 110",
+  "request": "문 앞에 두고 벨 눌러주세요"
+}
+
+### 유저 배송지 전체 목록
+GET {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses?page=0&size=10&sortBy=createdAt
+Authorization: Bearer {{jwt_token}}
+
+### 가변 변수 설정 1
+@deliveryAddressId = a78c19f1-c1d6-4906-8ec3-3e2d3ea83f8b
+
+### 유저 배송지 상세 조회
+GET {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses/{{deliveryAddressId}}
+Authorization: Bearer {{jwt_token}}
+
+### 유저 배송지 수정 -- 안됨
+PUT {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses/{{deliveryAddressId}}
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "address": "서울특별시 강남구 테헤란로 212",
+  "request": "경비실에 맡겨주세요"
+}
+
+### 유저 배송지 삭제
+DELETE {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses/{{deliveryAddressId}}
+Authorization: Bearer {{jwt_token}}

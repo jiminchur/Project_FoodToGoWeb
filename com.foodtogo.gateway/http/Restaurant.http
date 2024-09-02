@@ -1,0 +1,89 @@
+### 가게 관련 API
+
+### 서버 URL 설정 (여기에서 필요한 환경의 주석을 제거하세요)
+@SERVER_URL = http://localhost:8080
+# @SERVER_URL = http://43.201.69.252:8080
+
+### 공통 변수 설정
+@email = "user@example.com"
+@currentPassword = "Password123!"
+@newPassword = "Password123!new"
+
+
+### 유저 로그인 - 성공
+POST {{SERVER_URL}}/auth/v1/users/login
+Content-Type: application/json
+
+{
+  "email": {{email}},
+  "password": {{newPassword}}
+}
+
+
+### 가변 변수 설정 1
+@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmM2RhNjlkNS0xYWZlLTRlZmUtODUwZi00N2I5YjNjNzY2NmYiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1MjcyMzUxLCJpYXQiOjE3MjUyNjg3NTF9.GnbR94Vi-eLZKMOqFJx4kCLzW5Dbp16dLApAbWiNQyQ
+@userId = f3da69d5-1afe-4efe-850f-47b9b3c7666f
+@role = MASTER
+
+### 공통 변수 설정 1
+@categoryId = 7f69d63d-3fa5-400e-af64-c676fab829be
+@restaurantId = 2b06f460-8873-4263-b7e2-ee4223ecb51e
+
+
+
+### 가게 등록
+POST {{SERVER_URL}}/api/v1/restaurants
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryId": "{{categoryId}}",
+  "restaurantName": "테스트 맛집2",
+  "restaurantAddress": "서울시 종로구 세종대로 727-1",
+  "restaurantPhoneNumber": "02-9999-0003",
+  "restaurantIntroduce": "아임 테스트",
+  "restaurantImageUrl": "http://example.com/images/good.jpg"
+}
+
+
+### 가게 단건 조회
+GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}
+Authorization: Bearer {{jwt_token}}
+
+### 가게 전체 조회
+GET {{SERVER_URL}}/api/v1/restaurants?page=2&size=10
+Authorization: Bearer {{jwt_token}}
+
+### 가게 정보 전체 수정
+PUT {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryId": "{{categoryId}}",
+  "restaurantName": "홍홍홍",
+  "restaurantAddress": "서울시 종로구 세종대로 717-1 3홍",
+  "restaurantPhoneNumber": "02-9999-0001",
+  "restaurantIntroduce": "쭝궈룬 한궈룬",
+  "restaurantImageUrl": "http://example.com/images/good.jpg"
+}
+
+
+### 가게 검색
+GET {{SERVER_URL}}/api/v1/restaurants/search?query=테스트&page=0&size=5&isAsc=true&sortBy=createdAt
+Authorization: Bearer {{jwt_token}}
+
+
+### 가게 운영 상태 변경
+PATCH {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/status
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "status": "OPEN"
+}
+
+
+### 가게 삭제
+DELETE {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}
+Authorization: Bearer {{jwt_token}}
