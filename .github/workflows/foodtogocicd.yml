@@ -1,4 +1,3 @@
-
 name: Deploy to EC2
 
 on:
@@ -35,63 +34,47 @@ jobs:
           cd ./com.foodtogo.gateway/src/main/resources
           echo "${{ secrets.GW_YML }}" > application.yml
 
-      - name: Build JAR files mono
-        run: |
-          cd com.foodtogo.mono && ./gradlew build
-      - name: Build JAR files auth
-        run: |
-          cd com.foodtogo.auth && ./gradlew build
-      - name: Build JAR files gw
-        run: |
-          cd com.foodtogo.gateway && ./gradlew build
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and push Docker images
-        run: |
-          # Gateway
-          docker build --platform linux/amd64 -t ttlcc13/foodtogo-gateway:latest ./com.foodtogo.gateway
-          docker push ttlcc13/foodtogo-gateway:latest
-          
-          # Auth
-          docker build --platform linux/amd64 -t ttlcc13/foodtogo-auth:latest ./com.foodtogo.auth
-          docker push ttlcc13/foodtogo-auth:latest
-          
-          # Mono
-          docker build --platform linux/amd64 -t ttlcc13/foodtogo-mono:latest ./com.foodtogo.mono
-          docker push ttlcc13/foodtogo-mono:latest
-      - name: Add EC2 Host to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          ssh-keyscan -H ${{ secrets.EC2_HOST_GW }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to EC2 (auth-service, mono-service)
-        env:
-          HOST: ${{ secrets.EC2_HOST }}
-          USER: ${{ secrets.EC2_USER }}
-          KEY: ${{ secrets.EC2_SSH_KEY }}
+      - name: Prepare SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
           chmod 600 foodtogo.pem
-          ssh -i foodtogo.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            docker compose -f app-compose.yml down
-            docker compose -f app-compose.yml up -d
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i foodtogo.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_GW }} << 'EOF'
+            # 기존 JAR 파일 종료
+            for jar in "mono-0.0.1-SNAPSHOT.jar" "auth-0.0.1-SNAPSHOT.jar" "gateway-0.0.1-SNAPSHOT.jar"; do
+                PID=$(ps aux | grep "java -jar $jar" | grep -v grep | awk '{print $2}')
+                if [ -n "$PID" ]; then
+                    echo "Stopping $jar with PID: $PID"
+                    kill $PID
+                else
+                    echo "$jar is not running."
+                fi
+            done
+            
+            # 기존 JAR 파일이 있을 경우 삭제
+            for jar in "mono-0.0.1-SNAPSHOT.jar" "auth-0.0.1-SNAPSHOT.jar" "gateway-0.0.1-SNAPSHOT.jar"; do
+                if [ -f $jar ]; then
+                    echo "Deleting $jar"
+                    rm $jar
+                fi
+            done
           EOF
 
-      - name: Deploy to EC2 (gateway-service)
-        env:
-          HOST: ${{ secrets.EC2_HOST_GW }}
-          USER: ${{ secrets.EC2_USER }}
-          KEY: ${{ secrets.EC2_SSH_KEY }}
+      - name: Build and Deploy JAR files
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
-          chmod 600 foodtogo.pem
+          for service in "mono" "auth" "gateway"; do
+            cd com.foodtogo.$service
+            ./gradlew build
+            cd build/libs/
+            scp -i foodtogo.pem ${service}-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
+          done
+
+      - name: Start Applications
+        run: |
           ssh -i foodtogo.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_GW }} << 'EOF'
-            docker compose -f app-compose.yml down
-            docker compose -f app-compose.yml up -d
+              nohup java -jar mono-0.0.1-SNAPSHOT.jar > mono-0.0.1-SNAPSHOT.log 2>&1 &
+              nohup java -jar auth-0.0.1-SNAPSHOT.jar > auth-0.0.1-SNAPSHOT.log 2>&1 &
+              nohup java -jar gateway-0.0.1-SNAPSHOT.jar > gateway-0.0.1-SNAPSHOT.log 2>&1 &
           EOF
