@@ -46,13 +46,13 @@ public class OrderService {
 
     // 주문 등록 (접수)
     @Transactional
-    public String createOrder(UUID userId, UUID restaurantId, OrderRequestDto requestDto) {
+    public Order createOrder(UUID userId, UUID restaurantId, OrderRequestDto requestDto) {
         // 유저 확인
         User user = findUserId(userId);
         // 음식점 확인
         Restaurant restaurant = findRestaurantId(restaurantId);
         // 가게 오픈 여부
-        if(!restaurant.getIsOpened()){
+        if (!restaurant.getIsOpened()) {
             throw new IllegalArgumentException("가게 오픈전입니다.");
         }
         // 주문 생성 (접수)
@@ -75,9 +75,7 @@ public class OrderService {
         // 주문한 음식 리스트 정보 설정
         order.setOrderFoodList(orderFoodList);
         // 변경사항 저장 - 처음 객체를 생성할 때는 저장해주는 게 좋다.
-        orderRepository.save(order);
-
-        return "[" + user.getUsername() + "]님 주문 접수 완료";
+        return orderRepository.save(order);
     }
 
     // 주문 단건 조회
@@ -202,9 +200,10 @@ public class OrderService {
     }
 
     // 주문 정보 찾는 공통 메소드
-    private Order findOrderId(UUID orderId) {
+    @Transactional(readOnly = true)
+    public Order findOrderId(UUID orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 주문 정보입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다. ID: " + orderId));
     }
 
     // 음식점 정보 찾는 공통 메소드

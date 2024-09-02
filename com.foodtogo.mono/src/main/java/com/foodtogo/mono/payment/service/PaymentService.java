@@ -33,7 +33,7 @@ public class PaymentService {
 
     // 결제 생성(요청)
     @Transactional
-    public String createPayment(UUID userId, PaymentRequestDto paymentRequestDto) {
+    public Payment createPayment(UUID userId, PaymentRequestDto paymentRequestDto) {
         // 주문 여부 체크
         Order order = orderRepository.findById(paymentRequestDto.getOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 주문 정보입니다."));
@@ -41,14 +41,12 @@ public class PaymentService {
             throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
         }
         // 주문에 대한 결제 존재여부 확인 (1:1)
-        if(paymentRepository.existsByOrder(order)){
+        if (paymentRepository.existsByOrder(order)) {
             throw new IllegalArgumentException("이미 결제가 완료된 주문입니다.");
         }
         // 결제 생성
         Payment payment = new Payment(order, PaymentTypeEnum.valueOf(paymentRequestDto.getPaymentType()), order.getTotalOrderPrice());
-        paymentRepository.save(payment);
-        // PG에 요청
-        return "결제 요청 성공.";
+        return paymentRepository.save(payment);
     }
 
     // 결제 취소(요청) - 고객
@@ -122,7 +120,7 @@ public class PaymentService {
     }
 
     // 결제 정보 찾는 공통 메소드
-    private Payment findPaymentId(UUID paymentId) {
+    public Payment findPaymentId(UUID paymentId) {
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 결제 정보입니다."));
     }

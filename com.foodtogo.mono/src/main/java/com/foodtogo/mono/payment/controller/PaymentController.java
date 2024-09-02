@@ -1,6 +1,7 @@
 package com.foodtogo.mono.payment.controller;
 
 import com.foodtogo.mono.Result;
+import com.foodtogo.mono.payment.core.domain.Payment;
 import com.foodtogo.mono.payment.dto.request.PaymentCancelRequestDto;
 import com.foodtogo.mono.payment.dto.request.PaymentPageDto;
 import com.foodtogo.mono.payment.dto.request.PaymentRequestDto;
@@ -11,7 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
@@ -27,9 +35,10 @@ public class PaymentController {
     @PostMapping("/payments")
     public ResponseEntity<Result<String>> createPayment(@RequestHeader("X-User-Id") UUID userId,
                                                         @RequestBody PaymentRequestDto paymentRequestDto) {
-        String message = paymentService.createPayment(userId, paymentRequestDto);
+        Payment createPayment = paymentService.createPayment(userId, paymentRequestDto);
+        Payment payment = paymentService.findPaymentId(createPayment.getPaymentId());
         // 몇개, 얼마를 어떤 방식으로 결제할 것 인지?
-        return new ResponseEntity<>(Result.of(message), HttpStatus.OK);
+        return new ResponseEntity<>(Result.of(payment.getPaymentId().toString()), HttpStatus.OK);
     }
 
     // 결제 취소 요청 Post /api/v1/payments/{payment_id}/refund
@@ -52,7 +61,7 @@ public class PaymentController {
 
     // 결제 목록 조회 - 유저
     @GetMapping("/users/{user_id}/payments")
-    public ResponseEntity<Result<Page<PaymentResponseDto>>> getPaymentListForUser( @RequestHeader("X-User-Id") UUID userId,
+    public ResponseEntity<Result<Page<PaymentResponseDto>>> getPaymentListForUser(@RequestHeader("X-User-Id") UUID userId,
                                                                                   @PathVariable("user_id") UUID targetUserId,
                                                                                   PaymentPageDto paymentPageDto) {
         int size = paymentPageDto.getValidatedSize();

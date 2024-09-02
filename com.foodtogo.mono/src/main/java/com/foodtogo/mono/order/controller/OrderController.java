@@ -1,6 +1,7 @@
 package com.foodtogo.mono.order.controller;
 
 import com.foodtogo.mono.Result;
+import com.foodtogo.mono.order.core.domain.Order;
 import com.foodtogo.mono.order.dto.request.OrderPageDto;
 import com.foodtogo.mono.order.dto.request.OrderRequestDto;
 import com.foodtogo.mono.order.dto.request.UpdateOrderStatusDto;
@@ -28,8 +29,12 @@ public class OrderController {
     public ResponseEntity<Result<String>> createOrder(@RequestHeader("X-User-Id") UUID userId,
                                                       @PathVariable("restaurant_id") UUID restaurantId,
                                                       @RequestBody OrderRequestDto requestDto) {
-        String message = orderService.createOrder(userId, restaurantId, requestDto);
-        return new ResponseEntity<>(Result.of(message), HttpStatus.OK);
+        // 주문 생성
+        Order createdOrder = orderService.createOrder(userId, restaurantId, requestDto);
+        // 생성된 주문 ID를 사용하여 주문 조회
+        Order order = orderService.findOrderId(createdOrder.getOrderId());
+
+        return new ResponseEntity<>(Result.of(order.getOrderId().toString()), HttpStatus.OK);
     }
 
     // 주문 단건 조회
