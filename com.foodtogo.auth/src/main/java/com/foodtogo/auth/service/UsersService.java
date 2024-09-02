@@ -31,7 +31,7 @@ public class UsersService {
     }
 
 
-    @Value("${role.manager}")
+    @Value("${spring.role.manager}")
     private String managerToken;
 
 
