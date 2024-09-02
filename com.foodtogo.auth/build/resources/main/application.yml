@@ -1,0 +1,41 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+  app:
+    user:
+      default-role: CUSTOMER
+
+service:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration-time: 3600000
+    token-prefix: "Bearer "
+    header-string: "Authorization"
+
+role:
+  manager: ${MANAGER_TOKEN}
+
