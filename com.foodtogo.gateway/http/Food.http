@@ -28,7 +28,6 @@ Content-Type: application/json
   "foodInfoTitle": "테스트 음식",
   "foodInfoDesc": "이 음식은 테스트 음식입니다.",
   "foodInfoPrice": 10000,
-  "foodImageUrl": "http://example.com/images/food.jpg",
   "foodCategory": "디저트"
 }
 
@@ -64,7 +63,6 @@ Content-Type: application/json
   "foodInfoTitle": "업데이트된 음식",
   "foodInfoDesc": "이 음식은 업데이트된 음식입니다.",
   "foodInfoPrice": 12000,
-  "foodImageUrl": "http://example.com/images/updated_food.jpg",
   "foodCategory": "메인 요리"
 }
 
