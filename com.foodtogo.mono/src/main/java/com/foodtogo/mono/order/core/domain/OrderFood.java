@@ -1,13 +1,14 @@
 package com.foodtogo.mono.order.core.domain;
 
 import com.foodtogo.mono.food.core.Food;
-import com.foodtogo.mono.log.LogEntity;
+import com.foodtogo.mono.log.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -18,7 +19,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderFood extends LogEntity {
+@EntityListeners(value = {AuditingEntityListener.class})
+public class OrderFood extends BaseEntity {
 
     @Id
     @UuidGenerator
@@ -30,6 +32,7 @@ public class OrderFood extends LogEntity {
     @Column
     private BigDecimal singlePrice;
 
+    // 예를 들어, 단가와 수량을 곱한 값으로 설정
     @Column
     private BigDecimal totalSinglePrice;
 
@@ -42,12 +45,11 @@ public class OrderFood extends LogEntity {
     private Food food;
 
     // 주문-음식 등록
-    public OrderFood(String username, Order orderId, Food foodInfoId, Integer count) {
+    public OrderFood(Order orderId, Food foodInfoId, Integer count) {
         this.count = count;
         this.singlePrice = foodInfoId.getFoodInfoPrice();
         this.totalSinglePrice = foodInfoId.getFoodInfoPrice().multiply(BigDecimal.valueOf(count));
         this.order = orderId;
         this.food = foodInfoId;
-        setCreatedBy(username);
     }
 }

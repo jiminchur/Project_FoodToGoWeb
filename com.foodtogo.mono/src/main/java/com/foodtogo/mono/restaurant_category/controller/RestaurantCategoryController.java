@@ -31,7 +31,7 @@ public class RestaurantCategoryController {
         validateRole(role);
         log.info("사용자 {}에 대한 카테고리 생성 중", userId);
 
-        return restaurantCategoryService.createCategories(restaurantCategoryRequestDto, userId);
+        return restaurantCategoryService.createCategories(restaurantCategoryRequestDto);
     }
 
     // 카테고리 목록 조회
@@ -52,7 +52,7 @@ public class RestaurantCategoryController {
         validateRole(role);
         log.info("사용자 {}에 대한 ID {} 카테고리 수정 중", userId, categoryId);
 
-        return restaurantCategoryService.updateCategories(categoryId, restaurantCategoryRequestDto, userId);
+        return restaurantCategoryService.updateCategories(categoryId, restaurantCategoryRequestDto);
     }
 
     // 카테고리 삭제
