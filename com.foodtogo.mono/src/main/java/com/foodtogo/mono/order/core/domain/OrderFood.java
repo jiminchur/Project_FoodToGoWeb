@@ -11,6 +11,7 @@ import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -51,5 +52,11 @@ public class OrderFood extends BaseEntity {
         this.totalSinglePrice = foodInfoId.getFoodInfoPrice().multiply(BigDecimal.valueOf(count));
         this.order = orderId;
         this.food = foodInfoId;
+    }
+
+    // 주문 취소한 음식들
+    public void deleteOrderFood(String deletedBy) {
+        this.deletedAt = LocalDateTime.now();
+        this.deletedBy = deletedBy;
     }
 }

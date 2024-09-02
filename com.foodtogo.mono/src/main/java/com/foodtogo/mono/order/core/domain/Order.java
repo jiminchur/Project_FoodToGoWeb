@@ -76,9 +76,7 @@ public class Order extends BaseEntity {
     }
 
     // 주문 취소
-    public void cancelOrder(String username) {
-        this.deletedAt = LocalDateTime.now();
-        this.deletedBy = username;
+    public void cancelOrder() {
         this.orderStatus = OrderStatusEnum.CANCELED;
     }
 
