@@ -40,6 +40,10 @@ public class PaymentService {
         if (!order.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
         }
+        // 주문에 대한 결제 존재여부 확인 (1:1)
+        if(paymentRepository.existsByOrder(order)){
+            throw new IllegalArgumentException("이미 결제가 완료된 주문입니다.");
+        }
         // 결제 생성
         Payment payment = new Payment(order, PaymentTypeEnum.valueOf(paymentRequestDto.getPaymentType()), order.getTotalOrderPrice());
         paymentRepository.save(payment);

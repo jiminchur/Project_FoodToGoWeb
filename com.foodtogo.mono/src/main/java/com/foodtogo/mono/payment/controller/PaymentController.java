@@ -52,13 +52,9 @@ public class PaymentController {
 
     // 결제 목록 조회 - 유저
     @GetMapping("/users/{user_id}/payments")
-    public ResponseEntity<Result<Page<PaymentResponseDto>>> getPaymentListForUser(@RequestHeader("X-Role") String role,
-                                                                                  @RequestHeader("X-User-Id") UUID userId,
+    public ResponseEntity<Result<Page<PaymentResponseDto>>> getPaymentListForUser( @RequestHeader("X-User-Id") UUID userId,
                                                                                   @PathVariable("user_id") UUID targetUserId,
                                                                                   PaymentPageDto paymentPageDto) {
-        if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.CUSTOMER)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You re Role is not Customer");
-        }
         int size = paymentPageDto.getValidatedSize();
         Page<PaymentResponseDto> paymentResponseDtoList = paymentService.getPaymentListForUser(userId, targetUserId, paymentPageDto.getPage(), size, paymentPageDto.getSortBy());
         return new ResponseEntity<>(Result.of(paymentResponseDtoList), HttpStatus.OK);
@@ -70,8 +66,8 @@ public class PaymentController {
                                                                                         @RequestHeader("X-User-Id") UUID userId,
                                                                                         @PathVariable("restaurant_id") UUID restaurantId,
                                                                                         PaymentPageDto paymentPageDto) {
-        if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.OWNER)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are Role is not OWNER");
+        if (UserRoleEnum.valueOf(role).equals(UserRoleEnum.CUSTOMER)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are Role is CUSTOMER");
         }
         int size = paymentPageDto.getValidatedSize();
         Page<PaymentResponseDto> paymentResponseDtoList = paymentService.getPaymentListForRestaurant(userId, restaurantId, paymentPageDto.getPage(), size, paymentPageDto.getSortBy());
@@ -84,9 +80,7 @@ public class PaymentController {
                                                                               @RequestParam("page") int page,
                                                                               @RequestParam("size") int size,
                                                                               @RequestParam("sortBy") String sortBy) {
-        if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.MASTER) && !UserRoleEnum.valueOf(role).equals(UserRoleEnum.MANAGER)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are Role is not MASTER & MANAGER");
-        }
+        UserRoleEnum.validateManagerOrMaster(role);
         Page<PaymentResponseDto> paymentResponseDtoList = paymentService.getPaymentListAll(page, size, sortBy);
         return new ResponseEntity<>(Result.of(paymentResponseDtoList), HttpStatus.OK);
     }

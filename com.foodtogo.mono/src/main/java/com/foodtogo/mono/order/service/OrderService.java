@@ -51,13 +51,17 @@ public class OrderService {
         User user = findUserId(userId);
         // 음식점 확인
         Restaurant restaurant = findRestaurantId(restaurantId);
+        // 가게 오픈 여부
+        if(!restaurant.getIsOpened()){
+            throw new IllegalArgumentException("가게 오픈전입니다.");
+        }
         // 주문 생성 (접수)
         Order order = new Order(user, restaurant, requestDto.getOrderType());
         // 음식 리스트를 OrderFood 객체로 변환 & OrderFood를 Order에 추가
         List<OrderFood> orderFoodList = requestDto.getFoodList().stream()
                 .map(foodInfoDto -> {
                     Food foodInfo = foodRepository.findById(foodInfoDto.getFoodId())
-                            .orElseThrow(()-> new IllegalArgumentException("등록되지 않은 음식 정보입니다."));
+                            .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 음식 정보입니다."));
                     return new OrderFood(order, foodInfo, foodInfoDto.getQuantity());
                 })
                 .collect(Collectors.toList());
@@ -112,7 +116,6 @@ public class OrderService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "조회 시도한 정보가 회원님의 정보가 아닙니다.");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-
         // 고객의 주문 내역 리스트
         return orderRepository.findByUserId(userId, pageable)
                 .map(order -> new OrderResponseDto(order, findOrderFoodList(order)));
@@ -136,7 +139,12 @@ public class OrderService {
         if (!order.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
         }
-        order.deleteUserOrderInfo(order.getUser().getUsername());
+        // 주문 내역 삭제
+        order.deleteUserOrderInfo(order.getUser().getUserId().toString());
+        // 주문한 음식 내역 삭제
+        orderFoodRepository.findByOrder(order).forEach(orderFood ->
+                orderFood.deleteOrderFood(order.getUser().getUserId().toString())
+        );
         return "[" + order.getUser().getUsername() + "]님 주문 내역 삭제 완료.";
     }
 
@@ -150,9 +158,10 @@ public class OrderService {
             throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
         }
         if (!canCancelOrder(order)) {
-            return "주문을 접수한지 5분이 지났기 때문에 취소가 불가합니다.";
+            throw new IllegalArgumentException("주문을 접수한지 5분이 지났기 때문에 취소가 불가합니다.");
         }
-        order.cancelOrder(order.getUser().getUsername());
+        order.cancelOrder();
+
         return "주문 취소 완료.";
     }
 
