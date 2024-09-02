@@ -35,11 +35,15 @@ jobs:
           cd ./com.foodtogo.gateway/src/main/resources
           echo "${{ secrets.GW_YML }}" > application.yml
 
-      - name: Build JAR files
+      - name: Build JAR files mono
         run: |
           cd com.foodtogo.mono && ./gradlew build
-          cd ../com.foodtogo.auth && ./gradlew build
-          cd ../com.foodtogo.gateway && ./gradlew build
+      - name: Build JAR files auth
+        run: |
+          cd com.foodtogo.auth && ./gradlew build
+      - name: Build JAR files gw
+        run: |
+          cd com.foodtogo.gateway && ./gradlew build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
