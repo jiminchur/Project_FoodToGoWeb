@@ -33,6 +33,11 @@ jobs:
         run: |
           cd ./com.foodtogo.gateway/src/main/resources
           echo "${{ secrets.GW_YML }}" > application.yml
+      
+      - name: Add EC2 Host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
         run: |
