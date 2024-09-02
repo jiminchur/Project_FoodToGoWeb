@@ -1,9 +1,12 @@
 package com.foodtogo.mono.user.service;
 
+import com.foodtogo.mono.user.dto.request.RoleUpdateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -17,6 +20,7 @@ public class AuthService {
 
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "http://43.201.69.252:8080/auth/v1/cache/users/";
+//    private static final String BASE_URL = "http://localhost:8080/auth/v1/cache/users/";
     private static final String ROLE_PATH = "/role";
 
     public AuthService(RestTemplate restTemplate) {
@@ -64,7 +68,14 @@ public class AuthService {
         log.info("Updating user role in Redis cache for userId: {} with role: {}", userId, role);
 
         try {
-            HttpEntity<String> request = new HttpEntity<>(role);
+            RoleUpdateRequest requestBody = new RoleUpdateRequest(role);
+
+
+            // Content-Type을 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<RoleUpdateRequest> request = new HttpEntity<>(requestBody, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
             log.info("Received response: {}", response.getBody());
 

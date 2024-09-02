@@ -64,11 +64,7 @@ public class UserService {
     @Transactional
     public void updateUserInfo(UpdateRequestDto requestDto, UUID userId) {
         User user = userRepository.findUserId(userId);
-
-        // 비밀번호 암호화
-        final String passwordEncode = passwordEncoder.encode(requestDto.getPassword());
-
-        user.updateUserInfo(requestDto, passwordEncode);
+        user.updateUserInfo(requestDto);
     }
 
     // 회원 삭제
@@ -126,7 +122,7 @@ public class UserService {
     public User getUserByUserId(UUID userId) {
         return userRepository.findUserId(userId);
     }
-    
+
     public User getUserByEmail(String email) {
         return userRepository.findEmail(email);
     }
