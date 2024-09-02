@@ -64,6 +64,11 @@ jobs:
           # Mono
           docker build --platform linux/amd64 -t ttlcc13/foodtogo-mono:latest ./com.foodtogo.mono
           docker push ttlcc13/foodtogo-mono:latest
+      - name: Add EC2 Host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.EC2_HOST_GW }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2 (auth-service, mono-service)
         env:
