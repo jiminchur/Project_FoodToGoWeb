@@ -57,7 +57,7 @@ public class FoodService {
             Pageable pageable
     ) {
         // 사용자 권한에 따라 음식 조회
-        if (!"MASTER".equals(role) && !"MANAGER".equals(role) && "USER".equals(role) &&
+        if (!"MASTER".equals(role) && !"MANAGER".equals(role) && "CUSTOMER".equals(role) &&
                 restaurant.getUser().getUserId().equals(UUID.fromString(userId))) {
             return foodRepository.findByRestaurantAndIsHiddenFalseAndDeletedAtIsNull(restaurant, pageable);
         }
