@@ -63,21 +63,32 @@ jobs:
                 fi
             done
           EOF
-      - name: Build and Deploy JAR files
+      - name: Build and Deploy JAR files mono
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
           chmod 600 foodtogo.pem
-          for service in "mono" "auth" "gateway"; do
-          pwd  # 현재 디렉토리 출력
-          ls -la  # 현재 디렉토리의 파일 목록 출력
-          cd com.foodtogo.$service || { echo "Directory not found: com.foodtogo.$service"; exit 1; }
+          cd com.foodtogo.mono || { echo "Directory not found: com.foodtogo.$service"; exit 1; }
           ./gradlew build
-          pwd  # 현재 디렉토리 출력
-          ls -la  # 현재 디렉토리의 파일 목록 출력
           cd build/libs/
-          pwd  # 현재 디렉토리 출력
-          ls -la  # 현재 디렉토리의 파일 목록 출력
-          scp -i ../../../foodtogo.pem ${service}-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
+          scp -i ../../../foodtogo.pem mono-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
+          done
+      - name: Build and Deploy JAR files auth
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
+          chmod 600 foodtogo.pem
+          cd com.foodtogo.auth || { echo "Directory not found: com.foodtogo.$service"; exit 1; }
+          ./gradlew build
+          cd build/libs/
+          scp -i ../../../foodtogo.pem auth-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
+          done
+      - name: Build and Deploy JAR files gateway
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
+          chmod 600 foodtogo.pem
+          cd com.foodtogo.gateway || { echo "Directory not found: com.foodtogo.$service"; exit 1; }
+          ./gradlew build
+          cd build/libs/
+          scp -i ../../../foodtogo.pem gateway-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
           done
       - name: Start Applications
         run: |
