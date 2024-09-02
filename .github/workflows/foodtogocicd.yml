@@ -34,14 +34,11 @@ jobs:
           cd ./com.foodtogo.gateway/src/main/resources
           echo "${{ secrets.GW_YML }}" > application.yml
 
-      - name: Prepare SSH key
+      - name: Deploy to EC2
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
           chmod 600 foodtogo.pem
-
-      - name: Deploy to EC2
-        run: |
-          ssh -i foodtogo.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_GW }} << 'EOF'
+          ssh -i foodtogo.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             # 기존 JAR 파일 종료
             for jar in "mono-0.0.1-SNAPSHOT.jar" "auth-0.0.1-SNAPSHOT.jar" "gateway-0.0.1-SNAPSHOT.jar"; do
                 PID=$(ps aux | grep "java -jar $jar" | grep -v grep | awk '{print $2}')
@@ -64,6 +61,8 @@ jobs:
 
       - name: Build and Deploy JAR files
         run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
+          chmod 600 foodtogo.pem
           for service in "mono" "auth" "gateway"; do
             cd com.foodtogo.$service
             ./gradlew build
@@ -73,7 +72,9 @@ jobs:
 
       - name: Start Applications
         run: |
-          ssh -i foodtogo.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_GW }} << 'EOF'
+          echo "${{ secrets.EC2_SSH_KEY }}" > foodtogo.pem
+          chmod 600 foodtogo.pem
+          ssh -i foodtogo.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
               nohup java -jar mono-0.0.1-SNAPSHOT.jar > mono-0.0.1-SNAPSHOT.log 2>&1 &
               nohup java -jar auth-0.0.1-SNAPSHOT.jar > auth-0.0.1-SNAPSHOT.log 2>&1 &
               nohup java -jar gateway-0.0.1-SNAPSHOT.jar > gateway-0.0.1-SNAPSHOT.log 2>&1 &
