@@ -3,7 +3,7 @@
 
 ### 서버 URL 설정 (여기에서 필요한 환경의 주석을 제거하세요)
 @SERVER_URL = http://localhost:8080
-# @SERVER_URL = http://43.201.69.252:8080
+# @SERVER_URL = http://43.201.54.62:8080
 
 ### 공통 변수 설정
 @email = "user@example.com"

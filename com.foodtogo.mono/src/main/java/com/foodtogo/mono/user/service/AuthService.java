@@ -19,7 +19,7 @@ import java.util.UUID;
 public class AuthService {
 
     private final RestTemplate restTemplate;
-    private static final String BASE_URL = "http://43.201.69.252:8080/auth/v1/cache/users/";
+    private static final String BASE_URL = "http://43.201.54.62:8080/auth/v1/cache/users/";
 //    private static final String BASE_URL = "http://localhost:8080/auth/v1/cache/users/";
     private static final String ROLE_PATH = "/role";
 

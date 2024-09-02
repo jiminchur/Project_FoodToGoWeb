@@ -23,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Value("${role.manager}")
+    @Value("${spring.role.manager}")
     private String managerToken;
 
     private final UserRepository userRepository;
