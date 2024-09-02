@@ -1,0 +1,57 @@
+### 카테고리 관련 API
+
+
+### 서버 URL 설정 (여기에서 필요한 환경의 주석을 제거하세요)
+@SERVER_URL = http://localhost:8080
+# @SERVER_URL = http://43.201.69.252:8080
+
+### 공통 변수 설정
+@email = "user@example.com"
+@currentPassword = "Password123!"
+@newPassword = "Password123!new"
+
+
+### 유저 로그인 - 성공
+POST {{SERVER_URL}}/auth/v1/users/login
+Content-Type: application/json
+
+{
+  "email": {{email}},
+  "password": {{newPassword}}
+}
+
+
+### 가변 변수 설정 1
+@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmM2RhNjlkNS0xYWZlLTRlZmUtODUwZi00N2I5YjNjNzY2NmYiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1MjcyMzUxLCJpYXQiOjE3MjUyNjg3NTF9.GnbR94Vi-eLZKMOqFJx4kCLzW5Dbp16dLApAbWiNQyQ
+@userId = f3da69d5-1afe-4efe-850f-47b9b3c7666f
+@role = MASTER
+
+
+### 카테고리 등록
+POST {{SERVER_URL}}/api/v1/categories
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryTitle": "양식"
+}
+
+### 카테고리 목록 조회
+GET {{SERVER_URL}}/api/v1/categories
+Authorization: Bearer {{jwt_token}}
+
+### 공통 변수 설정 1
+@categoryId = 5bc017cf-57cc-495f-9703-5b5cf40f94df
+
+### 카테고리 수정
+PUT {{SERVER_URL}}/api/v1/categories/{{categoryId}}
+Authorization: Bearer {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryTitle": "한식2"
+}
+
+### 카테고리 삭제
+DELETE {{SERVER_URL}}/api/v1/categories/{{categoryId}}
+Authorization: Bearer {{jwt_token}}
