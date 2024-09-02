@@ -21,10 +21,10 @@ spring:
         show_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  role:
+    manager: ${MANAGER_TOKEN}
 
 google:
   api:
     key: ${GOOGLE_KEY}
 
-role:
-  manager: ${MANAGER_TOKEN}
