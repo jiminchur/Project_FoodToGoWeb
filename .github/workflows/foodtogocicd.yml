@@ -71,6 +71,7 @@ jobs:
           USER: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           echo "$KEY" > key.pem
           chmod 600 key.pem
           ssh -i key.pem $USER@$HOST << 'EOF'
@@ -84,6 +85,7 @@ jobs:
           USER: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           echo "$KEY" > key.pem
           chmod 600 key.pem
           ssh -i key.pem $USER@$HOST << 'EOF'
