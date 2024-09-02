@@ -116,7 +116,6 @@ public class UserService {
 
         // 비밀번호 변경
         user.changePassword(newPasswordEncoded);
-        user.setUpdatedBy(loginUserId.toString());
     }
 
     public User getUserByUserId(UUID userId) {
