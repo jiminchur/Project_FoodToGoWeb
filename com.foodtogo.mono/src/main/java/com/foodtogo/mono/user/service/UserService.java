@@ -23,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Value("${role.manager}")
+    @Value("${spring.role.manager}")
     private String managerToken;
 
     private final UserRepository userRepository;
@@ -60,19 +60,11 @@ public class UserService {
         return UserResponseDto.fromUser(user);
     }
 
-    public User getUserByUserId(UUID userId) {
-        return userRepository.findUserId(userId);
-    }
-
     // 회원 정보 수정
     @Transactional
     public void updateUserInfo(UpdateRequestDto requestDto, UUID userId) {
         User user = userRepository.findUserId(userId);
-
-        // 비밀번호 암호화
-        final String passwordEncode = passwordEncoder.encode(requestDto.getPassword());
-
-        user.updateUserInfo(requestDto, passwordEncode);
+        user.updateUserInfo(requestDto);
     }
 
     // 회원 삭제
@@ -124,7 +116,13 @@ public class UserService {
 
         // 비밀번호 변경
         user.changePassword(newPasswordEncoded);
-        user.setUpdatedBy(loginUserId.toString());
     }
 
+    public User getUserByUserId(UUID userId) {
+        return userRepository.findUserId(userId);
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findEmail(email);
+    }
 }

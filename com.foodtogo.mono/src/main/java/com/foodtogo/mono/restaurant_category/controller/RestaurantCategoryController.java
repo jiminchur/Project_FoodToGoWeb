@@ -1,5 +1,6 @@
 package com.foodtogo.mono.restaurant_category.controller;
 
+import com.foodtogo.mono.Result;
 import com.foodtogo.mono.restaurant_category.core.RestaurantCategory;
 import com.foodtogo.mono.restaurant_category.dto.RestaurantCategoryRequestDto;
 import com.foodtogo.mono.restaurant_category.dto.RestaurantCategoryResponseDto;
@@ -23,7 +24,7 @@ public class RestaurantCategoryController {
 
     // 카테고리 등록
     @PostMapping
-    public RestaurantCategoryResponseDto createCategories(
+    public Result<RestaurantCategoryResponseDto> createCategories(
             @RequestBody RestaurantCategoryRequestDto restaurantCategoryRequestDto,
             @RequestHeader(value = "X-User-Id", required = true) String userId,
             @RequestHeader(value = "X-Role", required = true) String role) {
@@ -31,19 +32,19 @@ public class RestaurantCategoryController {
         validateRole(role);
         log.info("사용자 {}에 대한 카테고리 생성 중", userId);
 
-        return restaurantCategoryService.createCategories(restaurantCategoryRequestDto);
+        return Result.of(restaurantCategoryService.createCategories(restaurantCategoryRequestDto));
     }
 
     // 카테고리 목록 조회
     @GetMapping
-    public List<RestaurantCategory> getAllCategories() {
+    public Result<List<RestaurantCategory>> getAllCategories() {
         log.info("모든 카테고리 조회 중");
-        return restaurantCategoryService.getAllCategories();
+        return Result.of(restaurantCategoryService.getAllCategories());
     }
 
     // 카테고리 수정
     @PutMapping("/{category_id}")
-    public RestaurantCategoryResponseDto updateCategories(
+    public Result<RestaurantCategoryResponseDto> updateCategories(
             @PathVariable("category_id") UUID categoryId,
             @RequestBody RestaurantCategoryRequestDto restaurantCategoryRequestDto,
             @RequestHeader(value = "X-User-Id", required = true) String userId,
@@ -52,7 +53,7 @@ public class RestaurantCategoryController {
         validateRole(role);
         log.info("사용자 {}에 대한 ID {} 카테고리 수정 중", userId, categoryId);
 
-        return restaurantCategoryService.updateCategories(categoryId, restaurantCategoryRequestDto);
+        return Result.of(restaurantCategoryService.updateCategories(categoryId, restaurantCategoryRequestDto));
     }
 
     // 카테고리 삭제

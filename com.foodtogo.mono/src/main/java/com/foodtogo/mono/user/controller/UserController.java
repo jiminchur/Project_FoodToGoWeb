@@ -8,9 +8,11 @@ import com.foodtogo.mono.user.dto.request.SignupRequestDto;
 import com.foodtogo.mono.user.dto.request.UpdateRequestDto;
 import com.foodtogo.mono.user.dto.request.UserSearchDto;
 import com.foodtogo.mono.user.dto.response.UserResponseDto;
+import com.foodtogo.mono.user.service.AuthService;
 import com.foodtogo.mono.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,18 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+@Slf4j(topic = "UserController")
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     // 회원 가입
     @PostMapping("/signup")
     public ResponseEntity<Result<String>> signupUser(@Valid @RequestBody SignupRequestDto signupRequestDto) {
 
-        String email = userService.signup(signupRequestDto);
+        final String email = userService.signup(signupRequestDto);
+
         return new ResponseEntity<>(Result.of(email), HttpStatus.OK);
     }
 
@@ -53,12 +58,15 @@ public class UserController {
     // 회원 정보 수정
     @PutMapping("/{userId}")
     public ResponseEntity<Result<UserResponseDto>> updateUserInfo(@PathVariable("userId") UUID userId, @RequestBody UpdateRequestDto updateRequestDto) {
-
         userService.updateUserInfo(updateRequestDto, userId);
-
-        // redis 호출
-
         UserResponseDto userInfo = userService.getUserInfo(userId);
+
+        try {
+            authService.updateRedisUserRole(userId, userInfo.getRole().toString());
+        } catch (Exception e) {
+            log.warn("Failed to update Redis cache for user role: {}", e.getMessage());
+        }
+        
         return new ResponseEntity<>(Result.of(userInfo), HttpStatus.OK);
     }
 
@@ -67,8 +75,13 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable("userId") UUID deleteUserId, @RequestHeader("X-User-Id") UUID loginUserId) {
 
         userService.deleteUser(deleteUserId, loginUserId);
+        try {
+            authService.deleteRedisUserRole(deleteUserId);
+            // 해당 유저의 토큰을 가져와서 블랙리스트 추가
 
-        // redis 호출
+        } catch (Exception e) {
+            log.warn("Failed to delete user role from Redis cache: {}", e.getMessage());
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

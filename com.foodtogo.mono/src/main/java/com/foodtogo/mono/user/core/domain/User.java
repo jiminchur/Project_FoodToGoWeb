@@ -1,13 +1,14 @@
 package com.foodtogo.mono.user.core.domain;
 
 import com.foodtogo.mono.address.core.domain.Address;
-import com.foodtogo.mono.log.LogEntity;
+import com.foodtogo.mono.log.BaseEntity;
 import com.foodtogo.mono.user.core.enums.UserRoleEnum;
 import com.foodtogo.mono.user.dto.request.SignupRequestDto;
 import com.foodtogo.mono.user.dto.request.UpdateRequestDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -20,6 +21,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +31,8 @@ import java.util.UUID;
 @Table(name = "p_users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends LogEntity {
+@EntityListeners(value = {AuditingEntityListener.class})
+public class User extends BaseEntity {
 
     @Id
     @UuidGenerator
@@ -83,7 +86,7 @@ public class User extends LogEntity {
     }
 
     public static User create(SignupRequestDto dto, String passwordEncode, UserRoleEnum role) {
-        User user = User.builder()
+        return User.builder()
                 .email(dto.getEmail())
                 .password(passwordEncode)
                 .username(dto.getUsername())
@@ -94,12 +97,10 @@ public class User extends LogEntity {
                 .isPublic(true)
                 .isBlock(false)
                 .build();
-        user.setCreatedBy("system");// userId는 DB에서 생성됨
-        return user;
+
     }
 
-    public void updateUserInfo(UpdateRequestDto requestDto, String passwordEncode) {
-        this.password = passwordEncode;
+    public void updateUserInfo(UpdateRequestDto requestDto) {
         this.username = requestDto.getUsername();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.nickname = requestDto.getNickname();

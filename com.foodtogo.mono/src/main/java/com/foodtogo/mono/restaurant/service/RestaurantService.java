@@ -97,19 +97,13 @@ public class RestaurantService {
 
     // 가게 검색
     public Page<RestaurantResponseDto> searchRestaurants(
-                String query,
+                String keyword,
                 int page,
                 int size,
-                String sortBy,
-                boolean isAsc
+                String sortBy
             ) {
-        Pageable pageable = convertToPage(
-                page,
-                size,
-                sortBy,
-                isAsc
-        );
-        Page<Restaurant> restaurantsList = restaurantRepository.findByRestaurantNameContaining(query, pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Page<Restaurant> restaurantsList = restaurantRepository.findByRestaurantNameContaining(keyword, pageable);
 
         return restaurantsList.map(RestaurantResponseDto::new); // 이름으로 가게 검색
     }

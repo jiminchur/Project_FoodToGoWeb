@@ -57,7 +57,7 @@ public class FoodService {
             Pageable pageable
     ) {
         // 사용자 권한에 따라 음식 조회
-        if (!"MASTER".equals(role) && !"MANAGER".equals(role) && "USER".equals(role) &&
+        if (!"MASTER".equals(role) && !"MANAGER".equals(role) && "CUSTOMER".equals(role) &&
                 restaurant.getUser().getUserId().equals(UUID.fromString(userId))) {
             return foodRepository.findByRestaurantAndIsHiddenFalseAndDeletedAtIsNull(restaurant, pageable);
         }
@@ -67,7 +67,7 @@ public class FoodService {
     // 운영진을 위한 음식 전체 조회
     @Transactional(readOnly = true)
     public Page<Food> getAllFood(Pageable pageable) {
-        return foodRepository.findAll(pageable);
+        return foodRepository.getAllFoods(pageable);
     }
 
     // 운영진을 위한 음식 단건 조회
@@ -132,21 +132,16 @@ public class FoodService {
     }
 
     // 음식 검색
+    @Transactional(readOnly = true)
     public Page<FoodResponseDto> searchFoods(
-            String query,
+            String keyword,
             int page,
             int size,
-            String sortBy,
-            boolean isAsc
+            String sortBy
     ) {
-        Pageable pageable = convertToPage(
-                page,
-                size,
-                sortBy,
-                isAsc
-        );
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
 
-        Page<Food> foodList = foodRepository.findByFoodInfoTitleContainingAndDeletedAtIsNull(query,pageable);
+        Page<Food> foodList = foodRepository.findByFoodInfoTitleContainingAndDeletedAtIsNull(keyword,pageable);
 
         return foodList.map(FoodResponseDto::new);
     }
@@ -167,14 +162,5 @@ public class FoodService {
         return foodRepository.findById(foodId)
                 .filter(o -> o.getDeletedAt() == null)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 음식은 없습니다."));
-    }
-
-    // 페이지 처리
-    private Pageable convertToPage(int page, int size, String sortBy, boolean isAsc) {
-
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-
-        return PageRequest.of(page, size, sort);
     }
 }

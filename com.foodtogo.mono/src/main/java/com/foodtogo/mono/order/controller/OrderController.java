@@ -1,6 +1,7 @@
 package com.foodtogo.mono.order.controller;
 
 import com.foodtogo.mono.Result;
+import com.foodtogo.mono.order.core.domain.Order;
 import com.foodtogo.mono.order.dto.request.OrderPageDto;
 import com.foodtogo.mono.order.dto.request.OrderRequestDto;
 import com.foodtogo.mono.order.dto.request.UpdateOrderStatusDto;
@@ -28,8 +29,12 @@ public class OrderController {
     public ResponseEntity<Result<String>> createOrder(@RequestHeader("X-User-Id") UUID userId,
                                                       @PathVariable("restaurant_id") UUID restaurantId,
                                                       @RequestBody OrderRequestDto requestDto) {
-        String message = orderService.createOrder(userId, restaurantId, requestDto);
-        return new ResponseEntity<>(Result.of(message), HttpStatus.OK);
+        // 주문 생성
+        Order createdOrder = orderService.createOrder(userId, restaurantId, requestDto);
+        // 생성된 주문 ID를 사용하여 주문 조회
+        Order order = orderService.findOrderId(createdOrder.getOrderId());
+
+        return new ResponseEntity<>(Result.of(order.getOrderId().toString()), HttpStatus.OK);
     }
 
     // 주문 단건 조회
@@ -46,7 +51,7 @@ public class OrderController {
                                                                                     @RequestHeader("X-User-Id") UUID userId,
                                                                                     @PathVariable("restaurant_id") UUID restaurantId,
                                                                                     OrderPageDto orderPageDto) {
-        if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.OWNER) && !UserRoleEnum.valueOf(role).equals(UserRoleEnum.MASTER)) {
+        if (UserRoleEnum.valueOf(role).equals(UserRoleEnum.CUSTOMER)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not OWNER.");
         }
         int size = orderPageDto.getValidatedSize();
@@ -56,13 +61,9 @@ public class OrderController {
 
     // 주문  조회 for 고객
     @GetMapping("/users/{user_id}/orders")
-    public ResponseEntity<Result<Page<OrderResponseDto>>> getOrderListForUser(@RequestHeader("X-Role") String role,
-                                                                              @RequestHeader("X-User-Id") UUID userId,
+    public ResponseEntity<Result<Page<OrderResponseDto>>> getOrderListForUser(@RequestHeader("X-User-Id") UUID userId,
                                                                               @PathVariable("user_id") UUID targetUserId,
                                                                               OrderPageDto orderPageDto) {
-        if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.CUSTOMER)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not CUSTOMER.");
-        }
         int size = orderPageDto.getValidatedSize();
         Page<OrderResponseDto> orderResponseDtoList = orderService.getOrderListForUser(userId, targetUserId, orderPageDto.getPage(), size, orderPageDto.getSortBy());
         return new ResponseEntity<>(Result.of(orderResponseDtoList), HttpStatus.OK);
@@ -73,9 +74,7 @@ public class OrderController {
     public ResponseEntity<Result<Page<OrderResponseDto>>> getOrderListAll(@RequestHeader("X-Role") String role,
                                                                           OrderPageDto orderPageDto) {
 
-        if (!UserRoleEnum.valueOf(role).equals(UserRoleEnum.MASTER) && !UserRoleEnum.valueOf(role).equals(UserRoleEnum.MANAGER)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User role is not MASTER or MANAGER.");
-        }
+        UserRoleEnum.validateManagerOrMaster(role);
         int size = orderPageDto.getValidatedSize();
         Page<OrderResponseDto> orderResponseDtoList = orderService.getOrderListAll(orderPageDto.getPage(), size, orderPageDto.getSortBy());
         return new ResponseEntity<>(Result.of(orderResponseDtoList), HttpStatus.OK);
@@ -95,9 +94,6 @@ public class OrderController {
     public ResponseEntity<Result<String>> cancelOrder(@RequestHeader("X-User-Id") UUID userId,
                                                       @PathVariable("order_id") UUID orderId) {
         String message = orderService.cancelOrder(userId, orderId);
-        if (message.equals("주문을 접수한지 5분이 지났기 때문에 취소가 불가합니다.")) {
-            return new ResponseEntity<>(Result.of(message), HttpStatus.BAD_REQUEST);
-        }
         return new ResponseEntity<>(Result.of(message), HttpStatus.OK);
     }
 
