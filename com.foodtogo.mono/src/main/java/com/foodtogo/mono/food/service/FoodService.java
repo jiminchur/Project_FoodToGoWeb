@@ -67,7 +67,7 @@ public class FoodService {
     // 운영진을 위한 음식 전체 조회
     @Transactional(readOnly = true)
     public Page<Food> getAllFood(Pageable pageable) {
-        return foodRepository.findAll(pageable);
+        return foodRepository.getAllFoods(pageable);
     }
 
     // 운영진을 위한 음식 단건 조회
