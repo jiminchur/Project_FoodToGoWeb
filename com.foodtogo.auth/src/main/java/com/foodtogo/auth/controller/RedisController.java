@@ -55,6 +55,8 @@ public class RedisController {
 	 */
 	@PostMapping("/users/{userId}/role")
 	public ResponseEntity<String> updateRole(@PathVariable("userId") String userId, @RequestBody UserRoleRequestDto requestDto) {
+		log.info("Received request with user_id: {} and role: {}", userId, requestDto.getNewRole());
+
 		try {
 			log.info("Updating role for user_id: {}", userId);
 			// 앞에서 role 검사가 끝났다는 전제하에
