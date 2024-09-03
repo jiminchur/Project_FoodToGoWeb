@@ -1,8 +1,8 @@
 ### 음식 관련 API
 
 ### 서버 URL 설정 (여기에서 필요한 환경의 주석을 제거하세요)
-@SERVER_URL = http://localhost:8080
-# @SERVER_URL = http://43.201.54.62:8080
+#@SERVER_URL = http://localhost:8080
+ @SERVER_URL = http://43.201.54.62:8080
 
 ### 공통 변수 설정
 @email = "user@example.com"
@@ -11,70 +11,68 @@
 
 
 ### 가변 변수 설정 1
-@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmM2RhNjlkNS0xYWZlLTRlZmUtODUwZi00N2I5YjNjNzY2NmYiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1Mjc2MTQ4LCJpYXQiOjE3MjUyNzI1NDh9.Qra-hdaxRsm7vjCf2VM-5Yw_aDIm1rZTS-jdg0kqnBE
-@userId = f3da69d5-1afe-4efe-850f-47b9b3c7666f
+@jwt_token = BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwZjkzNGU4OS0wMzQzLTQ0MzktYjQ4Yi05MjI4ZWRkMmRjZWQiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1MzMyNzM2LCJpYXQiOjE3MjUzMjkxMzZ9.VubyayzOiDEgRRwB46QqT0tVivQyQc1RHKf4Bnn2M2k
+@userId = 0f934e89-0343-4439-b48b-9228edd2dced
 @role = MASTER
 
 ### 공통 변수 설정 1
-@categoryId = 7f69d63d-3fa5-400e-af64-c676fab829be
-@restaurantId = 2b06f460-8873-4263-b7e2-ee4223ecb51e
+@categoryId = b6ef3aa7-8b54-4d75-bd02-386716cc5b90
+@restaurantId = a70ef6db-c4c2-4ba1-b898-f3401d560724
 
 ### 가게에 속한 음식 등록
 POST {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/foods
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 Content-Type: application/json
 
 {
   "foodInfoTitle": "테스트 음식",
   "foodInfoDesc": "이 음식은 테스트 음식입니다.",
-  "foodInfoPrice": 10000,
-  "foodCategory": "디저트"
+  "foodInfoPrice": 10000
 }
 
 ### 가게에 속한 음식 전체 조회 for 가게 (숨김처리 노출)
 GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/foods
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 ### 가게에 속한 음식 전체 조회 for 고객 (숨김처리)
 GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/foods
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 ### 음식 검색
-GET {{SERVER_URL}}/api/v1/foods/search?query=테스트&page=0&size=5&isAsc=true&sortBy=createdAt
-Authorization: Bearer {{jwt_token}}
+GET {{SERVER_URL}}/api/v1/foods/search?keyword=테스트&page=0&size=5&sortBy=createdAt
+Authorization: {{jwt_token}}
 
 ### 음식 전체 조회 FOR 운영진
 GET {{SERVER_URL}}/api/v1/foods
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 ### 가변 변수 설정 1
-@foodInfoId = f7daed0c-53d6-46e7-b38a-cf0f9b7a1401
+@foodInfoId = 297660de-d9e7-4e54-a7c3-edf1df0e581b
 
 ### 음식 단건 조회 FOR 운영진
 GET {{SERVER_URL}}/api/v1/foods/{{foodInfoId}}
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 ### 음식 상세 정보 수정
 PUT {{SERVER_URL}}/api/v1/foods/{{foodInfoId}}
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 Content-Type: application/json
 
 {
   "foodInfoTitle": "업데이트된 음식",
   "foodInfoDesc": "이 음식은 업데이트된 음식입니다.",
-  "foodInfoPrice": 12000,
-  "foodCategory": "메인 요리"
+  "foodInfoPrice": 12000
 }
 
 ### 음식 숨김 처리 및 복구
 PATCH {{SERVER_URL}}/api/v1/foods/{{foodInfoId}}/sale
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 
 ### 음식 품절 처리 및 복구
 PATCH {{SERVER_URL}}/api/v1/foods/{{foodInfoId}}/sold
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 ### 음식 삭제
 DELETE {{SERVER_URL}}/api/v1/foods/{{foodInfoId}}
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}

@@ -4,8 +4,8 @@
 @newPassword = "Password123!new"
 
 ### 서버 URL 설정 (여기에서 필요한 환경의 주석을 제거하세요)
-@SERVER_URL = http://localhost:8080
-# @SERVER_URL = http://43.201.54.62:8080
+#@SERVER_URL = http://localhost:8080
+ @SERVER_URL = http://43.201.54.62:8080
 
 ### 회원 가입
 POST {{SERVER_URL}}/api/v1/users/signup
@@ -33,20 +33,18 @@ Content-Type: application/json
 }
 
 ### 가변 변수 설정 1
-#@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmM2RhNjlkNS0xYWZlLTRlZmUtODUwZi00N2I5YjNjNzY2NmYiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiQ1VTVE9NRVIiLCJleHAiOjE3MjUyNjcxMTIsImlhdCI6MTcyNTI2MzUxMn0.Zx_9bPPuYcgXxYje6snDndnZBdqgK6uEOziAekXQUsM
-#@userId = f3da69d5-1afe-4efe-850f-47b9b3c7666f
+#@jwt_token = BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwZjkzNGU4OS0wMzQzLTQ0MzktYjQ4Yi05MjI4ZWRkMmRjZWQiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiQ1VTVE9NRVIiLCJleHAiOjE3MjUzMzExOTIsImlhdCI6MTcyNTMyNzU5Mn0.vH-VpgPzfziVHvGvHapPR2uapIWy84lxIAXNKNV1OCs
+#@userId = 0f934e89-0343-4439-b48b-9228edd2dced
 #@role = CUSTOMER
 
 ### 회원 정보 조회
 GET {{SERVER_URL}}/api/v1/users/{{userId}}
-Authorization: Bearer {{jwt_token}}
-X-User-Id: {{userId}}
+Authorization: {{jwt_token}}
 
 
 ### 회원 정보 수정
 PUT {{SERVER_URL}}/api/v1/users/{{userId}}
-Authorization: Bearer {{jwt_token}}
-X-User-Id: {{userId}}
+Authorization: {{jwt_token}}
 Content-Type: application/json
 
 {
@@ -61,13 +59,13 @@ Content-Type: application/json
 
 ### 회원 삭제
 DELETE {{SERVER_URL}}/api/v1/users/{{userId}}
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 X-User-Id: {{userId}}
 
 
 ### 유저 로그인 - 헤더로만 로그인
 POST {{SERVER_URL}}/auth/v1/users/login
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 
 ### 유저 로그인
@@ -76,7 +74,7 @@ Content-Type: application/json
 
 {
   "email": {{email}},
-  "password": {{currentPassword}}
+  "password": {{newPassword}}
 }
 
 > {%
@@ -87,28 +85,22 @@ Content-Type: application/json
 %}
 
 ### 가변 변수 설정 2
-@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmM2RhNjlkNS0xYWZlLTRlZmUtODUwZi00N2I5YjNjNzY2NmYiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1MjY5MDY1LCJpYXQiOjE3MjUyNjU0NjV9.bULF9sPrHC29juWAY9gX3rTetXecLslB01d4KkGHook
-@userId = f3da69d5-1afe-4efe-850f-47b9b3c7666f
+@jwt_token = BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwZjkzNGU4OS0wMzQzLTQ0MzktYjQ4Yi05MjI4ZWRkMmRjZWQiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1MzMyNzM2LCJpYXQiOjE3MjUzMjkxMzZ9.VubyayzOiDEgRRwB46QqT0tVivQyQc1RHKf4Bnn2M2k
+@userId = 0f934e89-0343-4439-b48b-9228edd2dced
 @role = MASTER
 
 
 ### 회원 전체 조회
 GET {{SERVER_URL}}/api/v1/users?page=0&size=5&sortBy=createdAt
-Authorization: Bearer {{jwt_token}}
-X-Role: {{role}}
-X-User-Id: {{userId}}
+Authorization: {{jwt_token}}
 
 ### 회원 키워드 검색
 GET {{SERVER_URL}}/api/v1/users/search?page=0&size=4&sortBy=createdAt&keyword=wonny
-Authorization: Bearer {{jwt_token}}
-X-Role: MASTER
-X-User-Id: {{userId}}
+Authorization: {{jwt_token}}
 
 ### 비밀번호 변경 (실제 비밀번호 변경)
 PATCH {{SERVER_URL}}/api/v1/users/change-password
-Authorization: Bearer {{jwt_token}}
-X-Role: MASTER
-X-User-Id: {{userId}}
+Authorization: {{jwt_token}}
 Content-Type: application/json
 
 {
@@ -118,9 +110,25 @@ Content-Type: application/json
 }
 
 
+### 유저 로그인 - 헤더로만 로그인
+POST {{SERVER_URL}}/auth/v1/users/login
+Authorization: {{jwt_token}}
+
+
+### 비밀번호 변경 (실제 비밀번호 변경)
+PATCH {{SERVER_URL}}/api/v1/users/change-password
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "currentPassword": {{newPassword}},
+  "newPassword": {{currentPassword}}
+}
+
 ### 유저 로그아웃
 POST {{SERVER_URL}}/auth/v1/users/logout
-Authorization: Bearer {{jwt_token}}
+Authorization: {{jwt_token}}
 
 ### Redis 캐시 조회 및 갱신(DB 유저 검증 포함)
 GET {{SERVER_URL}}/auth/v1/cache/users/{{userId}}/role

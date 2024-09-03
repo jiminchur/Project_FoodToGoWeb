@@ -1,0 +1,345 @@
+### 공통 변수 설정
+@SERVER_URL = http://43.201.54.62:8080
+@email = "user1@example.com"
+@currentPassword = "Password123!"
+@newPassword = "Password123!new"
+
+### 유저 관련 가변 변수
+@jwt_token = BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwZjkzNGU4OS0wMzQzLTQ0MzktYjQ4Yi05MjI4ZWRkMmRjZWQiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1MzMyNzM2LCJpYXQiOjE3MjUzMjkxMzZ9.VubyayzOiDEgRRwB46QqT0tVivQyQc1RHKf4Bnn2M2k
+@userId = 0f934e89-0343-4439-b48b-9228edd2dced
+@role = MASTER
+
+### 회원 가입
+POST {{SERVER_URL}}/api/v1/users/signup
+Content-Type: application/json
+
+{
+  "email": {{email}},
+  "password": {{currentPassword}},
+  "username": "testUser",
+  "phoneNumber": "010-1234-5678",
+  "nickname": "testUser",
+  "role": "CUSTOMER",
+  "profileUrl": "http://example.com/profile.jpg",
+  "adminToken": ""
+}
+
+### 유저 로그인 - 성공
+POST {{SERVER_URL}}/auth/v1/users/login
+Content-Type: application/json
+
+{
+  "email": {{email}},
+  "password": {{currentPassword}}
+}
+
+### 유저 로그인 - 헤더로만 로그인
+POST {{SERVER_URL}}/auth/v1/users/login
+Authorization: {{jwt_token}}
+
+### 회원 전체 조회
+GET {{SERVER_URL}}/api/v1/users?page=0&size=5&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+### 회원 키워드 검색
+GET {{SERVER_URL}}/api/v1/users/search?page=0&size=4&sortBy=createdAt&keyword=wonny
+Authorization: {{jwt_token}}
+
+### 비밀번호 변경 (실제 비밀번호 변경)
+PATCH {{SERVER_URL}}/api/v1/users/change-password
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "currentPassword": {{currentPassword}},
+  "newPassword": {{newPassword}}
+}
+
+### 회원 정보 수정
+PUT {{SERVER_URL}}/api/v1/users/{{userId}}
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "email": "wonny@example.com",
+  "username": "wonny2",
+  "phoneNumber": "010-1234-5678",
+  "nickname": "wonny2",
+  "role": "MASTER",
+  "profileUrl": "http://example.com/wonny2.jpg",
+  "adminToken": ""
+}
+
+### 유저 로그인 - 성공
+POST {{SERVER_URL}}/auth/v1/users/login
+Content-Type: application/json
+
+{
+  "email": {{email}},
+  "password": {{newPassword}}
+}
+
+### 유저 관련 가변 변수 2
+#@jwt_token =
+#@userId =
+#@role = MASTER
+
+
+### 카테고리 등록
+POST {{SERVER_URL}}/api/v1/categories
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryTitle": "양식"
+}
+
+### 카테고리 목록 조회
+GET {{SERVER_URL}}/api/v1/categories
+Authorization: {{jwt_token}}
+
+### 카테고리 변수
+@categoryId =
+
+### 카테고리 수정
+PUT {{SERVER_URL}}/api/v1/categories/{{categoryId}}
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryTitle": "양식2"
+}
+
+### 가게 등록
+POST {{SERVER_URL}}/api/v1/restaurants
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryId": "{{categoryId}}",
+  "restaurantName": "두바이 초콜릿",
+  "restaurantAddress": "서울시 종로구 세종대로 232-12",
+  "restaurantPhoneNumber": "02-1001-0003",
+  "restaurantIntroduce": "중동에서 수입한 피스타치오가 가득한 두바이 초콜릿",
+  "restaurantImageUrl": "http://example.com/images/dobye.jpg"
+}
+
+### 가게 변수
+@restaurantId =
+
+### 가게 단건 조회
+GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}
+Authorization: {{jwt_token}}
+
+### 가게 전체 조회
+GET {{SERVER_URL}}/api/v1/restaurants?page=0&size=10
+Authorization: {{jwt_token}}
+
+### 가게 정보 전체 수정
+PUT {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "categoryId": "{{categoryId}}",
+  "restaurantName": "압둘라 두바이 초콜릿",
+  "restaurantAddress": "서울시 종로구 세종대로 232-12",
+  "restaurantPhoneNumber": "02-1001-0003",
+  "restaurantIntroduce": "두바이산 고급 재료로 만들었습니다",
+  "restaurantImageUrl": "http://example.com/images/dobye2.jpg"
+}
+
+### 가게 운영 상태 변경
+PATCH {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/status
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "status": "OPEN"
+}
+
+### 가게에 속한 음식 등록
+POST {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/foods
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "foodInfoTitle": "피스타치오맛",
+  "foodInfoDesc": "피스타치오가 가득한 두바이 초콜릿",
+  "foodInfoPrice": 10000
+}
+
+### 음식 변수
+@foodInfoId =
+@foodInfoId2 = 8ea8fbbc-d0aa-4509-a075-fd493134cb2f
+
+### 가게에 속한 음식 전체 조회 for 가게 (숨김처리 노출)
+GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/foods
+Authorization: {{jwt_token}}
+
+### 가게에 속한 음식 전체 조회 for 고객 (숨김처리)
+GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/foods
+Authorization: {{jwt_token}}
+
+### 음식 상세 정보 수정
+PUT {{SERVER_URL}}/api/v1/foods/{{foodInfoId}}
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "foodInfoTitle": "딸기맛",
+  "foodInfoDesc": "딸기가 가득한 두바이 초콜릿",
+  "foodInfoPrice": 12000
+}
+
+### AI 생성
+POST {{SERVER_URL}}/api/v1/ai/generate-content
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "text": "두바이 초콜릿 식감"
+}
+
+### 조회 API (운영진 전용)
+GET {{SERVER_URL}}/api/v1/ai/history
+Authorization: {{jwt_token}}
+
+
+### 주문 등록
+POST {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/orders
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "orderType": "ONLINE",
+  "foodList": [
+    {
+      "foodId": "{{foodInfoId1}}",
+      "quantity": 1
+    },
+    {
+      "foodId": "{{foodInfoId2}}",
+      "quantity": 2
+    }
+  ]
+}
+
+### 주문 변수
+@orderId =
+@orderId1 = 2d7313a9-a79f-438e-aac3-96c95008f1d1
+@orderId2 = 366bd966-214a-48da-8de5-fb37101de3d2
+@orderId3 = 6795e5e1-4b3a-4972-9646-e2c9b84f719f
+
+
+### 주문 단건 조회
+GET {{SERVER_URL}}/api/v1/orders/{{orderId}}
+Authorization: {{jwt_token}}
+
+### 주문 전체 조회 for 가게
+GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/orders?page=0&size=10&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+### 주문 조회 for 고객
+GET {{SERVER_URL}}/api/v1/users/{{userId}}/orders?page=0&size=10&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+### 주문 전체 조회 FOR 운영진
+GET {{SERVER_URL}}/api/v1/orders?page=0&size=10&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+
+### 주문 취소 요청 5분 제약있음
+POST {{SERVER_URL}}/api/v1/orders/{{orderId}}/cancel
+Authorization: {{jwt_token}}
+
+### 주문 상태 업데이트
+PATCH {{SERVER_URL}}/api/v1/orders/{{orderId}}/status
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "orderStatus": "DELIVERY"
+}
+
+### 결제 요청(생성)
+POST {{SERVER_URL}}/api/v1/payments
+Authorization:{{jwt_token}}
+Content-Type: application/json
+
+{
+  "orderId": "{{orderId}}",
+  "amount": 15000,
+  "paymentType": "CARD"
+}
+
+### 페이먼트 아이디
+@paymentId =
+
+### 결제 단건 조회
+GET {{SERVER_URL}}/api/v1/payments/{{paymentId}}
+Authorization: {{jwt_token}}
+
+### 결제 전체 조회 for 운영진
+GET {{SERVER_URL}}/api/v1/payments?page=0&size=5&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+### 결제 목록 조회 for 유저
+GET {{SERVER_URL}}/api/v1/users/{{userId}}/payments?page=0&size=5&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+### 결제 목록 조회 for 가게
+GET {{SERVER_URL}}/api/v1/restaurants/{{restaurantId}}/payments?page=0&size=5&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+
+### 유저 배송지 등록
+POST {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "address": "서울특별시 여의도 1",
+  "request": "문 앞에 두고 벨 눌러주세요"
+}
+
+### 유저 배송지 전체 목록
+GET {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses?page=0&size=10&sortBy=createdAt
+Authorization: {{jwt_token}}
+
+### 가변 변수 설정 1
+@deliveryAddressId =
+
+### 유저 배송지 상세 조회
+GET {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses/{{deliveryAddressId}}
+Authorization: {{jwt_token}}
+
+### 유저 배송지 수정
+PUT {{SERVER_URL}}/api/v1/users/{{userId}}/delivery-addresses/{{deliveryAddressId}}
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "address": "서울특별시 여의도 2",
+  "request": "경비실에 맡겨주세요"
+}
+
+
+### 유저 로그아웃
+POST {{SERVER_URL}}/auth/v1/users/logout
+Authorization: {{jwt_token}}
+
+
+### 유저 로그인 - 헤더로만 로그인 - 실패 예정 - 블랙리스트 추가
+POST {{SERVER_URL}}/auth/v1/users/login
+Authorization: {{jwt_token}}
+
+### 유저 로그인 - 성공 - 토큰 재발급
+POST {{SERVER_URL}}/auth/v1/users/login
+Content-Type: application/json
+
+{
+  "email": {{email}},
+  "password": {{newPassword}}
+}

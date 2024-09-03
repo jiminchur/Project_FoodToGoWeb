@@ -1,0 +1,44 @@
+### AI 관련 API
+
+### 서버 URL 설정 (여기에서 필요한 환경의 주석을 제거하세요)
+#@SERVER_URL = http://localhost:8080
+ @SERVER_URL = http://43.201.54.62:8080
+
+### 공통 변수 설정
+@email = "user@example.com"
+@currentPassword = "Password123!"
+@newPassword = "Password123!new"
+
+### 가변 변수 설정 1
+@jwt_token = BearereyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwZjkzNGU4OS0wMzQzLTQ0MzktYjQ4Yi05MjI4ZWRkMmRjZWQiLCJpc3MiOiJhdXRoLXNlcnZpY2UiLCJyb2xlIjoiTUFTVEVSIiwiZXhwIjoxNzI1MzM2MDE3LCJpYXQiOjE3MjUzMzI0MTd9.6Wh1t3ZQhBvWhgVcCPKyt7YpLmy71SNTS1WjaUMzT0w
+@userId = 0f934e89-0343-4439-b48b-9228edd2dced
+@role = MASTER
+
+### 공통 변수 설정 1
+@categoryId = b6ef3aa7-8b54-4d75-bd02-386716cc5b90
+@restaurantId = a70ef6db-c4c2-4ba1-b898-f3401d560724
+
+### foodinfo
+@foodInfoId1 = 80dae09e-147f-4bac-b762-506372ef50b0
+@foodInfoId2 = 8ea8fbbc-d0aa-4509-a075-fd493134cb2f
+@foodInfoId3 = 8e454d48-f089-46fb-ae91-1c99dab28c68
+@foodInfoId4 = 49bc63d6-afd9-483a-b68e-70bb51ddabc1
+
+### 주문 변수
+@orderId = e41ee111-b04c-4436-b327-c4ae3c51b0e6
+@orderId1 = 2d7313a9-a79f-438e-aac3-96c95008f1d1
+@orderId2 = 366bd966-214a-48da-8de5-fb37101de3d2
+@orderId3 = 6795e5e1-4b3a-4972-9646-e2c9b84f719f
+
+### AI 생성
+POST {{SERVER_URL}}/api/v1/ai/generate-content
+Authorization: {{jwt_token}}
+Content-Type: application/json
+
+{
+  "text": "두바이 초콜릿 식감"
+}
+
+### 조회 API (운영진 전용)
+GET {{SERVER_URL}}/api/v1/ai/history
+Authorization: {{jwt_token}}
