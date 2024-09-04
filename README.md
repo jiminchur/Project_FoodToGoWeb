@@ -26,6 +26,8 @@
 
 [10. Git Branch 및 Git Commit 전략](#10-git-branch-및-git-commit-전략)
 
+[11. 시연영상](#11-시연영상)
+
 ## ✅ 1. 프로젝트 개요
 * **주제:** 배달 및 포장 음식 주문 관리 플랫폼 개발
 * **목표:** 광화문 근처에서 운영될 음식점들의 배달 및 포장 주문 관리, 결제, 그리고 주문 내역 관리 기능을 제공하는 플랫폼 개발
@@ -314,9 +316,11 @@
 * [🛠️ [CICD] SCP를 이용한 CICD 구축 #169](https://github.com/jiminchur/Project_FoodToGoWeb/issues/169)
 
 ## 📀 10. Git Branch 및 Git Commit 전략
+
 * Git Branch 전략
     * 자세한 내용은 [📘 Wiki - GitBranch 전략 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/Git-Branch-%EC%A0%84%EB%9E%B5) 에서 확인 가능함
 ![gitbranch](./IMG/gitcommit.png)
+
 * Git Commit 전략
     * 자세한 내용은 [📘 Wiki - GitCommit 전략 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/Commit-%EC%A0%84%EB%9E%B5) 에서 확인 가능함
 
@@ -332,3 +336,41 @@
 |Document|문서화|
 |Style|스타일 변경 (예: 코드 포맷팅)|
 |Test|테스트 추가 또는 수정|
+
+## 11. 시연영상
+* [ ▶ 시연영상 YouTube 링크](https://youtu.be/dwh8I9PK0ec)
+* 로그인 부터 주문,가게 등록, 등등 저희가 작업했던 내용들을 Http test를 통해 시연한 영상입니다.
+
+## 12. 4L 회고
+* 4L 이란??
+  > Liked : 좋았던 것/잘 한 것, Lacked : 아쉬웠던 것/부족했던 것, Learned : 배운 것, Longed for : 바라는 것/개선을 위해 시도해볼 것을 작성해보면서 프로젝트를 회고하는 방법입니다.
+
+<details>
+    <summary><h2>🙎🏻‍♂️ 지민철</h2></summary>
+
+### 1. Liked : 좋았던 것/잘 한 것
+### 2. Lacked : 아쉬웠던 것/부족했던 것
+### 3. Learned : 배운 것
+### 4. Longed for : 바라는 것/개선을 위해 시도해볼 것
+    
+</details>
+
+<details>
+    <summary><h2>🧑🏻‍💻 박현도</h2></summary>
+
+### 1. Liked : 좋았던 것/잘 한 것
+### 2. Lacked : 아쉬웠던 것/부족했던 것
+### 3. Learned : 배운 것
+### 4. Longed for : 바라는 것/개선을 위해 시도해볼 것
+
+</details>
+
+<details>
+    <summary><h2>👩🏻‍💻 한정원</h2></summary>
+
+### 1. Liked : 좋았던 것/잘 한 것
+### 2. Lacked : 아쉬웠던 것/부족했던 것
+### 3. Learned : 배운 것
+### 4. Longed for : 바라는 것/개선을 위해 시도해볼 것
+
+</details>
