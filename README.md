@@ -4,7 +4,8 @@
 
 ## 🗓️ 개발 기간
 * 2024.08.22 ~ 2024.09.03
-
+* [Github Projects Todo 링크](https://github.com/users/jiminchur/projects/4/views/1)
+  
 ## 📚 목차
 [1. 프로젝트 개요](#1-프로젝트-개요)
 
@@ -27,6 +28,8 @@
 [10. Git Branch 및 Git Commit 전략](#10-git-branch-및-git-commit-전략)
 
 [11. 시연영상](#11-시연영상)
+
+[12. 4L 회고](#12-4L-회고)
 
 ## ✅ 1. 프로젝트 개요
 * **주제:** 배달 및 포장 음식 주문 관리 플랫폼 개발
@@ -87,6 +90,8 @@
 
 <details>
     <summary>🍱 음식</summary>
+
+* [🍱 [[음식 앱] 성능 개선 #134](https://github.com/jiminchur/Project_FoodToGoWeb/issues/134)
 
 * [🍱 [음식 앱] 음식 품절 처리 #91](https://github.com/jiminchur/Project_FoodToGoWeb/issues/91)
 
@@ -285,6 +290,10 @@
     * Spring Boot 3.3.3
     * Spring Cloud Gateway
     * Gradle
+    * JWT
+    * Oauth2
+    * QueryDSL
+    * JPA
 * API Test
     * PostMan
 * Database
@@ -347,10 +356,38 @@
     <summary><h2>🙎🏻‍♂️ 지민철</h2></summary>
 
 ### 1. Liked : 좋았던 것/잘 한 것
+* Git Branch 전략 및 Git Commit Convention 에 따라 Github을 사용해서 잘 협업한것
+* 처음에 설계한 Gateway , Auth , Mono 서버를 분리하여서 서비스를 개발한것
+* CICD를 구축해서 Main Branch에 Push 하면 자동적으로 수정해서 배포가 된것
+* 회의를 통해서 개발방식을 최대한 비슷하게하여 코드의 통일성을 유지한 것
+* 클린코드를 우선시하고 중복된 코드를 최소한으로 줄인점
+* 최선의 방법은 아니지만 차선의 방법으로라도 기능구현을 완료한것
+* 서로의 의견을 존중하고 수용하며 최대한 맞춰서 개발한점
+* 기간내에 완료한점
+  
 ### 2. Lacked : 아쉬웠던 것/부족했던 것
+* 기능 구현에 우선시가 되어있고, 시간관계상 코드의 퀄리티에 신경을 제대로 쓰지 못한점
+* 코드리뷰시간을 많이 갖질 못해서 초반에 코드 통일화에 대한 부족함
+* 처음에 설계했던 모든 서비스를 도커를 띄우지 못한점 (Redis와 연결 이슈)
+* 성능 개선을 더하지 못한점
+* 코드의 중복사용을 더 막지 못한점
+* 로그기록 남길때 Delete부분은 Auditing을 적용하지 못한점
+* 막판에 Issue기록을 잘 못한점
+* 시간이 부족해 더 많은 기능구현을 못한점
+
 ### 3. Learned : 배운 것
+* Jpa Auditing으로 Create, update를 자동적으로 생성할 수 있는점
+* Entity에서는 Dto의 존재를 몰라야 한다는 점
+* Redis redis.conf에서 설정을 할 수 있다는 점
+* Spring Cloud에서 Eureka 서버가 필수는 아니라는 점
+* Enum을 사용시 데이터 베이스에 여러가지 타입으로 저장이 가능하다는 점
+* 로그아웃시 블랙리스트 토큰으로 재로그인을 하게해서 토큰 재발급을 유도한다는 점
+
 ### 4. Longed for : 바라는 것/개선을 위해 시도해볼 것
-    
+* Redis를 Docker로 띄울때 Docker로 띄운 웹서비스와의 통신
+* 검색을 할때 여러가지 필터를 적용을 해보기
+* 로그기록에서 Delete부분까지 Jpa Auditing을 적용해서 자동으로 기록해주게 하기
+
 </details>
 
 <details>
@@ -382,8 +419,26 @@
 * Spring Webflux & Spring Web 차이
     * 존재를 Spring web과 webflux에 대해 알게됨
     * web 동기 처리 방식 & webflux 비동기 처리 방식
+* 프로젝트 Authorization 검증시 User-Id , Role 값이 헤더에 담겨오는 이유와 과정
+    * Filter단에서 HttpHeader에 전송전 값을 삽입해 줬음
+* Spring Cloud를 사용한 MSA구조 설계 시 Eureka Server가 필수가 아니다
+    * 헬스 체크하는 기능이 탑재된 장점
+    * 하지만 라우팅 하는것은 Gateway 쪽이기 떄문에 Gateway쪽에서 사용하려는 나머지 서비스들을 등록하기만 하면 사용 가능
+* CICD시 application.yml에 관련된 정보를 암호화 사용법
+    * application.yml 자체를 Github Sercrets에 올려서 사용하는 방법도 있었음
+* Enum 사용시 타입별 저장 방법의 존재
+    * EnumType Ordinal, String 각자 장단점이 존재
+* Dto 사용시 Record 타입 사용
+    * 불변 객체 : Record로 정의된 객체는 기본적으로 불변 & 상속 불가 & 기본적으로 Getter 탑재 Setter는 불변 객체이기에 X
+      
 ### 4. Longed for : 바라는 것/개선을 위해 시도해볼 것
-
+* Spring Seurity를 사용한 인증 인가 처리
+    * 권한 체크로직을 효율적으로 관리하는 방향으로 리팩토링
+* 모놀리식 서비스를 Redis 사용
+    * 배운 레디스 캐시를 적용하지 못한 아쉬움
+* 서비스 배포 시 Docker 사용법 학습
+    * 실제로 배포하는 과정에서 Docker를 통한 내부통신에 대한 추가학습 필요 - 네트워크
+      
 </details>
 
 <details>
