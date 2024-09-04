@@ -243,13 +243,7 @@
 
 * [[인증 서버] redis - 캐시 삭제 #32](https://github.com/jiminchur/Project_FoodToGoWeb/issues/32)
 
-* [[인증 서버] 계정 - 잠금, 해제 #33](https://github.com/jiminchur/Project_FoodToGoWeb/issues/33)
-
 * [[인증 서버] 비밀번호 - 변경 #34](https://github.com/jiminchur/Project_FoodToGoWeb/issues/34)
-
-* [[인증 서버] 비밀번호 - 재설정 요청 #35](https://github.com/jiminchur/Project_FoodToGoWeb/issues/35)
-
-* [[인증 서버] 비밀번호 - 재설정 요청 #35](https://github.com/jiminchur/Project_FoodToGoWeb/issues/35)
 
 * [[인증 서버] gateway서버에서 인증서버 기능 호출 시 맞지 않는 부분 수정 #128](https://github.com/jiminchur/Project_FoodToGoWeb/issues/128)
 
@@ -421,7 +415,7 @@
 * 로그 필요성
     * 서버를 배포하고 나서 서버를 만든 사람만 로그를 보는게 가능
     * 어디서 오류가 나고 있는지 보지 못한는 것이 답답
-    * 처음 설계할때부터 로그를 볼 수 있는 환경 필요성 느낌
+    * 처음 설계할 때부터 로그를 볼 수 있는 환경 필요성 느낌
       
 ### 4. Longed for : 바라는 것/개선을 위해 시도해볼 것
 
