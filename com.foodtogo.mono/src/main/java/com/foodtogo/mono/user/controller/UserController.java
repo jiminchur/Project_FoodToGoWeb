@@ -3,11 +3,10 @@ package com.foodtogo.mono.user.controller;
 import static com.foodtogo.mono.user.core.enums.UserRoleEnum.validateManagerOrMaster;
 
 import com.foodtogo.mono.Result;
-import com.foodtogo.mono.common.dto.SearchDto;
+import com.foodtogo.mono.common.dto.SearchRequestDto;
 import com.foodtogo.mono.user.dto.request.ChangePasswordRequestDto;
 import com.foodtogo.mono.user.dto.request.SignupRequestDto;
 import com.foodtogo.mono.user.dto.request.UpdateRequestDto;
-import com.foodtogo.mono.user.dto.request.UserSearchDto;
 import com.foodtogo.mono.user.dto.response.UserResponseDto;
 import com.foodtogo.mono.user.service.AuthService;
 import com.foodtogo.mono.user.service.UserService;
@@ -67,7 +66,7 @@ public class UserController {
         } catch (Exception e) {
             log.warn("Failed to update Redis cache for user role: {}", e.getMessage());
         }
-        
+
         return new ResponseEntity<>(Result.of(userInfo), HttpStatus.OK);
     }
 
@@ -92,12 +91,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Result<Page<UserResponseDto>>> getAllUsers(
             @RequestHeader("X-Role") String role,
-            SearchDto searchDto) {
+            SearchRequestDto searchRequestDto) {
 
         validateManagerOrMaster(role);
 
-        // 페이지 크기를 10, 30, 50으로 제한
-        Page<UserResponseDto> users = userService.getAllUsers(searchDto.getValidatedPage(), searchDto.getValidatedSize(), searchDto.getValidatedSortBy());
+        Page<UserResponseDto> users = userService.getAllUsers(searchRequestDto.getValidatedPage(), searchRequestDto.getValidatedSize(), searchRequestDto.getValidatedSortBy());
         return new ResponseEntity<>(Result.of(users), HttpStatus.OK);
     }
 
@@ -106,13 +104,10 @@ public class UserController {
     @GetMapping("/search")
     public ResponseEntity<Result<Page<UserResponseDto>>> searchUsers(
             @RequestHeader("X-Role") String role,
-            UserSearchDto searchDto) {
+            SearchRequestDto searchRequestDto) {
 
         validateManagerOrMaster(role);
-
-        // 페이지 크기를 10, 30, 50으로 제한
-        int size = searchDto.getValidatedSize();
-        Page<UserResponseDto> users = userService.searchUsers(searchDto.getKeyword(), searchDto.getPage(), size, searchDto.getSortBy());
+        Page<UserResponseDto> users = userService.searchUsers(searchRequestDto.getKeyword(), searchRequestDto.getValidatedPage(), searchRequestDto.getValidatedSize(), searchRequestDto.getValidatedSortBy());
         return new ResponseEntity<>(Result.of(users), HttpStatus.OK);
     }
 

@@ -1,7 +1,7 @@
 package com.foodtogo.mono.restaurant.controller;
 
 import com.foodtogo.mono.Result;
-import com.foodtogo.mono.common.dto.SearchDto;
+import com.foodtogo.mono.common.dto.SearchRequestDto;
 import com.foodtogo.mono.restaurant.core.domain.Restaurant;
 import com.foodtogo.mono.restaurant.dto.RestaurantRequestDto;
 import com.foodtogo.mono.restaurant.dto.RestaurantResponseDto;
@@ -96,13 +96,13 @@ public class RestaurantController {
     // 가게 검색
     @GetMapping("/search")
     public ResponseEntity<Result<Page<RestaurantResponseDto>>> searchRestaurants(
-            SearchDto searchDto
+            SearchRequestDto searchRequestDto
     ) {
         Page<RestaurantResponseDto> searchedRestaurants = restaurantService.searchRestaurants(
-                searchDto.getKeyword(),
-                searchDto.getValidatedPage(),
-                searchDto.getValidatedSize(),
-                searchDto.getValidatedSortBy()
+                searchRequestDto.getKeyword(),
+                searchRequestDto.getValidatedPage(),
+                searchRequestDto.getValidatedSize(),
+                searchRequestDto.getValidatedSortBy()
         );
         return new ResponseEntity<>(Result.of(searchedRestaurants), HttpStatus.OK);
     }
