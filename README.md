@@ -203,7 +203,7 @@
     <summary><h2>👩🏻‍💻 한정원</h2></summary>
 
 <details>
-    <summary>Gateway</summary>
+    <summary>🚪 Gateway</summary>
 
 * [[gateway] 초기 세팅 #19](https://github.com/jiminchur/Project_FoodToGoWeb/issues/19)
 
@@ -215,7 +215,7 @@
 </details>
 
 <details>
-    <summary>Auth</summary>
+    <summary>🔐 Auth</summary>
 
 * [[인증 서버] 초기 세팅 #20](https://github.com/jiminchur/Project_FoodToGoWeb/issues/20)
 
@@ -256,11 +256,13 @@
 </details>
 
 <details>
-    <summary>유저</summary>
+    <summary>👦🏻 유저</summary>
 
 * [[유저 앱] 레디스 권한 체크 추가 #159](https://github.com/jiminchur/Project_FoodToGoWeb/issues/159)
 
 * [[gateway] 인증, 모노리티 서버 호출 연동 #145](https://github.com/jiminchur/Project_FoodToGoWeb/issues/145)
+
+* [[모노리틱 서버] 검색DTO 공통화 #170](https://github.com/jiminchur/Project_FoodToGoWeb/issues/170)
 
 </details>
 
