@@ -33,22 +33,29 @@
 |<img src="https://avatars.githubusercontent.com/u/145955453?v=4" alt="지민철" width="100">|<img src="https://avatars.githubusercontent.com/u/81797927?v=4" alt="박현도" width="100">|<img src="https://avatars.githubusercontent.com/u/161826579?v=4" alt="한정원" width="100">|
 |[지민철](https://github.com/jiminchur)|[박현도](https://github.com/atto08)|[한정원](https://github.com/dev-wonny)|
 ### 역할 분담
-* 🙎🏻‍♂️ 지민철
-    * 식당
-    * 식당 카테고리
-    * 음식
-    * AI
-    * CI/CD
-* 🧑🏻‍💻 박현도
-    * 주문
-    * 결제
-    * 배송지
-    * 유저
-* 👩🏻‍💻 한정원
-    * gateway
-    * auth
-    * 유저
-    * redis
+<details>
+    <summary>🙎🏻‍♂️ 지민철</summary>
+* 식당
+   
+* 식당 카테고리
+* 음식
+* AI
+* CI/CD
+</details>
+<details>
+    <summary>🧑🏻‍💻 박현도</summary>
+* 주문
+* 결제
+* 배송지
+* 유저
+</details>
+<details>
+    <summary>👩🏻‍💻 한정원</summary>
+* gateway
+* auth
+* 유저
+* redis
+</details>
 ## 3. 요구사항 명세서
 * Wiki에 따로 요구사항 명세서를 기록함
 * [📘 Wiki - 요구사항 명세서 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD-%EB%AA%85%EC%84%B8%EC%84%9C)
