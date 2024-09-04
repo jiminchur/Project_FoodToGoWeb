@@ -268,22 +268,22 @@
 </details>
 
 ## 📕 3. 요구사항 명세서
-* Wiki에 따로 요구사항 명세서를 기록함
+* Wiki에 따로 요구사항 명세서를 기록하였습니다.
 * [📘 Wiki - 요구사항 명세서 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD-%EB%AA%85%EC%84%B8%EC%84%9C)
 
 ## 📙 4. API 명세서
-* API 명세서에 설계에 따라 개발을 하였고, 첫 설계와 다른점이 있다고 생각하면 [🛠️ [수정사항] API 명세서 수정사항 #90](https://github.com/jiminchur/Project_FoodToGoWeb/issues/90)에 기록함
-* 아래 Notion 링크를 통해서 확인 가능함
+* API 명세서에 설계에 따라 개발을 하였고, 첫 설계와 다른점이 있다고 생각하면 [🛠️ [수정사항] API 명세서 수정사항 #90](https://github.com/jiminchur/Project_FoodToGoWeb/issues/90)에 기록하였습니다.
+* 아래 Notion 링크를 통해서 확인 가능합니다.
 * [Ohteam - API 명세서 - Notion](https://mire-plastic-701.notion.site/333fba57922143e39638d69ab7b9890b?v=19dba6a601034c9fa0da7acbf82b059e&pvs=4)
 
 ## 📄 5. 테이블 설계서
-* 요구사항 명세서의 **데이터 베이스 설계**의 규칙에 따라 작성함
-* 아래 Notion 링크를 통해서 확인 가능함
+* 요구사항 명세서의 **데이터 베이스 설계**의 규칙에 따라 작성하였습니다.
+* 아래 Notion 링크를 통해서 확인 가능합니다.
 * [Ohteam - 테이블 설계서 - Notion](https://mire-plastic-701.notion.site/7f5926ee36a84122ab90c34951d68f39?pvs=4)
 
 ## 📋 6. ERD
 ![ERD](./IMG/erd.png)
-* 테이블 설계서에 따라 만든 ERD
+* 테이블 설계서에 따라 만든 ERD입니다.
 
 ## 🛠️ 7. 기술 스택
 * Backend
@@ -320,16 +320,16 @@
 
 * [🛠️ [CICD] Docker hub을 이용한 CICD 구축시 Redis와의 연결 오류 #168](https://github.com/jiminchur/Project_FoodToGoWeb/issues/168)
 
-* [🛠️ [CICD] SCP를 이용한 CICD 구축 #169](https://github.com/jiminchur/Project_FoodToGoWeb/issues/169)
+* [🛠️ [CICD] SCP를 이용한 CICD 구축 #169](https://github.com/jiminchur/Project_FoodToGoWeb/issues/169) - ✅ 저희가 적용한 방법입니다.
 
 ## 📀 10. Git Branch 및 Git Commit 전략
 
 * Git Branch 전략
-    * 자세한 내용은 [📘 Wiki - GitBranch 전략 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/Git-Branch-%EC%A0%84%EB%9E%B5) 에서 확인 가능함
+    * 자세한 내용은 [📘 Wiki - GitBranch 전략 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/Git-Branch-%EC%A0%84%EB%9E%B5) 에서 확인 가능합니다.
 ![gitbranch](./IMG/gitcommit.png)
 
 * Git Commit 전략
-    * 자세한 내용은 [📘 Wiki - GitCommit 전략 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/Commit-%EC%A0%84%EB%9E%B5) 에서 확인 가능함
+    * 자세한 내용은 [📘 Wiki - GitCommit 전략 링크](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/Commit-%EC%A0%84%EB%9E%B5) 에서 확인 가능합니다.
 
 |머리말|내용|
 |-----|-----|
