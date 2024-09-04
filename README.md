@@ -1,6 +1,6 @@
 # 🍱 Project_FoodToGoWeb 🍱
+주문 배달 플랫폼을 스프링 부트 기반의 API Gateway, Auth, Monolitic 3개의 서버로 개발한 팀프로젝트 입니다.
 ![스크린샷](/IMG/FoodToGoWeb.png)
-* 주문 배달 플랫폼을 스프링 부트 기반의 API Gateway, Auth, Monolitic 3개의 서버로 개발한 팀프로젝트 입니다.
 
 ## 🗓️ 개발 기간
 * 2024.08.22 ~ 2024.09.03
@@ -31,6 +31,11 @@
 * **목표:** 광화문 근처에서 운영될 음식점들의 배달 및 포장 주문 관리, 결제, 그리고 주문 내역 관리 기능을 제공하는 플랫폼 개발
 
 ## 👬🏻 2. 팀원 역할 분담
+
+### 🙌🏻 회의 기록
+
+* [🗓️ [회의] 일자별로 회의 내용를 기록한 내용입니다. #1](https://github.com/jiminchur/Project_FoodToGoWeb/issues/1)
+* [📘 Wiki - OurRules](https://github.com/jiminchur/Project_FoodToGoWeb/wiki/OurRules)
 
 ### 🫡 팀원 소개
 |팀장(백엔드)|팀원(백엔드)|팀원(백엔드)|
@@ -113,26 +118,147 @@
 <details>
     <summary>🛠️ CICD</summary>
 
+* [🛠️ [CICD] Docker hub을 이용한 CICD 구축 #167](https://github.com/jiminchur/Project_FoodToGoWeb/issues/167)
+
+* [🛠️ [CICD] Docker hub을 이용한 CICD 구축시 Redis와의 연결 오류 #168](https://github.com/jiminchur/Project_FoodToGoWeb/issues/168)
+
+* [🛠️ [CICD] SCP를 이용한 CICD 구축 #169](https://github.com/jiminchur/Project_FoodToGoWeb/issues/169)
+
 </details>
 
 </details>
 
 <details>
     <summary><h2>🧑🏻‍💻 박현도</h2></summary>
-    
-* 주문
-* 결제
-* 배송지
-* 유저
+
+<details>
+    <summary>결제</summary>
+
+* [[Payment] 초기 구현 #146](https://github.com/jiminchur/Project_FoodToGoWeb/issues/146)
 
 </details>
+
+<details>
+    <summary>배송지</summary>
+
+* [[Address] 회원 배송지 삭제 #62](https://github.com/jiminchur/Project_FoodToGoWeb/issues/62)
+
+* [[Address] 회원 배송지 수정 #61](https://github.com/jiminchur/Project_FoodToGoWeb/issues/61)
+
+* [[Address] 회원 배송지 목록 조회 #60](https://github.com/jiminchur/Project_FoodToGoWeb/issues/60)
+
+* [[Address] 회원 배송지 상세 조회 #59](https://github.com/jiminchur/Project_FoodToGoWeb/issues/59)
+
+* [[Address] 회원 배송지 등록 #58](https://github.com/jiminchur/Project_FoodToGoWeb/issues/58)
+
+</details>
+
+<details>
+    <summary>주문</summary>
+
+* [[Order] totalOrderPrice @Enumerated 설정 제거 [Payment] PaymentRequestDto amount 제거 #155](https://github.com/jiminchur/Project_FoodToGoWeb/issues/155)
+
+* [[Order] 성능 개선 #126](https://github.com/jiminchur/Project_FoodToGoWeb/issues/126)
+
+* [[Order] 주문 내역 삭제 #99](https://github.com/jiminchur/Project_FoodToGoWeb/issues/99)
+
+* [[Order] 주문 내역 목록 조회 - [고객, 가게, 운영진] #96](https://github.com/jiminchur/Project_FoodToGoWeb/issues/96)
+
+* [[Order] 주문 단건 조회 #95](https://github.com/jiminchur/Project_FoodToGoWeb/issues/95)
+
+* [[Order] 주문 취소 요청 #94](https://github.com/jiminchur/Project_FoodToGoWeb/issues/94)
+
+* [[Order] 주문 상태 변경 #93](https://github.com/jiminchur/Project_FoodToGoWeb/issues/93)
+
+* [[Order] 주문 등록 #92](https://github.com/jiminchur/Project_FoodToGoWeb/issues/92)
+
+
+</details>
+
+<details>
+    <summary>유저</summary>
+
+* [[Users] 성능 개선 #125](https://github.com/jiminchur/Project_FoodToGoWeb/issues/125)
+
+* [[Users] 회원 전체 조회 - 관리자 #18](https://github.com/jiminchur/Project_FoodToGoWeb/issues/18)
+
+* [[Users] 회원 검색 - 관리자 #17](https://github.com/jiminchur/Project_FoodToGoWeb/issues/17)
+
+* [[Users] 회원 삭제 #16](https://github.com/jiminchur/Project_FoodToGoWeb/issues/16)
+
+* [[Users] 회원 정보 수정 #15](https://github.com/jiminchur/Project_FoodToGoWeb/issues/15)
+
+* [[Users] 회원 정보 조회 #14](https://github.com/jiminchur/Project_FoodToGoWeb/issues/14)
+
+* [[Users] 회원 전체 조회 #13](https://github.com/jiminchur/Project_FoodToGoWeb/issues/13)
+
+</details>
+
+</details>
+
+
 <details>
     <summary><h2>👩🏻‍💻 한정원</h2></summary>
 
-* gateway
-* auth
-* 유저
-* redis
+<details>
+    <summary>Gateway</summary>
+
+* [[gateway] 초기 세팅 #19](https://github.com/jiminchur/Project_FoodToGoWeb/issues/19)
+
+* [[gateway] 필터 개선 #131](https://github.com/jiminchur/Project_FoodToGoWeb/issues/131)
+
+* [[gateway] 인증, 모노리티 서버 호출 연동 #145](https://github.com/jiminchur/Project_FoodToGoWeb/issues/145)
+
+
+</details>
+
+<details>
+    <summary>Auth</summary>
+
+* [[인증 서버] 초기 세팅 #20](https://github.com/jiminchur/Project_FoodToGoWeb/issues/20)
+
+* [[인증 서버] jwt - 발급 #21](https://github.com/jiminchur/Project_FoodToGoWeb/issues/21)
+
+* [[인증 서버] jwt - 토큰 검증 #22](https://github.com/jiminchur/Project_FoodToGoWeb/issues/22)
+
+* [[인증 서버] jwt - 재발급 #23](https://github.com/jiminchur/Project_FoodToGoWeb/issues/23)
+
+* [[인증 서버] user - 등록 #24](https://github.com/jiminchur/Project_FoodToGoWeb/issues/24)
+
+* [[인증 서버] user - 수정 #25](https://github.com/jiminchur/Project_FoodToGoWeb/issues/25)
+
+* [[인증 서버] user - 조회 #26](https://github.com/jiminchur/Project_FoodToGoWeb/issues/26)
+
+* [[인증 서버] user - 삭제 #27](https://github.com/jiminchur/Project_FoodToGoWeb/issues/27)
+
+* [[인증 서버] user - 로그인 #28](https://github.com/jiminchur/Project_FoodToGoWeb/issues/28)
+
+* [[인증 서버] user - 로그아웃 #29](https://github.com/jiminchur/Project_FoodToGoWeb/issues/29)
+
+* [[인증 서버] redis - 캐시 조회, 갱신 #30](https://github.com/jiminchur/Project_FoodToGoWeb/issues/30)
+
+* [[인증 서버] redis - 캐시 업데이트 #31](https://github.com/jiminchur/Project_FoodToGoWeb/issues/31)
+
+* [[인증 서버] redis - 캐시 삭제 #32](https://github.com/jiminchur/Project_FoodToGoWeb/issues/32)
+
+* [[인증 서버] 계정 - 잠금, 해제 #33](https://github.com/jiminchur/Project_FoodToGoWeb/issues/33)
+
+* [[인증 서버] 비밀번호 - 변경 #34](https://github.com/jiminchur/Project_FoodToGoWeb/issues/34)
+
+* [[인증 서버] 비밀번호 - 재설정 요청 #35](https://github.com/jiminchur/Project_FoodToGoWeb/issues/35)
+
+* [[인증 서버] 비밀번호 - 재설정 요청 #35](https://github.com/jiminchur/Project_FoodToGoWeb/issues/35)
+
+* [[인증 서버] gateway서버에서 인증서버 기능 호출 시 맞지 않는 부분 수정 #128](https://github.com/jiminchur/Project_FoodToGoWeb/issues/128)
+
+</details>
+
+<details>
+    <summary>유저</summary>
+
+* [[유저 앱] 레디스 권한 체크 추가 #159](https://github.com/jiminchur/Project_FoodToGoWeb/issues/159)
+
+</details>
 
 </details>
 
@@ -180,6 +306,12 @@
 
 ## 🔨 9. CICD 파이프라인
 ![cicd](./IMG/cicd.png)
+
+* [🛠️ [CICD] Docker hub을 이용한 CICD 구축 #167](https://github.com/jiminchur/Project_FoodToGoWeb/issues/167)
+
+* [🛠️ [CICD] Docker hub을 이용한 CICD 구축시 Redis와의 연결 오류 #168](https://github.com/jiminchur/Project_FoodToGoWeb/issues/168)
+
+* [🛠️ [CICD] SCP를 이용한 CICD 구축 #169](https://github.com/jiminchur/Project_FoodToGoWeb/issues/169)
 
 ## 📀 10. Git Branch 및 Git Commit 전략
 * Git Branch 전략
